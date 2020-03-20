@@ -24,9 +24,10 @@ public class Killer extends PluginBase {
 
     private static Killer killer;
     private List<Player> playing;
-    private Map<Player, Integer> players;
+    private Map<Player, Integer> players; //0 平民 1侦探 2杀手 3观战
     private List<String> spawn;
     private Config config;
+    public int number = 0;
 
     public static Killer getInstance() { return killer; }
 
@@ -153,6 +154,7 @@ public class Killer extends PluginBase {
         players.put(detective, 1);
         detective.sendMessage("你已成为侦探！");
         int i=0;
+        this.number = 0;
         for (Player player : playing) {
             String[] s = this.spawn.get(i).split(":");
             player.teleport(new Position(Integer.parseInt(s[0]),
@@ -160,6 +162,7 @@ public class Killer extends PluginBase {
                     Integer.parseInt(s[2]),
                     getServer().getLevelByName(this.getWorld())));
             i++;
+            this.number++;
             if (player == killer || player == detective) {
                 continue;
             }
@@ -167,6 +170,21 @@ public class Killer extends PluginBase {
             player.sendMessage("你已成为平民");
         }
 
+    }
+
+    /**
+     * @Description 结束游戏
+     */
+    public void endGame() {
+        for (Player player : this.playing) {
+            if (player.getGamemode() != 0) {
+                player.setGamemode(0);
+            }
+            this.delPlaying(player);
+            this.players.remove(player);
+            player.sendMessage("本轮游戏结束！");
+            player.teleport(getServer().getDefaultLevel().getSafeSpawn());
+        }
     }
 
     /**
