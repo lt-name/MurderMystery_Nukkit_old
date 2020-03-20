@@ -1,0 +1,24 @@
+name: Killer
+main: name.killer.Killer
+version: "0.0.1"
+api:
+  - 1.0.0
+load: POSTWORLD
+author: lt_name
+loadbefore:
+  - AutoUpData
+
+commands:
+  killer:
+    description: killer游戏命令
+    usage: /Killer help
+    permission: a
+  kadmin:
+    description: killer管理命令
+    usage: /kadmin help
+    permission: b
+permissions:
+  a:
+    default: true
+  b:
+    default: op
