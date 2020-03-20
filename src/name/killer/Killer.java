@@ -55,13 +55,17 @@ public class Killer extends PluginBase {
                 switch (args[0]) {
                     case "加入":
                         if (!this.isPlaying(player)) {
-                            String[] Wait = this.getWait().split(":");
-                            player.teleport(new Position(Integer.parseInt(Wait[0]),
-                                    Integer.parseInt(Wait[1]),
-                                    Integer.parseInt(Wait[2]),
-                                    getServer().getLevelByName(Wait[3])));
-                            this.addPlaying(player);
-                            sender.sendMessage("你已成功加入游戏！");
+                            if (this.playing.size() <= 10) {
+                                String[] Wait = this.getWait().split(":");
+                                player.teleport(new Position(Integer.parseInt(Wait[0]),
+                                        Integer.parseInt(Wait[1]),
+                                        Integer.parseInt(Wait[2]),
+                                        getServer().getLevelByName(Wait[3])));
+                                this.addPlaying(player);
+                                sender.sendMessage("你已成功加入游戏！");
+                            }else {
+                                sender.sendMessage("当前仅支持10人同时游戏！");
+                            }
                         }else {
                             sender.sendMessage("§c你已经在游戏中，无法重复加入！");
                         }
@@ -148,7 +152,14 @@ public class Killer extends PluginBase {
         killer.sendMessage("你已成为杀手！");
         players.put(detective, 1);
         detective.sendMessage("你已成为侦探！");
+        int i=0;
         for (Player player : playing) {
+            String[] s = this.spawn.get(i).split(":");
+            player.teleport(new Position(Integer.parseInt(s[0]),
+                    Integer.parseInt(s[1]),
+                    Integer.parseInt(s[2]),
+                    getServer().getLevelByName(this.getWorld())));
+            i++;
             if (player == killer || player == detective) {
                 continue;
             }
