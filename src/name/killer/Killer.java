@@ -54,45 +54,49 @@ public class Killer extends PluginBase {
         if (command.getName().equals("killer") || command.getName().equals("杀手")) {
             if (sender instanceof Player) {
                 Player player = ((Player) sender).getPlayer();
-                switch (args[0]) {
-                    case "join":
-                    case "加入":
-                        if (!this.isPlaying(player)) {
-                            if (this.playing.size() <= 10) {
-                                String[] Wait = this.getWait().split(":");
-                                player.teleport(new Position(Integer.parseInt(Wait[0]),
-                                        Integer.parseInt(Wait[1]),
-                                        Integer.parseInt(Wait[2]),
-                                        getServer().getLevelByName(Wait[3])));
-                                this.addPlaying(player);
-                                sender.sendMessage("你已成功加入游戏！");
+                if (args.length >0) {
+                    switch (args[0]) {
+                        case "join":
+                        case "加入":
+                            if (!this.isPlaying(player)) {
+                                if (this.playing.size() <= 10) {
+                                    String[] Wait = this.getWait().split(":");
+                                    player.teleport(new Position(Integer.parseInt(Wait[0]),
+                                            Integer.parseInt(Wait[1]),
+                                            Integer.parseInt(Wait[2]),
+                                            getServer().getLevelByName(Wait[3])));
+                                    this.addPlaying(player);
+                                    sender.sendMessage("你已成功加入游戏！");
+                                }else {
+                                    sender.sendMessage("当前仅支持10人同时游戏！");
+                                }
                             }else {
-                                sender.sendMessage("当前仅支持10人同时游戏！");
+                                sender.sendMessage("§c你已经在游戏中，无法重复加入！");
                             }
-                        }else {
-                            sender.sendMessage("§c你已经在游戏中，无法重复加入！");
-                        }
-                        break;
-                    case "quit":
-                    case "退出":
-                        if (this.isPlaying(player)) {
-                            this.delPlaying(player);
-                            if (player.getGamemode() != 0) {
-                                player.setGamemode(0);
-                            }
+                            break;
+                        case "quit":
+                        case "退出":
+                            if (this.isPlaying(player)) {
+                                this.delPlaying(player);
+                                if (player.getGamemode() != 0) {
+                                    player.setGamemode(0);
+                                }
                            /* if (player.getDataFlag(0, 5)) {
                                 this.setPlayerInvisible(player, false);
                             }*/
-                            player.teleport(getServer().getDefaultLevel().getSpawnLocation());
-                            sender.sendMessage("已退出游戏！");
-                        }else {
-                            sender.sendMessage("你本来就不在游戏中，无需退出！");
-                        }
-                    default:
-                        player.sendMessage("killer--命令帮助");
-                        player.sendMessage("killer 加入 加入游戏");
-                        player.sendMessage("killer 退出 退出游戏");
-                        break;
+                                player.teleport(getServer().getDefaultLevel().getSpawnLocation());
+                                sender.sendMessage("已退出游戏！");
+                            }else {
+                                sender.sendMessage("你本来就不在游戏中，无需退出！");
+                            }
+                        default:
+                            player.sendMessage("killer--命令帮助");
+                            player.sendMessage("killer 加入 加入游戏");
+                            player.sendMessage("killer 退出 退出游戏");
+                            break;
+                    }
+                }else {
+                    sender.sendMessage("/killer help 查看帮助");
                 }
             }else {
                 sender.sendMessage("请在游戏内输入！");
@@ -101,39 +105,47 @@ public class Killer extends PluginBase {
         }else if (command.getName().equals("kadmin") || command.getName().equals("杀手管理")) {
             if (sender instanceof Player) {
                 Player player = ((Player) sender).getPlayer();
-                switch (args[0]) {
-                    case "addspawn":
-                    case "AddSpawn":
-                        if (spawn.size() < 10) {
-                            if (this.config.getString("World", null) == null) {
-                                this.config.set("World", player.getLevel().getName());
-                                this.config.save();
-                            }
-                            if (this.getWorld() == null || this.getWorld().equals(player.getLevel().getName())) {
-                                String s = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ();
-                                this.spawn.add(s);
-                                this.config.set("出生点", this.spawn);
-                                this.config.save();
-                                sender.sendMessage(s + "已添加完成！");
+                if (args.length > 0) {
+                    switch (args[0]) {
+                        case "addspawn":
+                        case "AddSpawn":
+                            if (spawn.size() < 10) {
+                                if (this.config.getString("World", null) == null) {
+                                    this.config.set("World", player.getLevel().getName());
+                                    this.config.save();
+                                }
+                                if (this.getWorld() == null || this.getWorld().equals(player.getLevel().getName())) {
+                                    String s = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ();
+                                    this.spawn.add(s);
+                                    this.config.set("出生点", this.spawn);
+                                    this.config.save();
+                                    sender.sendMessage(s + "已添加完成！");
+                                }else {
+                                    sender.sendMessage("请在同一个世界设置出生点");
+                                }
                             }else {
-                                sender.sendMessage("请在同一个世界设置出生点");
+                                sender.sendMessage("随机出生点只能设置10个");
                             }
-                        }else {
-                            sender.sendMessage("随机出生点只能设置10个");
-                        }
-                        break;
-                    case "wait":
-                    case "Wait":
-                        String Wait = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ()+ ":" + player.getLevel().getName();
-                        this.config.set("Wait", Wait);
-                        this.config.save();
-                        sender.sendMessage("已设置等待地点！");
-                        break;
-                    default:
-                        player.sendMessage("killer管理--命令帮助");
-                        player.sendMessage("/kadmin addspawn 添加随机出生点");
-                        player.sendMessage("/kadmin wait 设置等待地点");
-                        break;
+                            break;
+                        case "wait":
+                        case "Wait":
+                            String Wait = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ()+ ":" + player.getLevel().getName();
+                            this.config.set("Wait", Wait);
+                            this.config.save();
+                            sender.sendMessage("已设置等待地点！");
+                            break;
+                        case "start":
+                        case "开始":
+                            this.startGame();
+                            break;
+                        default:
+                            player.sendMessage("killer管理--命令帮助");
+                            player.sendMessage("/kadmin addspawn 添加随机出生点");
+                            player.sendMessage("/kadmin wait 设置等待地点");
+                            break;
+                    }
+                }else {
+                    sender.sendMessage("/kadmin help 查看帮助");
                 }
             }else {
                 sender.sendMessage("请在游戏内输入！");
