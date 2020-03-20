@@ -74,11 +74,12 @@ public class PlayerGame implements Listener {
         }
     }
 
-    //游戏地图禁止破坏
+    //准备状态的玩家 游戏地图 禁止放置或破坏
     @EventHandler
     public void onBPE(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        if (player != null && Killer.getInstance().isPlaying(player)) {
+        if (player != null && (Killer.getInstance().isPlaying(player) ||
+                Killer.getInstance().getWorld().equals(player.getLevel().getName()))) {
             event.setCancelled();
         }
     }
@@ -86,7 +87,8 @@ public class PlayerGame implements Listener {
     @EventHandler
     public void onBBE(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        if (player != null && Killer.getInstance().isPlaying(player)) {
+        if (player != null && (Killer.getInstance().isPlaying(player) ||
+                Killer.getInstance().getWorld().equals(player.getLevel().getName()))) {
             event.setCancelled();
         }
     }
