@@ -11,6 +11,7 @@ import name.killer.Listener.PlayerGame;
 import name.killer.Listener.PlayerJoinAndQuit;
 
 //import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +24,9 @@ import static com.boydti.fawe.object.PseudoRandom.random;
 public class Killer extends PluginBase {
 
     private static Killer killer;
-    private List<Player> playing;
+    private List<Player> playing = new ArrayList<>();
     private Map<Player, Integer> players; //0 平民 1侦探 2杀手 3观战
-    private List<String> spawn;
+    private List<String> spawn = new ArrayList<>();
     private Config config;
     public int number = 0;
 
@@ -54,6 +55,7 @@ public class Killer extends PluginBase {
             if (sender instanceof Player) {
                 Player player = ((Player) sender).getPlayer();
                 switch (args[0]) {
+                    case "join":
                     case "加入":
                         if (!this.isPlaying(player)) {
                             if (this.playing.size() <= 10) {
@@ -71,6 +73,7 @@ public class Killer extends PluginBase {
                             sender.sendMessage("§c你已经在游戏中，无法重复加入！");
                         }
                         break;
+                    case "quit":
                     case "退出":
                         if (this.isPlaying(player)) {
                             this.delPlaying(player);
@@ -101,12 +104,12 @@ public class Killer extends PluginBase {
                 switch (args[0]) {
                     case "addspawn":
                     case "AddSpawn":
-                        if (spawn.size() <= 10) {
+                        if (spawn.size() < 10) {
                             if (this.config.getString("World", null) == null) {
                                 this.config.set("World", player.getLevel().getName());
                                 this.config.save();
                             }
-                            if (this.config.getString("World", null).equals(player.getLevel().getName())) {
+                            if (this.getWorld() == null || this.getWorld().equals(player.getLevel().getName())) {
                                 String s = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ();
                                 this.spawn.add(s);
                                 this.config.set("出生点", this.spawn);
@@ -200,7 +203,8 @@ public class Killer extends PluginBase {
      * @param player 玩家
      */
     public void delPlaying(Player player) {
-        this.playing.add(player);
+        this.playing.remove(player);
+        this.players.remove(player);
     }
 
     /**
