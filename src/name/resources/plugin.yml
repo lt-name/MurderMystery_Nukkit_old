@@ -10,15 +10,23 @@ loadbefore:
 
 commands:
   killer:
-    description: killer游戏命令
     usage: /Killer help
-    permission: a
+    description: "killer游戏命令"
+    permission: Killer.a
+  杀手:
+    usage: /杀手 help
+    description: "killer游戏命令"
+    permission: Killer.a
   kadmin:
-    description: killer管理命令
     usage: /kadmin help
-    permission: b
+    description: "killer管理命令"
+    permission: Killer.b
+  杀手管理:
+    usage: /杀手管理 help
+    description: "killer管理命令"
+    permission: Killer.b
 permissions:
-  a:
+  Killer.a:
     default: true
-  b:
+  Killer.b:
     default: op

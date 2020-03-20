@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.level.Level;
+import cn.nukkit.level.Position;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import name.killer.Listener.PlayerGame;
@@ -12,6 +13,9 @@ import name.killer.Listener.PlayerJoinAndQuit;
 //import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.boydti.fawe.object.PseudoRandom.random;
+
 
 /**
  * @author lt_name
@@ -23,6 +27,8 @@ public class Killer extends PluginBase {
     private Map<Player, Integer> players;
     private List<String> spawn;
     private Config config;
+
+    public static Killer getInstance() { return killer; }
 
     @Override
     public void onEnable() {
@@ -36,23 +42,26 @@ public class Killer extends PluginBase {
 
     @Override
     public void onDisable() {
+        this.config.set("出生点", this.spawn);
+        this.config.save();
         this.getLogger().info("§c已卸载！");
-    }
-
-    public static Killer getInstance() {
-        return killer;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equals("Killer") || command.getName().equals("杀手")) {
+        if (command.getName().equals("killer") || command.getName().equals("杀手")) {
             if (sender instanceof Player) {
                 Player player = ((Player) sender).getPlayer();
                 switch (args[0]) {
                     case "加入":
                         if (!this.isPlaying(player)) {
-
+                            String[] Wait = this.getWait().split(":");
+                            player.teleport(new Position(Integer.parseInt(Wait[0]),
+                                    Integer.parseInt(Wait[1]),
+                                    Integer.parseInt(Wait[2]),
+                                    getServer().getLevelByName(Wait[3])));
                             this.addPlaying(player);
+                            sender.sendMessage("你已成功加入游戏！");
                         }else {
                             sender.sendMessage("§c你已经在游戏中，无法重复加入！");
                         }
@@ -63,14 +72,19 @@ public class Killer extends PluginBase {
                             if (player.getGamemode() != 0) {
                                 player.setGamemode(0);
                             }
-                            if (player.getDataFlag(0, 5)) {
+                           /* if (player.getDataFlag(0, 5)) {
                                 this.setPlayerInvisible(player, false);
-                            }
+                            }*/
                             player.teleport(getServer().getDefaultLevel().getSpawnLocation());
                             sender.sendMessage("已退出游戏！");
                         }else {
                             sender.sendMessage("你本来就不在游戏中，无需退出！");
                         }
+                    default:
+                        player.sendMessage("killer--命令帮助");
+                        player.sendMessage("killer 加入 加入游戏");
+                        player.sendMessage("killer 退出 退出游戏");
+                        break;
                 }
             }else {
                 sender.sendMessage("请在游戏内输入！");
@@ -82,15 +96,20 @@ public class Killer extends PluginBase {
                 switch (args[0]) {
                     case "addspawn":
                     case "AddSpawn":
-                        if (spawn.size() >= 10) {
+                        if (spawn.size() <= 10) {
                             if (this.config.getString("World", null) == null) {
                                 this.config.set("World", player.getLevel().getName());
+                                this.config.save();
                             }
-                            String s = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ();
-                            this.spawn.add(s);
-                            this.config.set("出生点", this.spawn);
-                            this.config.save();
-                            sender.sendMessage(s + "已添加完成！");
+                            if (this.config.getString("World", null).equals(player.getLevel().getName())) {
+                                String s = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ();
+                                this.spawn.add(s);
+                                this.config.set("出生点", this.spawn);
+                                this.config.save();
+                                sender.sendMessage(s + "已添加完成！");
+                            }else {
+                                sender.sendMessage("请在同一个世界设置出生点");
+                            }
                         }else {
                             sender.sendMessage("随机出生点只能设置10个");
                         }
@@ -103,7 +122,7 @@ public class Killer extends PluginBase {
                         sender.sendMessage("已设置等待地点！");
                         break;
                     default:
-                        player.sendMessage("killer管理==命令帮助");
+                        player.sendMessage("killer管理--命令帮助");
                         player.sendMessage("/kadmin addspawn 添加随机出生点");
                         player.sendMessage("/kadmin wait 设置等待地点");
                         break;
@@ -114,6 +133,29 @@ public class Killer extends PluginBase {
             return true;
         }
         return false;
+    }
+
+    /**
+     * @Description 开始游戏
+     */
+    public void startGame() {
+        Player detective;
+        Player killer = this.playing.get(random.nextInt(playing.size()));
+        do {
+            detective = this.playing.get(random.nextInt(playing.size()));
+        }while (detective == killer);
+        players.put(killer, 2);
+        killer.sendMessage("你已成为杀手！");
+        players.put(detective, 1);
+        detective.sendMessage("你已成为侦探！");
+        for (Player player : playing) {
+            if (player == killer || player == detective) {
+                continue;
+            }
+            players.put(player, 0);
+            player.sendMessage("你已成为平民");
+        }
+
     }
 
     /**
@@ -138,6 +180,13 @@ public class Killer extends PluginBase {
      */
     public boolean isPlaying(Player player) {
         return this.playing.contains(player);
+    }
+
+    /**
+     * @return 玩家列表
+     */
+    public List<Player> getPlayerList() {
+        return this.playing;
     }
 
     /**
@@ -170,13 +219,6 @@ public class Killer extends PluginBase {
     public void setPlayerInvisible(Player player, boolean bool) {
         player.setDataFlag(0, 5, bool);
         player.setNameTagVisible(!bool);
-    }
-
-    /**
-     * @Description 开始游戏
-     */
-    public void startGame() {
-
     }
 
 }

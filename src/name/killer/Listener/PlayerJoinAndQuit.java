@@ -12,20 +12,16 @@ public class PlayerJoinAndQuit implements Listener {
     @EventHandler
     public void onPJE(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if (player != null) {
-            if (Killer.getInstance().isPlaying(player)) {
-                Killer.getInstance().delPlaying(player);
-            }
+        if (player != null && Killer.getInstance().isPlaying(player)) {
+            Killer.getInstance().delPlaying(player);
         }
     }
 
     @EventHandler
     public void onPQE(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (player != null){
-            if (Killer.getInstance().isPlaying(player)){
-                Killer.getInstance().delPlaying(player);
-            }
+        if (player != null && Killer.getInstance().isPlaying(player)){
+            Killer.getInstance().delPlaying(player);
         }
     }
 

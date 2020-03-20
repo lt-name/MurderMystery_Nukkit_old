@@ -15,14 +15,16 @@ public class PlayerGame implements Listener {
     @EventHandler
     public void onEDBE(EntityDamageByEntityEvent event) {
         //damager 攻击者 entity 被攻击者
+        if (event == null) { return; }
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
             Player player1 = (Player) event.getDamager();
             Player player2 = (Player) event.getEntity();
+            if (player1 == null || player2 == null) { return; }
             if (Killer.getInstance().getPlayerMode(player1) == 2) {
                 if (player1.getInventory().getItemInHand().getId() == 267) {
                     player1.sendMessage("你成功击杀了一位玩家");
                     player2.setGamemode(3);
-                    Killer.getInstance().setPlayerInvisible(player2, true);
+                    //Killer.getInstance().setPlayerInvisible(player2, true);
                     player2.sendMessage("你被杀手杀死了");
                 }
             }
