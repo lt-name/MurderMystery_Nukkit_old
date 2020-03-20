@@ -13,6 +13,9 @@ import name.killer.Listener.PlayerJoinAndQuit;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author lt_name
+ */
 public class Killer extends PluginBase {
 
     private static Killer killer;
@@ -47,16 +50,16 @@ public class Killer extends PluginBase {
                 Player player = ((Player) sender).getPlayer();
                 switch (args[0]) {
                     case "加入":
-                        if (!this.ispalying(player)) {
+                        if (!this.isPlaying(player)) {
 
-                            this.addpalying(player);
+                            this.addPlaying(player);
                         }else {
                             sender.sendMessage("§c你已经在游戏中，无法重复加入！");
                         }
                         break;
                     case "退出":
-                        if (this.ispalying(player)) {
-                            this.delpalying(player);
+                        if (this.isPlaying(player)) {
+                            this.delPlaying(player);
                             if (player.getGamemode() != 0) {
                                 player.setGamemode(0);
                             }
@@ -114,47 +117,66 @@ public class Killer extends PluginBase {
     }
 
     /**
-     *@Description 记录在游戏内的玩家
+     * @Description 记录在游戏内的玩家
+     * @param player 玩家
      */
-    public void addpalying(Player player) {
+    public void addPlaying(Player player) {
         this.playing.add(player);
     }
 
     /**
-     *@Description 删除记录
+     * @Description 删除记录
+     * @param player 玩家
      */
-    public void delpalying(Player player) {
+    public void delPlaying(Player player) {
         this.playing.add(player);
     }
 
     /**
-     * @return 玩家是否在游戏里
+     * @return boolean 玩家是否在游戏里
+     * @param player 玩家
      */
-    public boolean ispalying(Player player) {
+    public boolean isPlaying(Player player) {
         return this.playing.contains(player);
     }
 
-    public Level getWorld() {
+    /**
+     * @return 游戏地图
+     */
+    public String getWorld() {
         return this.config.get("World", null);
     }
 
+    /**
+     * @return 等待地点
+     */
     public String getWait() {
         return this.config.getString("Wait", null);
     }
 
     /**
      * @return 玩家职位
+     * @param player 玩家
      */
     public Integer getPlayerMode(Player player) {
         return players.get(player);
     }
 
     /**
-     *@Description 设置玩家隐身
+     * @Description 设置玩家隐身
+     * @param player 玩家
+     * @param bool 是否设置隐身
      */
     public void setPlayerInvisible(Player player, boolean bool) {
         player.setDataFlag(0, 5, bool);
         player.setNameTagVisible(!bool);
+    }
+
+    /**
+     * @Description 开始游戏
+     */
+    public void startGame() {
+
     }
 
 }

@@ -18,20 +18,23 @@ public class PlayerGame implements Listener {
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
             Player player1 = (Player) event.getDamager();
             Player player2 = (Player) event.getEntity();
-            if (player1.getInventory().getItemInHand().getId() == 267) {
-                player1.sendMessage("你成功击杀了一位玩家");
-                player2.setGamemode(3);
-                Killer.getInstance().setPlayerInvisible(player2, true);
-                player2.sendMessage("你被杀手杀死了");
+            if (Killer.getInstance().getPlayerMode(player1) == 2) {
+                if (player1.getInventory().getItemInHand().getId() == 267) {
+                    player1.sendMessage("你成功击杀了一位玩家");
+                    player2.setGamemode(3);
+                    Killer.getInstance().setPlayerInvisible(player2, true);
+                    player2.sendMessage("你被杀手杀死了");
+                }
             }
         }
+        event.setCancelled();
     }
 
     //游戏地图禁止破坏
     @EventHandler
     public void onBPE(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        if (player != null && Killer.getInstance().ispalying(player)) {
+        if (player != null && Killer.getInstance().isPlaying(player)) {
             event.setCancelled();
         }
     }
@@ -39,7 +42,7 @@ public class PlayerGame implements Listener {
     @EventHandler
     public void onBBE(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        if (player != null && Killer.getInstance().ispalying(player)) {
+        if (player != null && Killer.getInstance().isPlaying(player)) {
             event.setCancelled();
         }
     }
