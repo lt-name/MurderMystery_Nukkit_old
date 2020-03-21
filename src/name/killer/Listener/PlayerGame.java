@@ -10,7 +10,10 @@ import cn.nukkit.event.entity.EntityDamageByChildEntityEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityExplodeEvent;
+import cn.nukkit.level.Level;
 import name.killer.Killer;
+import name.killer.Room.GameRoom;
+
 
 
 public class PlayerGame implements Listener {
@@ -44,11 +47,12 @@ public class PlayerGame implements Listener {
             Player player1 = (Player) event.getDamager();
             Player player2 = (Player) event.getEntity();
             if (player1 == null || player2 == null) { return; }
-            if (Killer.getInstance().getPlayerMode(player1) == 2) {
+            GameRoom gameRoom = Killer.getInstance().getRooms().get(player1.getLevel().getName());
+            if (gameRoom.getPlayerMode(player1) == 2) {
                 if (player1.getInventory().getItemInHand().getId() == 267) {
                     player1.sendMessage("你成功击杀了一位玩家");
                     player2.setGamemode(3);
-                    Killer.getInstance().number--;
+                    gameRoom.addPlaying(player2, 3);
                     //Killer.getInstance().setPlayerInvisible(player2, true);
                     player2.sendMessage("你被杀手杀死了");
                 }
@@ -63,10 +67,11 @@ public class PlayerGame implements Listener {
         if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
             Player player1 = ((Player) event.getDamager()).getPlayer();
             Player player2 = ((Player) event.getEntity()).getPlayer();
-            if (Killer.getInstance().getPlayerMode(player1) == 1) {
-                if (Killer.getInstance().getPlayerMode(player2) == 2) {
+            GameRoom gameRoom = Killer.getInstance().getRooms().get(player1.getLevel().getName());
+            if (gameRoom.getPlayerMode(player1) == 1) {
+                if (gameRoom.getPlayerMode(player2) == 2) {
                     if (event.getChild().getId() == 262) {
-                        Killer.getInstance().endGame();
+                        gameRoom.endGame(1);
                     }
                 }
             }
@@ -77,26 +82,24 @@ public class PlayerGame implements Listener {
     //准备状态的玩家 游戏地图 禁止放置或破坏
     @EventHandler
     public void onBPE(BlockPlaceEvent event) {
-        Player player = event.getPlayer();
-        if (player != null && (Killer.getInstance().isPlaying(player) ||
-                Killer.getInstance().getWorld().equals(player.getLevel().getName()))) {
+        Level level = event.getPlayer().getLevel();
+        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
     }
 
     @EventHandler
     public void onBBE(BlockBreakEvent event) {
-        Player player = event.getPlayer();
-        if (player != null && (Killer.getInstance().isPlaying(player) ||
-                Killer.getInstance().getWorld().equals(player.getLevel().getName()))) {
+        Level level = event.getPlayer().getLevel();
+        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
     }
 
     @EventHandler
     public void onEEE(EntityExplodeEvent event) {
-        String level = event.getEntity().getLevel().getName();
-        if ((level != null) && (Killer.getInstance().getWorld().equals(level))) {
+        Level level = event.getEntity().getLevel();
+        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
     }

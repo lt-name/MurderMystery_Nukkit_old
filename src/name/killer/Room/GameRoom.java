@@ -23,23 +23,36 @@ public class GameRoom {
     public int gameTime = 600;
     public int victoryTime = 10;
     private Map<Player, Integer> players; //0平民 1侦探 2杀手 3观战 4未分配
-    private List<String> spawn = new ArrayList<>();
-    private List<String> goldSpawn = new ArrayList<>();
-    public int goldSpawnTime = 15;
+    private List<String> spawn;
+    private List<String> goldSpawn;
+    public int goldSpawnTime;
     private int goldSpawnTime1;
     private String Wait,World;
+    private Config config;
 
     /**
-     * @Description 初始化
+     * 初始化
      * @param config 配置文件
      */
-    public void init(Config config) {
+    public GameRoom(Config config) {
+        this.config = config;
         this.spawn = config.getStringList("出生点");
         this.Wait = config.getString("Wait", null);
         this.goldSpawn = config.getStringList("goldSpawn");
         this.goldSpawnTime = config.getInt("goldSpawnTime", 15);
         this.goldSpawnTime1 = config.getInt("goldSpawnTime", 15);
         this.World = config.getString("World", null);
+        if (config.getBoolean("就绪",false)) {
+            this.mode = 2;
+        }
+    }
+
+    /**
+     * 初始化
+     * @return 配置文件
+     */
+    public Config getConfig() {
+        return this.config;
     }
 
     /**
@@ -116,7 +129,7 @@ public class GameRoom {
      */
     public boolean joinRoom(Player player) {
         if (!this.isPlaying(player)) {
-            if (this.players.size() <10) {
+            if (this.players.size() < 10) {
                 this.addPlaying(player);
                 player.teleport(this.getWait());
                 return true;
@@ -188,6 +201,13 @@ public class GameRoom {
     }
 
     /**
+     * @return 玩家出生点
+     */
+    public List<String> getSpawn(){
+        return this.spawn;
+    }
+
+    /**
      * @param spawn 金锭产出地点
      */
     public void setGoldSpawn(Vector3 spawn) {
@@ -220,6 +240,15 @@ public class GameRoom {
      */
     public List<String> getGoldSpawn() {
         return this.goldSpawn;
+    }
+
+    /**
+     * @param player 玩家
+     */
+    public void setWait(Player player) {
+        this.Wait = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ()+ ":" + player.getLevel().getName();
+        this.config.set("Wait", this.Wait);
+        this.config.save();
     }
 
     /**

@@ -53,6 +53,8 @@ public class RoomTask extends PluginTask<Killer> {
                 //防溢出
                 if (this.gameRoom.goldSpawnTime < 0) { this.gameRoom.goldSpawnTime = 0; }
             }
+        }else {
+            this.cancel();
         }
     }
 
