@@ -11,12 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.boydti.fawe.object.PseudoRandom.random;
+
 /**
  * @Description 房间实体类
  */
 public class GameRoom {
 
-    private int mode = 0; //0等待 1游戏中 2结算
+    private int mode = 0; //0等待 1游戏中 2需要重置参数
     public int waitTime = 120;//秒
     public int gameTime = 600;
     public int victoryTime = 10;
@@ -50,8 +52,62 @@ public class GameRoom {
     /**
      * 开始游戏
      */
-    public void startGame() {
+    public Boolean startGame() {
+        List<String> player = null;
+        for (Player p : this.players.keySet()) {
+            player.add(p.getName());
+        }
+        if (player == null) { return false; }
+        Player detective;
+        Player killer = Killer.getInstance().getServer().getPlayer(player.get(random.nextInt(player.size())));
+        do {
+            detective = Killer.getInstance().getServer().getPlayer(player.get(random.nextInt(player.size())));
+        }while (detective == killer);
+        players.put(killer, 2);
+        killer.sendMessage("你已成为杀手！");
+        players.put(detective, 1);
+        detective.sendMessage("你已成为侦探！");
+        int i = 0;
+        for (Player p : this.players.keySet()) {
+            String[] s = this.spawn.get(i).split(":");
+            p.teleport(new Position(Integer.parseInt(s[0]),
+                    Integer.parseInt(s[1]),
+                    Integer.parseInt(s[2]),
+                    Killer.getInstance().getServer().getLevelByName(this.World)));
+            i++;
+            if (p == killer || p == detective) { continue; }
+            players.put(p, 0);
+            p.sendMessage("你已成为平民");
+        }
+        this.mode = 1;
+        return true;
+    }
 
+    /**
+     * 结束游戏
+     * @param mode 胜利方
+     */
+    public void endGame(Integer mode) {
+        String send;
+        if (mode == 2) {
+            send = "杀手取得胜利！";
+        }else {
+            send = "平民和侦探取得胜利！";
+        }
+        for (Player player : this.players.keySet()) {
+            player.sendMessage(send);
+        }
+        this.endGame(false);
+    }
+
+    public void endGame(boolean timeOut) {
+        for (Player player : this.players.keySet()) {
+            if (timeOut) { player.sendMessage("时间耗尽，游戏结束！"); }
+            if (player.getGamemode() != 0) { player.setGamemode(0); }
+            player.teleport(Killer.getInstance().getServer().getDefaultLevel().getSafeSpawn());
+            this.players.remove(player);
+        }
+        this.mode = 2;
     }
 
     /**
