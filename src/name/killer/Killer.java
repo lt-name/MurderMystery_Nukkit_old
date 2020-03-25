@@ -4,15 +4,13 @@ import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.level.Level;
-import cn.nukkit.level.Position;
 import cn.nukkit.plugin.PluginBase;
-import cn.nukkit.scheduler.PluginTask;
 import cn.nukkit.scheduler.Task;
 import cn.nukkit.utils.Config;
 import name.killer.Listener.PlayerGame;
 import name.killer.Listener.PlayerJoinAndQuit;
 import name.killer.Room.GameRoom;
-import name.killer.Tasks.RoomTask;
+import name.killer.Tasks.GameTask;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -51,7 +49,7 @@ public class Killer extends PluginBase {
                 for (File file : files) {
                     if (file.isDirectory()) {
                         this.rooms.put(file.getName(), new GameRoom(new Config(file, 2)));
-                        Task RoomTask = new RoomTask(this, this.rooms.get(file.getName()));
+                        Task RoomTask = new GameTask(this, this.rooms.get(file.getName()));
                         this.roomTask.put(file.getName(), RoomTask);
                         this.getServer().getScheduler().scheduleRepeatingTask(
                                 this, RoomTask, 20, true);
@@ -63,7 +61,7 @@ public class Killer extends PluginBase {
 
     private void init(Level level) {
         this.rooms.put(level.getName(), new GameRoom(new Config(getDataFolder() + "/Rooms/" + level.getName() +".yml", 2)));
-        Task RoomTask = new RoomTask(this, this.rooms.get(level.getName()));
+        Task RoomTask = new GameTask(this, this.rooms.get(level.getName()));
         this.roomTask.put(level.getName(), RoomTask);
         this.getServer().getScheduler().scheduleRepeatingTask(
                 this, RoomTask, 20, true);
@@ -88,13 +86,16 @@ public class Killer extends PluginBase {
                     switch (args[0]) {
                         case "join":
                         case "加入":
-                            for (GameRoom gameRoom : this.rooms.values()) {
-                                if (gameRoom.getPlayers().size() < 10) {
+                            if (args[1] != null) {
+
+/*                                if (gameRoom.getPlayers().size() < 10) {
                                     if (gameRoom.joinRoom(player)) {
                                         player.sendMessage("成功加入房间！");
                                         return true;
                                     }
-                                }
+                                }*/
+                            }else {
+                                sender.sendMessage("/killer help 查看帮助");
                             }
                             break;
                         case "quit":
@@ -106,9 +107,10 @@ public class Killer extends PluginBase {
                                     }
                                 }
                             }
+                            break;
                         default:
                             player.sendMessage("killer--命令帮助");
-                            player.sendMessage("killer 加入 加入游戏");
+                            player.sendMessage("killer 加入 房间号 加入游戏");
                             player.sendMessage("killer 退出 退出游戏");
                             break;
                     }

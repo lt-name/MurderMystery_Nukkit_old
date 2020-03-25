@@ -7,7 +7,6 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.Config;
 import name.killer.Killer;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +25,7 @@ public class GameRoom {
     private List<String> spawn;
     private List<String> goldSpawn;
     public int goldSpawnTime;
-    private int goldSpawnTime1;
+    private int setGoldSpawnTime;
     private String Wait,World;
     private Config config;
 
@@ -40,7 +39,7 @@ public class GameRoom {
         this.Wait = config.getString("Wait", null);
         this.goldSpawn = config.getStringList("goldSpawn");
         this.goldSpawnTime = config.getInt("goldSpawnTime", 15);
-        this.goldSpawnTime1 = config.getInt("goldSpawnTime", 15);
+        this.setGoldSpawnTime = config.getInt("goldSpawnTime", 15);
         this.World = config.getString("World", null);
         if (config.getBoolean("就绪",false)) {
             this.mode = 2;
@@ -232,7 +231,7 @@ public class GameRoom {
      * @return 金锭刷新时间
      */
     public int getGoldSpawnTime() {
-        return this.goldSpawnTime1;
+        return this.setGoldSpawnTime;
     }
 
     /**
