@@ -1,12 +1,19 @@
 package name.killer.Utils;
 
+import cn.nukkit.level.Level;
+import name.killer.Killer;
+
 import java.io.*;
 
 
 public class LevelFileReset {
 
+    public boolean resetLevel(Level level) {
+        Killer.getInstance().getServer().unloadLevel(level);
+        //Killer.getInstance().getDataFolder()
 
-
+        return true;
+    }
 
     public void copyDir(String from, String to) {
         File src = new File(from);

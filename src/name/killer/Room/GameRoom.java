@@ -5,6 +5,8 @@ import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
 import name.killer.Killer;
+import name.killer.Tasks.ResetLevelTask;
+import name.killer.Utils.LevelFileReset;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -48,6 +50,13 @@ public class GameRoom {
      */
     public Config getConfig() {
         return this.config;
+    }
+
+    /**
+     * @param mode 房间状态
+     */
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 
     /**
@@ -120,7 +129,8 @@ public class GameRoom {
      */
     public boolean joinRoom(Player player) {
         if (this.mode == 0) {
-
+            Killer.getInstance().getServer().getScheduler().scheduleTask(
+                    Killer.getInstance(), new ResetLevelTask(Killer.getInstance(), this), true);
         }else if (this.mode == 1) {
             if (!this.isPlaying(player)) {
                 if (this.players.size() < 10) {

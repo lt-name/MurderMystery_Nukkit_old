@@ -13,18 +13,14 @@ commands:
     usage: /Killer help
     description: "killer游戏命令"
     permission: Killer.a
-  杀手:
-    usage: /杀手 help
-    description: "killer游戏命令"
-    permission: Killer.a
+    aliases:
+      - 杀手
   kadmin:
     usage: /kadmin help
     description: "killer管理命令"
     permission: Killer.b
-  杀手管理:
-    usage: /杀手管理 help
-    description: "killer管理命令"
-    permission: Killer.b
+    aliases:
+      - 杀手管理
 permissions:
   Killer.a:
     default: true

@@ -79,7 +79,7 @@ public class Killer extends PluginBase {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equals("killer") || command.getName().equals("杀手")) {
+        if (command.getName().equals("killer")) {
             if (sender instanceof Player) {
                 Player player = ((Player) sender).getPlayer();
                 if (args.length >0) {
@@ -121,7 +121,7 @@ public class Killer extends PluginBase {
                 sender.sendMessage("请在游戏内输入！");
             }
             return true;
-        }else if (command.getName().equals("kadmin") || command.getName().equals("杀手管理")) {
+        }else if (command.getName().equals("kadmin")) {
             if (sender instanceof Player) {
                 Player player = ((Player) sender).getPlayer();
                 if (args.length > 0) {
