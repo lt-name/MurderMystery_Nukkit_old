@@ -19,14 +19,16 @@ public class GameTask extends PluginTask<Killer> {
     }
 
     public void onRun(int i) {
-        if (this.gameRoom.getMode() == 1) {
+        if (this.gameRoom.getMode() == 2) {
+            //游戏时间
             if (this.gameRoom.gameTime > 0) {
                 this.gameRoom.gameTime--;
                 this.sendActionBar("距游戏结束还有"+ this.gameRoom.gameTime + "秒");
             }else {
                 this.gameRoom.endGame(true);
             }
-            if (this.gameRoom.goldSpawnTime == 0) {
+            //金锭生成
+            if (this.gameRoom.goldSpawnTime < 1) {
                 List<String> goldSpawn = this.gameRoom.getGoldSpawn();
                 for (String spawn : goldSpawn) {
                     String[] s = spawn.split(":");
@@ -36,8 +38,6 @@ public class GameTask extends PluginTask<Killer> {
                 this.gameRoom.goldSpawnTime = this.gameRoom.getGoldSpawnTime();
             }else {
                 this.gameRoom.goldSpawnTime--;
-                //防溢出
-                if (this.gameRoom.goldSpawnTime < 0) { this.gameRoom.goldSpawnTime = 0; }
             }
         }else {
             this.cancel();

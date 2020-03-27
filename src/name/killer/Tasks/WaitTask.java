@@ -19,12 +19,13 @@ public class WaitTask extends PluginTask<Killer> {
         if (this.gameRoom.getPlayers().size() >= 5) {
             if (this.gameRoom.waitTime > 0) {
                 this.gameRoom.waitTime--;
-                this.sendActionBar("§a游戏还有" + this.gameRoom.waitTime + "秒开始！");
+                this.sendActionBar("§a当前已有" + this.gameRoom.getPlayers().size() + "位玩家" +
+                        "\n§a游戏还有" + this.gameRoom.waitTime + "秒开始！");
             }else {
                 this.gameRoom.startGame();
                 owner.getServer().getScheduler().scheduleRepeatingTask(
                         Killer.getInstance(), new GameTask(Killer.getInstance(), this.gameRoom), 20,true);
-                this.sendActionBar("§e游戏已开始！");
+                this.sendActionBar("§e游戏开始！");
                 this.cancel();
             }
         }else {

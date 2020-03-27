@@ -3,30 +3,28 @@ package name.killer.Room;
 import cn.nukkit.Player;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
-import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.Config;
 import name.killer.Killer;
 
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.boydti.fawe.object.PseudoRandom.random;
 
 /**
- * @Description 房间实体类
+ * 房间实体类
  */
 public class GameRoom {
 
-    private int mode = 0; //0等待 1游戏中 2需要重置参数
-    public int waitTime = 120;//秒
-    public int gameTime = 600;
-    public int victoryTime = 10;
-    private Map<Player, Integer> players; //0平民 1侦探 2杀手 3观战 4未分配
-    private List<String> spawn;
+    private int mode; //0等待重置 1玩家等待中 2玩家游戏中
+    public int waitTime, gameTime; //秒
+    //public int victoryTime = 10;
+    private LinkedHashMap<Player, Integer> players = new LinkedHashMap<>(); //0未分配 1平民 2侦探 3杀手 4等待重生
+    private LinkedHashMap<Player, Integer> playerSpawnTime = new LinkedHashMap<>();
     private List<String> goldSpawn;
     public int goldSpawnTime;
     private int setGoldSpawnTime;
-    private String Wait,World;
+    private String spawn, world;
     private Config config;
 
     /**
@@ -35,19 +33,17 @@ public class GameRoom {
      */
     public GameRoom(Config config) {
         this.config = config;
-        this.spawn = config.getStringList("出生点");
-        this.Wait = config.getString("Wait", null);
+        this.waitTime = config.getInt("等待时间", 120);
+        this.gameTime = config.getInt("游戏时间", 600);
+        this.spawn = config.getString("出生点", null);
         this.goldSpawn = config.getStringList("goldSpawn");
         this.goldSpawnTime = config.getInt("goldSpawnTime", 15);
         this.setGoldSpawnTime = config.getInt("goldSpawnTime", 15);
-        this.World = config.getString("World", null);
-        if (config.getBoolean("就绪",false)) {
-            this.mode = 2;
-        }
+        this.world = config.getString("World", null);
+        this.mode = 0;
     }
 
     /**
-     * 初始化
      * @return 配置文件
      */
     public Config getConfig() {
@@ -81,17 +77,12 @@ public class GameRoom {
         detective.sendMessage("你已成为侦探！");
         int i = 0;
         for (Player p : this.players.keySet()) {
-            String[] s = this.spawn.get(i).split(":");
-            p.teleport(new Position(Integer.parseInt(s[0]),
-                    Integer.parseInt(s[1]),
-                    Integer.parseInt(s[2]),
-                    Killer.getInstance().getServer().getLevelByName(this.World)));
             i++;
             if (p == killer || p == detective) { continue; }
             players.put(p, 0);
             p.sendMessage("你已成为平民");
         }
-        this.mode = 1;
+        this.mode = 2;
         return true;
     }
 
@@ -110,16 +101,17 @@ public class GameRoom {
             player.sendMessage(send);
         }
         this.endGame(false);
+        this.mode = 0;
     }
 
     public void endGame(boolean timeOut) {
         for (Player player : this.players.keySet()) {
-            if (timeOut) { player.sendMessage("时间耗尽，游戏结束！"); }
-            if (player.getGamemode() != 0) { player.setGamemode(0); }
-            player.teleport(Killer.getInstance().getServer().getDefaultLevel().getSafeSpawn());
-            this.players.remove(player);
+            if (timeOut) {
+                player.sendMessage("时间耗尽，游戏结束！");
+            }
+            quitRoom(player);
         }
-        this.mode = 2;
+        this.mode = 0;
     }
 
     /**
@@ -127,11 +119,15 @@ public class GameRoom {
      * @param player 玩家
      */
     public boolean joinRoom(Player player) {
-        if (!this.isPlaying(player)) {
-            if (this.players.size() < 10) {
-                this.addPlaying(player);
-                player.teleport(this.getWait());
-                return true;
+        if (this.mode == 0) {
+
+        }else if (this.mode == 1) {
+            if (!this.isPlaying(player)) {
+                if (this.players.size() < 10) {
+                    this.addPlaying(player);
+                    player.teleport(this.getSpawn());
+                    return true;
+                }
             }
         }
         return false;
@@ -143,8 +139,12 @@ public class GameRoom {
      */
     public boolean quitRoom(Player player) {
         if (this.isPlaying(player)) {
-            this.delPlaying(player);
+            if (player.getGamemode() != 0) {
+                player.setGamemode(0);
+            }
+            player.getInventory().clearAll();
             player.teleport(Killer.getInstance().getServer().getDefaultLevel().getSafeSpawn());
+            this.delPlaying(player);
             return true;
         }
         return false;
@@ -188,33 +188,89 @@ public class GameRoom {
     /**
      * @return 玩家列表
      */
-    public Map<Player, Integer> getPlayers() {
+    public LinkedHashMap<Player, Integer> getPlayers() {
         return this.players;
+    }
+
+    /**
+     * @return 玩家重生时间
+     */
+    public LinkedHashMap<Player, Integer> getPlayerSpawnTime() {
+        return this.playerSpawnTime;
     }
 
     /**
      * @return 玩家身份
      */
     public Integer getPlayerMode(Player player) {
-        return this.players.getOrDefault(player, 4);
+        if (isPlaying(player)) {
+            return this.players.get(player);
+        }else {
+            return null;
+        }
     }
 
     /**
-     * @return 玩家出生点
+     * @param gameTime 游戏时间
      */
-    public List<String> getSpawn(){
-        return this.spawn;
+    public boolean setGameTime(int gameTime) {
+        if (this.mode == 0) {
+            this.gameTime = gameTime;
+            this.config.set("游戏时间", this.gameTime);
+            this.config.save();
+            return true;
+        }
+        return false;
     }
 
     /**
-     * @param spawn 金锭产出地点
+     * @param waitTime 等待时间
      */
-    public void setGoldSpawn(Vector3 spawn) {
-        setGoldSpawn(spawn.x, spawn.y, spawn.z);
+    public boolean setWaitTime(int waitTime) {
+        if (this.mode == 0) {
+            this.waitTime = waitTime;
+            this.config.set("等待时间", this.waitTime);
+            this.config.save();
+            return true;
+        }
+        return false;
     }
 
-    private void setGoldSpawn(double x, double y, double z) {
-        setGoldSpawn((int)x, (int)y, (int)z);
+    /**
+     * @param player 玩家
+     */
+    public boolean setSpawn(Player player) {
+        if (this.mode == 0) {
+            this.spawn = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ()+ ":" + player.getLevel().getName();
+            this.world = player.getLevel().getName();
+            this.config.set("World", this.world);
+            this.config.set("出生点", this.spawn);
+            this.config.save();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return 出生点
+     */
+    public Position getSpawn() {
+        String[] s = this.spawn.split(":");
+        return new Position(Integer.parseInt(s[0]),
+                Integer.parseInt(s[1]),
+                Integer.parseInt(s[2]),
+                Killer.getInstance().getServer().getLevelByName(s[3]));
+    }
+
+    /**
+     * @param player 玩家
+     */
+    public boolean setGoldSpawn(Player player) {
+        if (this.mode == 0) {
+            setGoldSpawn(player.getFloorX(), player.getFloorY(), player.getFloorZ());
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -222,9 +278,11 @@ public class GameRoom {
      * @param y 金锭产出地点 Y
      * @param z 金锭产出地点 Z
      */
-    public void setGoldSpawn(int x, int y, int z) {
+    private void setGoldSpawn(int x, int y, int z) {
         String s = x + ":" + y + ":" + z;
         this.goldSpawn.add(s);
+        this.config.set("goldSpawn", this.goldSpawn);
+        this.config.save();
     }
 
     /**
@@ -242,30 +300,10 @@ public class GameRoom {
     }
 
     /**
-     * @param player 玩家
-     */
-    public void setWait(Player player) {
-        this.Wait = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ()+ ":" + player.getLevel().getName();
-        this.config.set("Wait", this.Wait);
-        this.config.save();
-    }
-
-    /**
-     * @return 等待地点
-     */
-    public Position getWait() {
-        String[] W = this.Wait.split(":");
-        return new Position(Integer.parseInt(W[0]),
-                Integer.parseInt(W[1]),
-                Integer.parseInt(W[2]),
-                Killer.getInstance().getServer().getLevelByName(W[3]));
-    }
-
-    /**
      * @return 游戏世界
      */
     public Level getWorld() {
-        return Killer.getInstance().getServer().getLevelByName(this.World);
+        return Killer.getInstance().getServer().getLevelByName(this.world);
     }
 
 }
