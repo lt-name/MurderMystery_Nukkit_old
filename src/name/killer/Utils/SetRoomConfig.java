@@ -12,7 +12,7 @@ public class SetRoomConfig {
      * @param player 玩家
      * @param config 配置文件
      */
-    public void setSpawn(Player player, Config config) {
+    public static void setSpawn(Player player, Config config) {
         String spawn = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ()+ ":" + player.getLevel().getName();
         String world = player.getLevel().getName();
         config.set("World", world);
@@ -25,7 +25,7 @@ public class SetRoomConfig {
      * @param player 玩家
      * @param config 配置文件
      */
-    public void addGoldSpawn(Player player, Config config) {
+    public static void addGoldSpawn(Player player, Config config) {
         addGoldSpawn(player.getFloorX(), player.getFloorY(), player.getFloorZ(), config);
     }
 
@@ -35,7 +35,7 @@ public class SetRoomConfig {
      * @param z 金锭产出地点 Z
      * @param config 配置文件
      */
-    private void addGoldSpawn(int x, int y, int z, Config config) {
+    private static void addGoldSpawn(int x, int y, int z, Config config) {
         String s = x + ":" + y + ":" + z;
         List<String> list = config.getStringList("goldSpawn");
         list.add(s);
@@ -48,7 +48,7 @@ public class SetRoomConfig {
      * @param waitTime 等待时间
      * @param config 配置文件
      */
-    public void setWaitTime(Integer waitTime, Config config) {
+    public static void setWaitTime(Integer waitTime, Config config) {
         config.set("等待时间", waitTime);
         config.save();
     }
@@ -58,7 +58,7 @@ public class SetRoomConfig {
      * @param gameTime 游戏时间
      * @param config 配置文件
      */
-    public void setGameTime(Integer gameTime, Config config) {
+    public static void setGameTime(Integer gameTime, Config config) {
         config.set("游戏时间", gameTime);
         config.save();
     }
@@ -68,7 +68,7 @@ public class SetRoomConfig {
      * @param goldSpawnTime 等待时间
      * @param config 配置文件
      */
-    public void setGoldSpawnTime(Integer goldSpawnTime, Config config) {
+    public static void setGoldSpawnTime(Integer goldSpawnTime, Config config) {
         config.set("goldSpawnTime", goldSpawnTime);
         config.save();
     }

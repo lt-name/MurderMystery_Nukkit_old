@@ -73,7 +73,7 @@ public class GameTask extends PluginTask<Killer> {
             }
         }
         owner.getServer().getScheduler().scheduleRepeatingTask(
-                Killer.getInstance(), new VictoryTask(Killer.getInstance(), i), 20,true);
+                Killer.getInstance(), new VictoryTask(Killer.getInstance(), this.gameRoom, i), 20,true);
         this.cancel();
     }
 

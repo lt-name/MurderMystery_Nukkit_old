@@ -14,6 +14,7 @@ import name.killer.Utils.SetRoomConfig;
 
 import java.io.File;
 import java.util.LinkedHashMap;
+import java.util.Set;
 
 
 /**
@@ -25,7 +26,6 @@ public class Killer extends PluginBase {
     private Config config;
     private LinkedHashMap<String, Config> roomConfigs = new LinkedHashMap<>();
     private LinkedHashMap<String, Room> rooms = new LinkedHashMap<>();
-    private SetRoomConfig setRoomConfig;
 
     public static Killer getInstance() { return killer; }
 
@@ -40,7 +40,6 @@ public class Killer extends PluginBase {
         if (!file.exists() && !file.mkdirs()) {
             getLogger().error("Rooms 文件夹初始化失败");
         }
-        this.setRoomConfig = new SetRoomConfig();
         getLogger().info("§a插件加载完成！");
     }
 
@@ -101,16 +100,16 @@ public class Killer extends PluginBase {
                 if (args.length > 0) {
                     switch (args[0]) {
                         case "设置出生点": case "setspawn": case "SetSpawn":
-                            setRoomConfig.setSpawn(player, getRoomConfig(player.getLevel()));
+                            SetRoomConfig.setSpawn(player, getRoomConfig(player.getLevel()));
                             sender.sendMessage("§a出生点设置成功！");
                             break;
                         case "添加金锭生成点": case "addGoldSpawn":
-                            setRoomConfig.addGoldSpawn(player, getRoomConfig(player.getLevel()));
+                            SetRoomConfig.addGoldSpawn(player, getRoomConfig(player.getLevel()));
                             sender.sendMessage("§a金锭生成点添加成功！");
                             break;
                         case "设置金锭产出间隔":
                             if (args.length == 2) {
-                                setRoomConfig.setGoldSpawnTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
+                                SetRoomConfig.setGoldSpawnTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
                                 sender.sendMessage("§a金锭产出间隔已设置为：" + Integer.valueOf(args[1]));
                             }else {
                                 sender.sendMessage("§a查看帮助：/kadmin help");
@@ -118,7 +117,7 @@ public class Killer extends PluginBase {
                             break;
                         case "设置等待时间":
                             if (args.length == 2) {
-                                setRoomConfig.setWaitTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
+                                SetRoomConfig.setWaitTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
                                 sender.sendMessage("§a等待时间已设置为：" + Integer.valueOf(args[1]));
                             }else {
                                 sender.sendMessage("§a查看帮助：/kadmin help");
@@ -126,7 +125,7 @@ public class Killer extends PluginBase {
                             break;
                         case "设置游戏时间":
                             if (args.length == 2) {
-                                setRoomConfig.setGameTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
+                                SetRoomConfig.setGameTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
                                 sender.sendMessage("§a游戏时间已设置为：" + Integer.valueOf(args[1]));
                             }else {
                                 sender.sendMessage("§a查看帮助：/kadmin help");
