@@ -6,6 +6,7 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.block.ItemFrameDropItemEvent;
+import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityExplodeEvent;
 import cn.nukkit.event.inventory.CraftItemEvent;
 import cn.nukkit.event.inventory.StartBrewEvent;
@@ -123,6 +124,18 @@ public class GameProtection implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onDropItem(PlayerDropItemEvent event) {
         Level level = event.getPlayer().getLevel();
+        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
+            event.setCancelled();
+        }
+    }
+
+    /**
+     * 伤害事件
+     * @param event 事件
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void on(EntityDamageEvent event) {
+        Level level = event.getEntity().getLevel();
         if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
