@@ -114,6 +114,13 @@ public class Room {
      * @param mode 身份
      */
     public void addPlaying(Player player, Integer mode) {
+        if (mode == 1) {
+            player.sendTitle("§a你已被选为平民", "想办法活下去吧", 10, 30, 10);
+        }else if (mode == 2) {
+            player.sendTitle("§e你已被选为侦探", "想办法找出杀手吧", 10, 30, 10);
+        }else if (mode == 3) {
+            player.sendTitle("§c你已被选为杀手", "想办法杀光所有人吧", 10, 30, 10);
+        }
         this.players.put(player, mode);
     }
 

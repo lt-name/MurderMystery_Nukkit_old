@@ -13,7 +13,7 @@ import name.killer.Room.Room;
 public class PlayerJoinAndQuit implements Listener {
 
     @EventHandler
-    public void onPJE(PlayerJoinEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         for (Room room : Killer.getInstance().getRooms().values()) {
             if (player != null && room.isPlaying(player)) {
@@ -23,7 +23,7 @@ public class PlayerJoinAndQuit implements Listener {
     }
 
     @EventHandler
-    public void onPQE(PlayerQuitEvent event) {
+    public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         for (Room room : Killer.getInstance().getRooms().values()) {
             if (player != null && room.isPlaying(player)) {
@@ -45,7 +45,7 @@ public class PlayerJoinAndQuit implements Listener {
             if (!player.isOp() && Killer.getInstance().getRooms().containsKey(toLevel) &&
                     !Killer.getInstance().getRooms().get(toLevel).isPlaying(player)) {
                 event.setCancelled();
-                player.sendMessage("要进入游戏地图，请先加入游戏！");
+                player.sendMessage("§c要进入游戏地图，请先加入游戏！");
             }
         }
     }

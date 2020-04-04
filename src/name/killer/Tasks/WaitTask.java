@@ -5,6 +5,9 @@ import cn.nukkit.scheduler.PluginTask;
 import name.killer.Killer;
 import name.killer.Room.Room;
 
+import java.util.LinkedHashMap;
+import java.util.Random;
+
 public class WaitTask extends PluginTask<Killer> {
 
     private Room gameRoom;
@@ -16,16 +19,32 @@ public class WaitTask extends PluginTask<Killer> {
 
     @Override
     public void onRun(int i) {
-        if (this.gameRoom.getPlayers().size() >= 5) {
+        if (this.gameRoom.getPlayers().size() >= 10) {
             if (this.gameRoom.waitTime > 0) {
                 this.gameRoom.waitTime--;
                 this.sendActionBar("§a当前已有" + this.gameRoom.getPlayers().size() + "位玩家" +
                         "\n§a游戏还有" + this.gameRoom.waitTime + "秒开始！");
             }else {
-
+                LinkedHashMap<Player, Integer> players = this.gameRoom.getPlayers();
+                int random1 = new Random().nextInt(players.size()) + 1;
+                int random2;
+                do {
+                    random2 = new Random().nextInt(players.size()) + 1;
+                }while (random1 == random2);
+                int j = 0;
+                for (Player player : players.keySet()) {
+                    if (j == random1) {
+                        this.gameRoom.addPlaying(player, 2);
+                        continue;
+                    }
+                    if (j == random2) {
+                        this.gameRoom.addPlaying(player, 3);
+                        continue;
+                    }
+                    this.gameRoom.addPlaying(player, 1);
+                }
                 owner.getServer().getScheduler().scheduleRepeatingTask(
                         Killer.getInstance(), new GameTask(Killer.getInstance(), this.gameRoom), 20,true);
-                this.sendActionBar("§e游戏开始！");
                 this.cancel();
             }
         }else {
@@ -36,7 +55,7 @@ public class WaitTask extends PluginTask<Killer> {
 
     private void sendActionBar(String string) {
         for (Player player : this.gameRoom.getPlayers().keySet()) {
-            player.sendActionBar(string);
+            player.sendTip(string);
         }
     }
 
