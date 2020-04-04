@@ -21,6 +21,9 @@ public class VictoryTask extends PluginTask<Killer> {
     public void onRun(int i) {
         if (this.room.victoryTime < 1) {
             this.room.endGame();
+            owner.getServer().getScheduler().scheduleRepeatingTask(
+                    Killer.getInstance(), new WaitTask(Killer.getInstance(), this.room), 20,true);
+            this.cancel();
         }else {
             this.room.victoryTime--;
             for (Player player : this.room.getPlayers().keySet()) {

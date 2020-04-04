@@ -10,6 +10,8 @@ import name.killer.Listener.GameLevel;
 import name.killer.Listener.PlayerGame;
 import name.killer.Listener.PlayerJoinAndQuit;
 import name.killer.Room.Room;
+import name.killer.Tasks.GameTask;
+import name.killer.Tasks.WaitTask;
 import name.killer.Utils.SetRoomConfig;
 
 import java.io.File;
@@ -40,6 +42,7 @@ public class Killer extends PluginBase {
         if (!file.exists() && !file.mkdirs()) {
             getLogger().error("Rooms 文件夹初始化失败");
         }
+        loadRooms();
         getLogger().info("§a插件加载完成！");
     }
 
@@ -168,6 +171,23 @@ public class Killer extends PluginBase {
         Config config = new Config(getDataFolder() + "/Rooms/" + level + ".yml", 2);
         this.roomConfigs.put(level, config);
         return config;
+    }
+
+    /**
+     * 加载已有房间
+     */
+    private void loadRooms() {
+        File[] s = new File(getServer().getFilePath() + "/Rooms").listFiles();
+        if (s != null) {
+            for (File file1 : s) {
+                if (file1.isDirectory()) {
+                    Room room = new Room(getRoomConfig(file1.getName()));
+                    this.rooms.put(file1.getName(), room);
+                    getServer().getScheduler().scheduleRepeatingTask(
+                            this, new WaitTask(this, room), 20,true);
+                }
+            }
+        }
     }
 
 }
