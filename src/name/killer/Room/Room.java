@@ -1,0 +1,173 @@
+package name.killer.Room;
+
+import cn.nukkit.Player;
+import cn.nukkit.level.Level;
+import cn.nukkit.level.Position;
+import cn.nukkit.utils.Config;
+import name.killer.Killer;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+
+/**
+ * 房间实体类
+ */
+public class Room {
+
+    private int mode; //0等待重置 1玩家等待中 2玩家游戏中
+    public int waitTime, gameTime, victoryTime; //秒
+    private LinkedHashMap<Player, Integer> players = new LinkedHashMap<>(); //0未分配 1平民 2侦探 3杀手
+    private List<String> goldSpawn;
+    public int goldSpawnTime;
+    private int setGoldSpawnTime;
+    private String spawn, world;
+    private Config config;
+
+    /**
+     * 初始化
+     * @param config 配置文件
+     */
+    public Room(Config config) {
+        this.config = config;
+        this.waitTime = config.getInt("等待时间", 120);
+        this.gameTime = config.getInt("游戏时间", 600);
+        this.spawn = config.getString("出生点", null);
+        this.goldSpawn = config.getStringList("goldSpawn");
+        this.goldSpawnTime = config.getInt("goldSpawnTime", 15);
+        this.setGoldSpawnTime = config.getInt("goldSpawnTime", 15);
+        this.world = config.getString("World", null);
+        this.mode = 0;
+    }
+
+    /**
+     * @return 配置文件
+     */
+    public Config getConfig() {
+        return this.config;
+    }
+
+    /**
+     * @param mode 房间状态
+     */
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
+    /**
+     * @return 房间状态
+     */
+    public int getMode() {
+        return this.mode;
+    }
+
+    public void endGame(boolean timeOut) {
+        for (Player player : this.players.keySet()) {
+            if (timeOut) {
+                player.sendMessage("时间耗尽，游戏结束！");
+            }
+            quitRoom(player);
+        }
+        this.mode = 0;
+    }
+
+    /**
+     * 退出房间
+     * @param player 玩家
+     */
+    public void quitRoom(Player player) {
+        if (this.isPlaying(player)) {
+            if (player.getGamemode() != 0) {
+                player.setGamemode(0);
+            }
+            player.getInventory().clearAll();
+            player.teleport(Killer.getInstance().getServer().getDefaultLevel().getSafeSpawn());
+            this.delPlaying(player);
+        }
+    }
+
+    /**
+     * 记录在游戏内的玩家
+     * @param player 玩家
+     */
+    public void addPlaying(Player player) {
+        if (!this.players.containsKey(player)) {
+            this.addPlaying(player, 0);
+        }
+    }
+
+    /**
+     * 记录在游戏内的玩家
+     * @param player 玩家
+     * @param mode 身份
+     */
+    public void addPlaying(Player player, Integer mode) {
+        this.players.put(player, mode);
+    }
+
+    /**
+     * 删除记录
+     * @param player 玩家
+     */
+    public void delPlaying(Player player) {
+        this.players.remove(player);
+    }
+
+    /**
+     * @return boolean 玩家是否在游戏里
+     * @param player 玩家
+     */
+    public boolean isPlaying(Player player) {
+        return this.players.containsKey(player);
+    }
+
+    /**
+     * @return 玩家列表
+     */
+    public LinkedHashMap<Player, Integer> getPlayers() {
+        return this.players;
+    }
+
+    /**
+     * @return 玩家身份
+     */
+    public Integer getPlayerMode(Player player) {
+        if (isPlaying(player)) {
+            return this.players.get(player);
+        }else {
+            return null;
+        }
+    }
+
+    /**
+     * @return 出生点
+     */
+    public Position getSpawn() {
+        String[] s = this.spawn.split(":");
+        return new Position(Integer.parseInt(s[0]),
+                Integer.parseInt(s[1]),
+                Integer.parseInt(s[2]),
+                Killer.getInstance().getServer().getLevelByName(s[3]));
+    }
+
+    /**
+     * @return 金锭刷新时间
+     */
+    public int getGoldSpawnTime() {
+        return this.setGoldSpawnTime;
+    }
+
+    /**
+     * @return 金锭产出地点
+     */
+    public List<String> getGoldSpawn() {
+        return this.goldSpawn;
+    }
+
+    /**
+     * @return 游戏世界
+     */
+    public Level getWorld() {
+        return Killer.getInstance().getServer().getLevelByName(this.world);
+    }
+
+}

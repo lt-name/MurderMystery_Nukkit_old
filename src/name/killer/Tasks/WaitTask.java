@@ -3,13 +3,13 @@ package name.killer.Tasks;
 import cn.nukkit.Player;
 import cn.nukkit.scheduler.PluginTask;
 import name.killer.Killer;
-import name.killer.Room.GameRoom;
+import name.killer.Room.Room;
 
 public class WaitTask extends PluginTask<Killer> {
 
-    private GameRoom gameRoom;
+    private Room gameRoom;
 
-    public WaitTask(Killer owner, GameRoom gameRoom) {
+    public WaitTask(Killer owner, Room gameRoom) {
         super(owner);
         this.gameRoom = gameRoom;
     }
@@ -22,7 +22,7 @@ public class WaitTask extends PluginTask<Killer> {
                 this.sendActionBar("§a当前已有" + this.gameRoom.getPlayers().size() + "位玩家" +
                         "\n§a游戏还有" + this.gameRoom.waitTime + "秒开始！");
             }else {
-                this.gameRoom.startGame();
+
                 owner.getServer().getScheduler().scheduleRepeatingTask(
                         Killer.getInstance(), new GameTask(Killer.getInstance(), this.gameRoom), 20,true);
                 this.sendActionBar("§e游戏开始！");

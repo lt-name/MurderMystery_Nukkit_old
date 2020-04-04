@@ -5,15 +5,15 @@ import cn.nukkit.item.Item;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.PluginTask;
 import name.killer.Killer;
-import name.killer.Room.GameRoom;
+import name.killer.Room.Room;
 
 import java.util.List;
 
 public class GameTask extends PluginTask<Killer> {
 
-    private GameRoom gameRoom;
+    private Room gameRoom;
 
-    public GameTask(Killer owner, GameRoom gameRoom) {
+    public GameTask(Killer owner, Room gameRoom) {
         super(owner);
         this.gameRoom = gameRoom;
     }
