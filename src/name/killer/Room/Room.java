@@ -71,6 +71,19 @@ public class Room {
     }
 
     /**
+     * 加入房间
+     * @param player 玩家
+     */
+    public void joinRoom(Player player) {
+        if (player.getGamemode() != 0) {
+            player.setGamemode(0);
+        }
+        player.getInventory().clearAll();
+        this.addPlaying(player);
+        player.teleport(this.getSpawn());
+    }
+
+    /**
      * 退出房间
      * @param player 玩家
      */

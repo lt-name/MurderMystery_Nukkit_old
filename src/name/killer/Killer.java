@@ -6,7 +6,6 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
-import com.j256.ormlite.stmt.query.In;
 import name.killer.Listener.GameLevel;
 import name.killer.Listener.PlayerGame;
 import name.killer.Listener.PlayerJoinAndQuit;
@@ -62,29 +61,35 @@ public class Killer extends PluginBase {
                 if (args.length >0) {
                     switch (args[0]) {
                         case "join": case "加入":
-                            if (args[1] != null) {
-
-
+                            for (Room room : this.rooms.values()) {
+                                if (room.isPlaying(player)) {
+                                    sender.sendMessage("§c你已经在一个房间中了!");
+                                    return true;
+                                }
+                            }
+                            if (args[1] != null && this.rooms.containsKey(args[1])) {
+                                Room room = this.rooms.get(args[1]);
+                                room.joinRoom(player);
                             }else {
-                                sender.sendMessage("/killer help 查看帮助");
+                                sender.sendMessage("§a该房间不存在！");
                             }
                             break;
                         case "quit": case "退出":
                             for (Room gameRoom : this.rooms.values()) {
                                 if (gameRoom.getPlayers().containsKey(player)) {
                                     gameRoom.quitRoom(player);
-                                    player.sendMessage("你已退出房间");
+                                    sender.sendMessage("§a你已退出房间");
                                 }
                             }
                             break;
                         default:
-                            player.sendMessage("killer--命令帮助");
-                            player.sendMessage("killer 加入 房间号 加入游戏");
-                            player.sendMessage("killer 退出 退出游戏");
+                            sender.sendMessage("§e/killer--命令帮助");
+                            sender.sendMessage("§a/killer 加入 房间 §e加入游戏");
+                            sender.sendMessage("§a/killer 退出 §e退出游戏");
                             break;
                     }
                 }else {
-                    sender.sendMessage("/killer help 查看帮助");
+                    sender.sendMessage("§a/killer help §e查看帮助");
                 }
             }else {
                 sender.sendMessage("请在游戏内输入！");
@@ -97,42 +102,42 @@ public class Killer extends PluginBase {
                     switch (args[0]) {
                         case "设置出生点": case "setspawn": case "SetSpawn":
                             setRoomConfig.setSpawn(player, getRoomConfig(player.getLevel()));
-                            sender.sendMessage("出生点设置成功！");
+                            sender.sendMessage("§a出生点设置成功！");
                             break;
                         case "添加金锭生成点": case "addGoldSpawn":
                             setRoomConfig.addGoldSpawn(player, getRoomConfig(player.getLevel()));
-                            sender.sendMessage("金锭生成点添加成功！");
+                            sender.sendMessage("§a金锭生成点添加成功！");
                             break;
                         case "设置金锭产出间隔":
                             if (args.length == 2) {
                                 setRoomConfig.setGoldSpawnTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
-                                sender.sendMessage("金锭产出间隔已设置为：" + Integer.valueOf(args[1]));
+                                sender.sendMessage("§a金锭产出间隔已设置为：" + Integer.valueOf(args[1]));
                             }else {
-                                sender.sendMessage("查看帮助：/kadmin help");
+                                sender.sendMessage("§a查看帮助：/kadmin help");
                             }
                             break;
                         case "设置等待时间":
                             if (args.length == 2) {
                                 setRoomConfig.setWaitTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
-                                sender.sendMessage("等待时间已设置为：" + Integer.valueOf(args[1]));
+                                sender.sendMessage("§a等待时间已设置为：" + Integer.valueOf(args[1]));
                             }else {
-                                sender.sendMessage("查看帮助：/kadmin help");
+                                sender.sendMessage("§a查看帮助：/kadmin help");
                             }
                             break;
                         case "设置游戏时间":
                             if (args.length == 2) {
                                 setRoomConfig.setGameTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
-                                sender.sendMessage("游戏时间已设置为：" + Integer.valueOf(args[1]));
+                                sender.sendMessage("§a游戏时间已设置为：" + Integer.valueOf(args[1]));
                             }else {
-                                sender.sendMessage("查看帮助：/kadmin help");
+                                sender.sendMessage("§a查看帮助：/kadmin help");
                             }
                             break;
                         default:
-                            player.sendMessage("§ekiller管理--命令帮助");
-                            player.sendMessage("§a/设置出生点 §e设置当前位置为游戏出生点");
-                            player.sendMessage("§a/添加金锭生成点 §e将当前位置设置为金锭生成点");
-                            player.sendMessage("§a/设置等待时间 数字 §e设置游戏人数足够后的等待时间");
-                            player.sendMessage("§a/设置游戏时间 数字 §e设置每轮游戏最长时间");
+                            sender.sendMessage("§e killer管理--命令帮助");
+                            sender.sendMessage("§a/kadmin 设置出生点 §e设置当前位置为游戏出生点");
+                            sender.sendMessage("§a/kadmin 添加金锭生成点 §e将当前位置设置为金锭生成点");
+                            sender.sendMessage("§a/kadmin 设置等待时间 数字 §e设置游戏人数足够后的等待时间");
+                            sender.sendMessage("§a/kadmin 设置游戏时间 数字 §e设置每轮游戏最长时间");
                             break;
                     }
                 }else {
