@@ -19,7 +19,7 @@ public class WaitTask extends PluginTask<Killer> {
 
     @Override
     public void onRun(int i) {
-        if (this.gameRoom.getPlayers().size() >= 10) {
+        if (this.gameRoom.getPlayers().size() >= 5) {
             if (this.gameRoom.waitTime > 0) {
                 this.gameRoom.waitTime--;
                 this.sendActionBar("§a当前已有" + this.gameRoom.getPlayers().size() + "位玩家" +
