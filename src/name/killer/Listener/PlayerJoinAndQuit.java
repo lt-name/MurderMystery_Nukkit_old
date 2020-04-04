@@ -9,7 +9,9 @@ import cn.nukkit.event.player.PlayerTeleportEvent;
 import name.killer.Killer;
 import name.killer.Room.Room;
 
-
+/**
+ * 玩家进入/退出服务器 或传送到其他世界时，退出房间
+ */
 public class PlayerJoinAndQuit implements Listener {
 
     @EventHandler

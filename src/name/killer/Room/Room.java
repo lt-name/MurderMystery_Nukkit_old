@@ -14,12 +14,11 @@ import java.util.List;
  */
 public class Room {
 
-    private int mode; //0等待重置 1玩家等待中 2玩家游戏中
-    public int waitTime, gameTime, victoryTime; //秒
+    private int mode; //0等待重置 1玩家等待中 2玩家游戏中 3胜利结算中
+    public int waitTime, gameTime, victoryTime = 10, goldSpawnTime; //秒
+    private int setWaitTime, setGoldSpawnTime;
     private LinkedHashMap<Player, Integer> players = new LinkedHashMap<>(); //0未分配 1平民 2侦探 3杀手
     private List<String> goldSpawn;
-    public int goldSpawnTime;
-    private int setGoldSpawnTime;
     private String spawn, world;
     private Config config;
 
@@ -30,11 +29,12 @@ public class Room {
     public Room(Config config) {
         this.config = config;
         this.waitTime = config.getInt("等待时间", 120);
+        this.setWaitTime = this.waitTime;
         this.gameTime = config.getInt("游戏时间", 600);
         this.spawn = config.getString("出生点", null);
         this.goldSpawn = config.getStringList("goldSpawn");
         this.goldSpawnTime = config.getInt("goldSpawnTime", 15);
-        this.setGoldSpawnTime = config.getInt("goldSpawnTime", 15);
+        this.setGoldSpawnTime = this.goldSpawnTime;
         this.world = config.getString("World", null);
         this.mode = 0;
     }
@@ -60,11 +60,8 @@ public class Room {
         return this.mode;
     }
 
-    public void endGame(boolean timeOut) {
+    public void endGame() {
         for (Player player : this.players.keySet()) {
-            if (timeOut) {
-                player.sendMessage("时间耗尽，游戏结束！");
-            }
             quitRoom(player);
         }
         this.mode = 0;
@@ -174,6 +171,13 @@ public class Room {
      */
     public int getGoldSpawnTime() {
         return this.setGoldSpawnTime;
+    }
+
+    /**
+     * @return 等待时间
+     */
+    public int getWaitTime() {
+        return this.setWaitTime;
     }
 
     /**

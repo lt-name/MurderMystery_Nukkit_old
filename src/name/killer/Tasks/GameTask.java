@@ -19,28 +19,41 @@ public class GameTask extends PluginTask<Killer> {
     }
 
     public void onRun(int i) {
-        if (this.gameRoom.getMode() == 2) {
-            //游戏时间
-            if (this.gameRoom.gameTime > 0) {
-                this.gameRoom.gameTime--;
-                this.sendActionBar("距游戏结束还有"+ this.gameRoom.gameTime + "秒");
-            }else {
-                this.gameRoom.endGame(true);
-            }
-            //金锭生成
-            if (this.gameRoom.goldSpawnTime < 1) {
-                List<String> goldSpawn = this.gameRoom.getGoldSpawn();
-                for (String spawn : goldSpawn) {
-                    String[] s = spawn.split(":");
-                    this.gameRoom.getWorld().dropItem(new Vector3(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])),
-                            Item.get(266, 0));
+        //游戏时间
+        if (this.gameRoom.gameTime > 0) {
+            this.gameRoom.gameTime--;
+            int j = 0;
+            boolean killer = false;
+            for (Integer integer : this.gameRoom.getPlayers().values()) {
+                if (integer != 0) {
+                    j++;
                 }
-                this.gameRoom.goldSpawnTime = this.gameRoom.getGoldSpawnTime();
+                if (integer == 3) {
+                    killer = true;
+                }
+            }
+            this.sendActionBar("距游戏结束还有"+ this.gameRoom.gameTime + "秒+\n当前还有：" + j + "人存活");
+            if (killer) {
+                if (j < 2) {
+                    victory(3);
+                }
             }else {
-                this.gameRoom.goldSpawnTime--;
+                victory(1);
             }
         }else {
-            this.cancel();
+            victory(1);
+        }
+        //金锭生成
+        if (this.gameRoom.goldSpawnTime < 1) {
+            List<String> goldSpawn = this.gameRoom.getGoldSpawn();
+            for (String spawn : goldSpawn) {
+                String[] s = spawn.split(":");
+                this.gameRoom.getWorld().dropItem(new Vector3(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])),
+                        Item.get(266, 0));
+            }
+            this.gameRoom.goldSpawnTime = this.gameRoom.getGoldSpawnTime();
+        }else {
+            this.gameRoom.goldSpawnTime--;
         }
     }
 
@@ -48,6 +61,20 @@ public class GameTask extends PluginTask<Killer> {
         for (Player player : this.gameRoom.getPlayers().keySet()) {
             player.sendActionBar(string);
         }
+    }
+
+    private void victory(int i) {
+        this.gameRoom.setMode(3);
+        for (Player player : this.gameRoom.getPlayers().keySet()) {
+            if (i == 3) {
+                player.sendTitle("杀手获得胜利！", "", 10, 30, 10);
+            }else {
+                player.sendTitle("平民和侦探获得胜利！", "", 10, 30, 10);
+            }
+        }
+        owner.getServer().getScheduler().scheduleRepeatingTask(
+                Killer.getInstance(), new VictoryTask(Killer.getInstance(), i), 20,true);
+        this.cancel();
     }
 
 }

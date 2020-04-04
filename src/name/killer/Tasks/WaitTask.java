@@ -33,6 +33,7 @@ public class WaitTask extends PluginTask<Killer> {
                 }while (random1 == random2);
                 int j = 0;
                 for (Player player : players.keySet()) {
+                    j++;
                     if (j == random1) {
                         this.gameRoom.addPlaying(player, 2);
                         continue;
@@ -43,12 +44,15 @@ public class WaitTask extends PluginTask<Killer> {
                     }
                     this.gameRoom.addPlaying(player, 1);
                 }
+                this.gameRoom.setMode(2);
                 owner.getServer().getScheduler().scheduleRepeatingTask(
                         Killer.getInstance(), new GameTask(Killer.getInstance(), this.gameRoom), 20,true);
                 this.cancel();
             }
         }else {
-            if (this.gameRoom.waitTime != 120) { this.gameRoom.waitTime = 120; }
+            if (this.gameRoom.waitTime != this.gameRoom.getWaitTime()) {
+                this.gameRoom.waitTime = this.gameRoom.getWaitTime();
+            }
             this.sendActionBar("§c等待玩家加入中,当前已有" + this.gameRoom.getPlayers().size() + "位玩家");
         }
     }

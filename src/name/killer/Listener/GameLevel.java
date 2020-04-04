@@ -11,6 +11,9 @@ import cn.nukkit.event.inventory.CraftItemEvent;
 import cn.nukkit.level.Level;
 import name.killer.Killer;
 
+/**
+ * 游戏地图保护
+ */
 public class GameLevel implements Listener {
 
     @EventHandler(ignoreCancelled = true)
