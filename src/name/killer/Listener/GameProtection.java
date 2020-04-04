@@ -8,14 +8,22 @@ import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.block.ItemFrameDropItemEvent;
 import cn.nukkit.event.entity.EntityExplodeEvent;
 import cn.nukkit.event.inventory.CraftItemEvent;
+import cn.nukkit.event.inventory.StartBrewEvent;
+import cn.nukkit.event.player.PlayerDropItemEvent;
+import cn.nukkit.event.player.PlayerFoodLevelChangeEvent;
 import cn.nukkit.level.Level;
 import name.killer.Killer;
 
 /**
- * 游戏地图保护
+ * 游戏保护
+ * 禁止除游戏规则外的其他事件
  */
-public class GameLevel implements Listener {
+public class GameProtection implements Listener {
 
+    /**
+     * 物品合成事件
+     * @param event 事件
+     */
     @EventHandler(ignoreCancelled = true)
     public void onCraft(CraftItemEvent event) {
         Level level = event.getPlayer().getLevel();
@@ -24,6 +32,22 @@ public class GameLevel implements Listener {
         }
     }
 
+    /**
+     * 开始酿造事件
+     * @param event 事件
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onStartBrew(StartBrewEvent event) {
+        Level level = event.getBrewingStand().getLevel();
+        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
+            event.setCancelled();
+        }
+    }
+
+    /**
+     * 方块放置事件
+     * @param event 事件
+     */
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
@@ -36,6 +60,10 @@ public class GameLevel implements Listener {
         }
     }
 
+    /**
+     * 方块破坏事件
+     * @param event 事件
+     */
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
@@ -48,6 +76,10 @@ public class GameLevel implements Listener {
         }
     }
 
+    /**
+     * 实体爆炸事件
+     * @param event 事件
+     */
     @EventHandler(ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
         Level level = event.getEntity().getLevel();
@@ -56,6 +88,10 @@ public class GameLevel implements Listener {
         }
     }
 
+    /**
+     * 物品展示框丢出事件
+     * @param event 事件
+     */
     @EventHandler(ignoreCancelled = true)
     public void onFrameDropItem(ItemFrameDropItemEvent event) {
         Player player = event.getPlayer();
@@ -63,6 +99,30 @@ public class GameLevel implements Listener {
             return;
         }
         Level level = event.getItemFrame().getLevel();
+        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
+            event.setCancelled();
+        }
+    }
+
+    /**
+     * 饥饿值变化事件
+     * @param event 事件
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onFoodLevelChange(PlayerFoodLevelChangeEvent event) {
+        Level level = event.getPlayer().getLevel();
+        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
+            event.setCancelled();
+        }
+    }
+
+    /**
+     * 丢出物品事件
+     * @param event 事件
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onDropItem(PlayerDropItemEvent event) {
+        Level level = event.getPlayer().getLevel();
         if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }

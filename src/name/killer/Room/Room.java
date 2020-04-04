@@ -16,7 +16,7 @@ public class Room {
 
     private int mode; //0等待重置 1玩家等待中 2玩家游戏中 3胜利结算中
     public int waitTime, gameTime, victoryTime = 10, goldSpawnTime; //秒
-    private int setWaitTime, setGoldSpawnTime;
+    private int setWaitTime, setGameTime, setGoldSpawnTime;
     private LinkedHashMap<Player, Integer> players = new LinkedHashMap<>(); //0未分配 1平民 2侦探 3杀手
     private List<String> goldSpawn;
     private String spawn, world;
@@ -31,6 +31,7 @@ public class Room {
         this.waitTime = config.getInt("等待时间", 120);
         this.setWaitTime = this.waitTime;
         this.gameTime = config.getInt("游戏时间", 600);
+        this.setGameTime = this.gameTime;
         this.spawn = config.getString("出生点", null);
         this.goldSpawn = config.getStringList("goldSpawn");
         this.goldSpawnTime = config.getInt("goldSpawnTime", 15);
@@ -60,10 +61,16 @@ public class Room {
         return this.mode;
     }
 
+    /**
+     * 结束本局游戏
+     */
     public void endGame() {
         for (Player player : this.players.keySet()) {
             quitRoom(player);
         }
+        this.waitTime = this.setWaitTime;
+        this.gameTime = this.setGameTime;
+        this.goldSpawnTime = this.setGoldSpawnTime;
         this.mode = 0;
     }
 
@@ -75,7 +82,7 @@ public class Room {
         if (player.getGamemode() != 0) {
             player.setGamemode(0);
         }
-        player.getInventory().clearAll();
+        rePlayerState(player);
         this.addPlaying(player);
         player.teleport(this.getSpawn());
     }
@@ -89,10 +96,20 @@ public class Room {
             if (player.getGamemode() != 0) {
                 player.setGamemode(0);
             }
-            player.getInventory().clearAll();
+            rePlayerState(player);
             player.teleport(Killer.getInstance().getServer().getDefaultLevel().getSafeSpawn());
             this.delPlaying(player);
         }
+    }
+
+    /**
+     * 重置玩家状态
+     * @param player 玩家
+     */
+    public void rePlayerState(Player player) {
+        player.getInventory().clearAll();
+        player.setHealth(player.getMaxHealth());
+        player.getFoodData().setLevel(player.getFoodData().getMaxLevel());
     }
 
     /**

@@ -6,17 +6,15 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
-import name.killer.Listener.GameLevel;
+import name.killer.Listener.GameProtection;
 import name.killer.Listener.PlayerGame;
 import name.killer.Listener.PlayerJoinAndQuit;
 import name.killer.Room.Room;
-import name.killer.Tasks.GameTask;
 import name.killer.Tasks.WaitTask;
 import name.killer.Utils.SetRoomConfig;
 
 import java.io.File;
 import java.util.LinkedHashMap;
-import java.util.Set;
 
 
 /**
@@ -36,7 +34,7 @@ public class Killer extends PluginBase {
         killer = this;
         this.config = new Config(getDataFolder() + "/config.yml", 2);
         getServer().getPluginManager().registerEvents(new PlayerJoinAndQuit(), this);
-        getServer().getPluginManager().registerEvents(new GameLevel(), this);
+        getServer().getPluginManager().registerEvents(new GameProtection(), this);
         getServer().getPluginManager().registerEvents(new PlayerGame(), this);
         File file = new File(this.getDataFolder() + "/Rooms");
         if (!file.exists() && !file.mkdirs()) {
