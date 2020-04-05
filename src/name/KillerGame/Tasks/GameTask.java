@@ -7,6 +7,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.PluginTask;
+import com.google.gson.internal.$Gson$Preconditions;
 import name.KillerGame.KillerGame;
 import name.KillerGame.Room.Room;
 
@@ -27,15 +28,16 @@ public class GameTask extends PluginTask<KillerGame> {
         if (this.gameRoom.gameTime >= this.gameRoom.getGameTime()-10) {
             this.gameRoom.gameTime--;
             int time = this.gameRoom.gameTime - (this.gameRoom.getGameTime() - 10);
-            this.sendMessage("杀手将在" + time + "秒后拿到剑！");
-            if (time <= 5 && time > 1) {
+            if (time <= 5 && time >= 1) {
+                this.sendMessage("§e杀手将在" + time + "秒后拿到剑！");
                 addSound();
             }else if (time < 1){
+                this.sendMessage("§e杀手已拿到剑！");
                 for (Map.Entry<Player, Integer> entry : this.gameRoom.getPlayers().entrySet()) {
-                    if (entry.getValue() == 1) {
+                    if (entry.getValue() == 2) {
                         entry.getKey().getInventory().addItem(Item.get(261, 0, 1));
                         entry.getKey().getInventory().addItem(Item.get(262, 0, 1));
-                    }else if (entry.getValue() == 2) {
+                    }else if (entry.getValue() == 3) {
                         entry.getKey().getInventory().addItem(Item.get(267, 0, 1));
                     }
                 }
@@ -52,7 +54,7 @@ public class GameTask extends PluginTask<KillerGame> {
                     killer = true;
                 }
             }
-            this.sendActionBar("距游戏结束还有"+ this.gameRoom.gameTime + "秒+\n当前还有：" + j + "人存活");
+            this.sendActionBar("§a距游戏结束还有"+ this.gameRoom.gameTime + "秒\n当前还有：§e" + j + " §a人存活");
             if (killer) {
                 if (j < 2) {
                     victory(3);
@@ -66,11 +68,7 @@ public class GameTask extends PluginTask<KillerGame> {
         //金锭生成
         if (this.gameRoom.goldSpawnTime < 1) {
             List<String> goldSpawn = this.gameRoom.getGoldSpawn();
-            for (Entity entity : this.gameRoom.getWorld().getEntities()) {
-                if (entity instanceof EntityItem) {
-                    entity.close();
-                }
-            }
+            this.cleanEntityItem();
             for (String spawn : goldSpawn) {
                 String[] s = spawn.split(":");
                 this.gameRoom.getWorld().dropItem(new Vector3(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])),
@@ -79,6 +77,27 @@ public class GameTask extends PluginTask<KillerGame> {
             this.gameRoom.goldSpawnTime = this.gameRoom.getGoldSpawnTime();
         }else {
             this.gameRoom.goldSpawnTime--;
+        }
+        //判断玩家金锭数量
+        for (Player player : this.gameRoom.getPlayers().keySet()) {
+            int x = 0;
+            boolean bow = true;
+            for (Item item : player.getInventory().getContents().values()) {
+                if (item.getId() == 266) {
+                    x += item.getCount();
+                    continue;
+                }
+                if (item.getId() == 261) {
+                    bow = false;
+                }
+            }
+            if (x > 9) {
+                player.getInventory().removeItem(Item.get(266, 0, 10));
+                player.getInventory().addItem(Item.get(262, 0, 1));
+                if (bow) {
+                    player.getInventory().addItem(Item.get(261, 0, 1));
+                }
+            }
         }
     }
 
@@ -101,17 +120,26 @@ public class GameTask extends PluginTask<KillerGame> {
     }
 
     private void victory(int i) {
+        this.cleanEntityItem();
         this.gameRoom.setMode(3);
         for (Player player : this.gameRoom.getPlayers().keySet()) {
             if (i == 3) {
-                player.sendTitle("杀手获得胜利！", "", 10, 30, 10);
+                player.sendTitle("§a杀手获得胜利！", "", 10, 30, 10);
             }else {
-                player.sendTitle("平民和侦探获得胜利！", "", 10, 30, 10);
+                player.sendTitle("§a平民和侦探获得胜利！", "", 10, 30, 10);
             }
         }
         owner.getServer().getScheduler().scheduleRepeatingTask(
                 KillerGame.getInstance(), new VictoryTask(KillerGame.getInstance(), this.gameRoom, i), 20,true);
         this.cancel();
+    }
+
+    private void cleanEntityItem(){
+        for (Entity entity : this.gameRoom.getWorld().getEntities()) {
+            if (entity instanceof EntityItem) {
+                entity.close();
+            }
+        }
     }
 
 }

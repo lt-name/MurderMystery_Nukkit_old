@@ -70,6 +70,7 @@ public class Room {
         }
         this.waitTime = this.setWaitTime;
         this.gameTime = this.setGameTime;
+        this.victoryTime = 10;
         this.goldSpawnTime = this.setGoldSpawnTime;
         this.mode = 0;
     }

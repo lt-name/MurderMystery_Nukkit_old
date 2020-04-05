@@ -6,9 +6,8 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityDamageByChildEntityEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityShootBowEvent;
-import cn.nukkit.event.player.PlayerBlockPickEvent;
 import cn.nukkit.item.Item;
-import cn.nukkit.scheduler.Task;
+import cn.nukkit.level.Level;
 import name.KillerGame.KillerGame;
 import name.KillerGame.Room.Room;
 
@@ -22,6 +21,10 @@ public class PlayerGame implements Listener {
         if (event.getDamager() == null || event.getEntity() == null) {
             return;
         }
+        Level level = event.getDamager().getLevel();
+        if (level == null || !KillerGame.getInstance().getRooms().containsKey(level.getName())) {
+            return;
+        }
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
             Player player1 = (Player) event.getDamager();
             Player player2 = (Player) event.getEntity();
@@ -29,13 +32,11 @@ public class PlayerGame implements Listener {
                 return;
             }
             Room gameRoom = KillerGame.getInstance().getRooms().get(player1.getLevel().getName());
-            if (gameRoom.getPlayerMode(player1) == 2) {
-                if (player1.getInventory().getItemInHand().getId() == 267) {
-                    player1.sendMessage("你成功击杀了一位玩家！");
-                    player2.sendMessage("你被杀手杀死了！");
-                    player2.setGamemode(3);
-                    gameRoom.addPlaying(player2, 0);
-                }
+            if (gameRoom.getPlayerMode(player1) == 3 && player1.getInventory().getItemInHand().getId() == 267) {
+                player1.sendMessage("§a你成功击杀了一位玩家！");
+                player2.sendTitle("§c你已死亡", "§c你被杀手杀死了", 20, 40, 20);
+                player2.setGamemode(3);
+                gameRoom.addPlaying(player2, 0);
             }
         }
         event.setCancelled();
@@ -53,25 +54,27 @@ public class PlayerGame implements Listener {
                 return;
             }
             Room room = KillerGame.getInstance().getRooms().get(player1.getLevel().getName());
-            if (room.getPlayerMode(player2) == 2 && event.getChild().getId() == 262) {
+            if (room.getPlayerMode(player2) == 3 && event.getChild().getId() == 262) {
                 player1.sendMessage("你成功击杀了杀手！");
+                player2.sendTitle("§c你已死亡", "§c你被平民或侦探打死了", 20, 40, 20);
             } else {
-                player1.sendMessage("你打中友军啦！");
+                player1.sendTitle("§c你已死亡", "§c你击中了队友", 20, 40, 20);
+                player2.sendTitle("§c你已死亡", "§c你被队友打死了", 20, 40, 20);
                 player1.setGamemode(3);
                 room.addPlaying(player1, 0);
             }
-            player2.sendMessage("你已被击杀！");
             player2.setGamemode(3);
             room.addPlaying(player2, 0);
         }
         event.setCancelled();
     }
 
+    /*
     /**
      * 玩家拾取物品事件
      * @param event 事件
      */
-    @EventHandler
+/*    @EventHandler
     public void onPick(PlayerBlockPickEvent event) {
         Player player = event.getPlayer();
         Item item = event.getItem();
@@ -83,14 +86,14 @@ public class PlayerGame implements Listener {
                 @Override
                 public void onRun(int i) {
                     int j = 0;
-                    boolean bow = false;
+                    boolean bow = true;
                     for (Item item : player.getInventory().getContents().values()) {
                         if (item.getId() == 266) {
                             j += item.getCount();
                             continue;
                         }
                         if (item.getId() == 261) {
-                            bow = true;
+                            bow = false;
                         }
                     }
                     if (j > 9) {
@@ -103,7 +106,7 @@ public class PlayerGame implements Listener {
                 }
             }, 10);
         }
-    }
+    }*/
 
     /**
      * 生命实体射出箭 事件
