@@ -42,7 +42,10 @@ public class PlayerJoinAndQuit implements Listener {
         if (player == null || fromLevel == null || toLevel == null) { return; }
         if (!fromLevel.equals(toLevel)) {
             if (Killer.getInstance().getRooms().containsKey(fromLevel)) {
-                Killer.getInstance().getRooms().get(fromLevel).quitRoom(player);
+                Room room = Killer.getInstance().getRooms().get(fromLevel);
+                if (room.isPlaying(player)) {
+                    room.quitRoom(player);
+                }
             }
             if (!player.isOp() && Killer.getInstance().getRooms().containsKey(toLevel) &&
                     !Killer.getInstance().getRooms().get(toLevel).isPlaying(player)) {

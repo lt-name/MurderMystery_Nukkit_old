@@ -96,9 +96,9 @@ public class Room {
             if (player.getGamemode() != 0) {
                 player.setGamemode(0);
             }
+            this.delPlaying(player);
             rePlayerState(player);
             player.teleport(Killer.getInstance().getServer().getDefaultLevel().getSafeSpawn());
-            this.delPlaying(player);
         }
     }
 
