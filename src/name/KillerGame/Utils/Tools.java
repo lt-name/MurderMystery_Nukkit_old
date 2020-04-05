@@ -17,6 +17,7 @@ public class Tools {
 
     /**
      * 放烟花
+     * GitHub：https://github.com/SmallasWater/LuckDraw/blob/master/src/main/java/smallaswater/luckdraw/utils/Tools.java
      * @param player 玩家
      */
     public static void spawnFirework(Player player) {
