@@ -129,8 +129,9 @@ public class Killer extends PluginBase {
                                 if (Integer.parseInt(args[1]) > 60) {
                                     SetRoomConfig.setGameTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
                                     sender.sendMessage("§a游戏时间已设置为：" + Integer.valueOf(args[1]));
+                                }else {
+                                    sender.sendMessage("§a游戏时间最小不能低于1分钟！");
                                 }
-                                sender.sendMessage("§a游戏时间最小不能低于1分钟！");
                             }else {
                                 sender.sendMessage("§a查看帮助：/kadmin help");
                             }
@@ -178,14 +179,16 @@ public class Killer extends PluginBase {
      * 加载已有房间
      */
     private void loadRooms() {
-        File[] s = new File(getServer().getFilePath() + "/Rooms").listFiles();
+        File[] s = new File(getDataFolder() + "/Rooms").listFiles();
         if (s != null) {
             for (File file1 : s) {
-                if (file1.isDirectory()) {
-                    Room room = new Room(getRoomConfig(file1.getName()));
-                    this.rooms.put(file1.getName(), room);
+                String[] fileName = file1.getName().split("\\.");
+                if (fileName.length > 0) {
+                    Room room = new Room(getRoomConfig(fileName[0]));
+                    this.rooms.put(fileName[0], room);
                     getServer().getScheduler().scheduleRepeatingTask(
                             this, new WaitTask(this, room), 20,true);
+                    getLogger().info("房间：" + fileName[0] + " 已加载！");
                 }
             }
         }
