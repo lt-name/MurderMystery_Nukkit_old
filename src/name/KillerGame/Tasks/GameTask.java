@@ -1,21 +1,23 @@
-package name.killer.Tasks;
+package name.KillerGame.Tasks;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.item.EntityItem;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.PluginTask;
-import name.killer.Killer;
-import name.killer.Room.Room;
+import name.KillerGame.KillerGame;
+import name.KillerGame.Room.Room;
 
 import java.util.List;
 import java.util.Map;
 
-public class GameTask extends PluginTask<Killer> {
+public class GameTask extends PluginTask<KillerGame> {
 
     private Room gameRoom;
 
-    public GameTask(Killer owner, Room gameRoom) {
+    public GameTask(KillerGame owner, Room gameRoom) {
         super(owner);
         this.gameRoom = gameRoom;
     }
@@ -26,7 +28,7 @@ public class GameTask extends PluginTask<Killer> {
             int time = this.gameRoom.gameTime - (this.gameRoom.getGameTime() - 10);
             this.sendMessage("杀手将在" + time + "秒后拿到剑！");
             if (time <= 5 && time > 1) {
-                addSound(Sound.RANDOM_CLICK);
+                addSound();
             }else if (time < 1){
                 for (Map.Entry<Player, Integer> entry : this.gameRoom.getPlayers().entrySet()) {
                     if (entry.getValue() == 1) {
@@ -63,6 +65,11 @@ public class GameTask extends PluginTask<Killer> {
         //金锭生成
         if (this.gameRoom.goldSpawnTime < 1) {
             List<String> goldSpawn = this.gameRoom.getGoldSpawn();
+            for (Entity entity : this.gameRoom.getWorld().getEntities()) {
+                if (entity instanceof EntityItem) {
+                    entity.close();
+                }
+            }
             for (String spawn : goldSpawn) {
                 String[] s = spawn.split(":");
                 this.gameRoom.getWorld().dropItem(new Vector3(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])),
@@ -86,9 +93,9 @@ public class GameTask extends PluginTask<Killer> {
         }
     }
 
-    private void addSound(Sound sound) {
+    private void addSound() {
         for (Player player : this.gameRoom.getPlayers().keySet()) {
-            player.getLevel().addSound(new Vector3(player.x, player.y, player.z), sound);
+            player.getLevel().addSound(new Vector3(player.x, player.y, player.z), Sound.RANDOM_CLICK);
         }
     }
 
@@ -102,7 +109,7 @@ public class GameTask extends PluginTask<Killer> {
             }
         }
         owner.getServer().getScheduler().scheduleRepeatingTask(
-                Killer.getInstance(), new VictoryTask(Killer.getInstance(), this.gameRoom, i), 20,true);
+                KillerGame.getInstance(), new VictoryTask(KillerGame.getInstance(), this.gameRoom, i), 20,true);
         this.cancel();
     }
 

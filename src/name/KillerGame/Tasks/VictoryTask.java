@@ -1,17 +1,17 @@
-package name.killer.Tasks;
+package name.KillerGame.Tasks;
 
 import cn.nukkit.Player;
 import cn.nukkit.scheduler.PluginTask;
-import name.killer.Killer;
-import name.killer.Room.Room;
-import name.killer.Utils.Tools;
+import name.KillerGame.KillerGame;
+import name.KillerGame.Room.Room;
+import name.KillerGame.Utils.Tools;
 
-public class VictoryTask extends PluginTask<Killer> {
+public class VictoryTask extends PluginTask<KillerGame> {
 
     private Room room;
     private int victory;
 
-    public VictoryTask(Killer owner, Room room, int victory) {
+    public VictoryTask(KillerGame owner, Room room, int victory) {
         super(owner);
         this.room = room;
         this.victory = victory;
@@ -22,7 +22,7 @@ public class VictoryTask extends PluginTask<Killer> {
         if (this.room.victoryTime < 1) {
             this.room.endGame();
             owner.getServer().getScheduler().scheduleRepeatingTask(
-                    Killer.getInstance(), new WaitTask(Killer.getInstance(), this.room), 20,true);
+                    KillerGame.getInstance(), new WaitTask(KillerGame.getInstance(), this.room), 20,true);
             this.cancel();
         }else {
             this.room.victoryTime--;

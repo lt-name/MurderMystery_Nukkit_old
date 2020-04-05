@@ -1,4 +1,4 @@
-package name.killer;
+package name.KillerGame;
 
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
@@ -6,12 +6,12 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
-import name.killer.Listener.GameProtection;
-import name.killer.Listener.PlayerGame;
-import name.killer.Listener.PlayerJoinAndQuit;
-import name.killer.Room.Room;
-import name.killer.Tasks.WaitTask;
-import name.killer.Utils.SetRoomConfig;
+import name.KillerGame.Listener.GameProtection;
+import name.KillerGame.Listener.PlayerGame;
+import name.KillerGame.Listener.PlayerJoinAndQuit;
+import name.KillerGame.Room.Room;
+import name.KillerGame.Tasks.WaitTask;
+import name.KillerGame.Utils.SetRoomConfig;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -20,14 +20,14 @@ import java.util.LinkedHashMap;
 /**
  * @author lt_name
  */
-public class Killer extends PluginBase {
+public class KillerGame extends PluginBase {
 
-    private static Killer killer;
+    private static KillerGame killer;
     private Config config;
     private LinkedHashMap<String, Config> roomConfigs = new LinkedHashMap<>();
     private LinkedHashMap<String, Room> rooms = new LinkedHashMap<>();
 
-    public static Killer getInstance() { return killer; }
+    public static KillerGame getInstance() { return killer; }
 
     @Override
     public void onEnable() {

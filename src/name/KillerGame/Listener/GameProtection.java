@@ -1,4 +1,4 @@
-package name.killer.Listener;
+package name.KillerGame.Listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
@@ -13,7 +13,7 @@ import cn.nukkit.event.inventory.StartBrewEvent;
 import cn.nukkit.event.player.PlayerDropItemEvent;
 import cn.nukkit.event.player.PlayerFoodLevelChangeEvent;
 import cn.nukkit.level.Level;
-import name.killer.Killer;
+import name.KillerGame.KillerGame;
 
 /**
  * 游戏保护
@@ -28,7 +28,7 @@ public class GameProtection implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onCraft(CraftItemEvent event) {
         Level level = event.getPlayer().getLevel();
-        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
+        if (level != null && KillerGame.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
     }
@@ -40,7 +40,7 @@ public class GameProtection implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onStartBrew(StartBrewEvent event) {
         Level level = event.getBrewingStand().getLevel();
-        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
+        if (level != null && KillerGame.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
     }
@@ -56,7 +56,7 @@ public class GameProtection implements Listener {
             return;
         }
         Level level = event.getPlayer().getLevel();
-        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
+        if (level != null && KillerGame.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
     }
@@ -72,7 +72,7 @@ public class GameProtection implements Listener {
             return;
         }
         Level level = event.getPlayer().getLevel();
-        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
+        if (level != null && KillerGame.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
     }
@@ -84,7 +84,7 @@ public class GameProtection implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
         Level level = event.getEntity().getLevel();
-        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
+        if (level != null && KillerGame.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
     }
@@ -100,7 +100,7 @@ public class GameProtection implements Listener {
             return;
         }
         Level level = event.getItemFrame().getLevel();
-        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
+        if (level != null && KillerGame.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
     }
@@ -112,7 +112,7 @@ public class GameProtection implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onFoodLevelChange(PlayerFoodLevelChangeEvent event) {
         Level level = event.getPlayer().getLevel();
-        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
+        if (level != null && KillerGame.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
     }
@@ -124,7 +124,7 @@ public class GameProtection implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onDropItem(PlayerDropItemEvent event) {
         Level level = event.getPlayer().getLevel();
-        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
+        if (level != null && KillerGame.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
     }
@@ -136,7 +136,7 @@ public class GameProtection implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void on(EntityDamageEvent event) {
         Level level = event.getEntity().getLevel();
-        if (level != null && Killer.getInstance().getRooms().containsKey(level.getName())) {
+        if (level != null && KillerGame.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
     }

@@ -1,7 +1,7 @@
-package name.killer.Utils;
+package name.KillerGame.Utils;
 
 import cn.nukkit.level.Level;
-import name.killer.Killer;
+import name.KillerGame.KillerGame;
 
 import java.io.*;
 
@@ -9,8 +9,8 @@ import java.io.*;
 public class LevelFileReset {
 
     public boolean resetLevel(Level level) {
-        Killer.getInstance().getServer().unloadLevel(level);
-        //Killer.getInstance().getDataFolder()
+        KillerGame.getInstance().getServer().unloadLevel(level);
+        //KillerGame.getInstance().getDataFolder()
 
         return true;
     }

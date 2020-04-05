@@ -1,4 +1,4 @@
-package name.killer.Listener;
+package name.KillerGame.Listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
@@ -9,8 +9,8 @@ import cn.nukkit.event.entity.EntityShootBowEvent;
 import cn.nukkit.event.player.PlayerBlockPickEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.scheduler.Task;
-import name.killer.Killer;
-import name.killer.Room.Room;
+import name.KillerGame.KillerGame;
+import name.KillerGame.Room.Room;
 
 /**
  * 游戏监听器
@@ -28,7 +28,7 @@ public class PlayerGame implements Listener {
             if (player1 == null || player2 == null) {
                 return;
             }
-            Room gameRoom = Killer.getInstance().getRooms().get(player1.getLevel().getName());
+            Room gameRoom = KillerGame.getInstance().getRooms().get(player1.getLevel().getName());
             if (gameRoom.getPlayerMode(player1) == 2) {
                 if (player1.getInventory().getItemInHand().getId() == 267) {
                     player1.sendMessage("你成功击杀了一位玩家！");
@@ -52,7 +52,7 @@ public class PlayerGame implements Listener {
             if (player1 == null || player2 == null) {
                 return;
             }
-            Room room = Killer.getInstance().getRooms().get(player1.getLevel().getName());
+            Room room = KillerGame.getInstance().getRooms().get(player1.getLevel().getName());
             if (room.getPlayerMode(player2) == 2 && event.getChild().getId() == 262) {
                 player1.sendMessage("你成功击杀了杀手！");
             } else {
@@ -76,10 +76,10 @@ public class PlayerGame implements Listener {
         Player player = event.getPlayer();
         Item item = event.getItem();
         if (player != null && item != null && item.getId() == 266) {
-            if (!Killer.getInstance().getRooms().containsKey(player.getLevel().getName())) {
+            if (!KillerGame.getInstance().getRooms().containsKey(player.getLevel().getName())) {
                 return;
             }
-            Killer.getInstance().getServer().getScheduler().scheduleDelayedTask(new Task() {
+            KillerGame.getInstance().getServer().getScheduler().scheduleDelayedTask(new Task() {
                 @Override
                 public void onRun(int i) {
                     int j = 0;
@@ -113,10 +113,10 @@ public class PlayerGame implements Listener {
     public void onShootBow(EntityShootBowEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = ((Player) event.getEntity()).getPlayer();
-            if (!Killer.getInstance().getRooms().containsKey(player.getLevel().getName())) {
+            if (!KillerGame.getInstance().getRooms().containsKey(player.getLevel().getName())) {
                 return;
             }
-            if (Killer.getInstance().getRooms().get(player.getLevel().getName()).getPlayers().get(player) == 2) {
+            if (KillerGame.getInstance().getRooms().get(player.getLevel().getName()).getPlayers().get(player) == 2) {
                 player.getInventory().addItem(Item.get(262, 0, 1));
                 return;
             }

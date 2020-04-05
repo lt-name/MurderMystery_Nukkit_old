@@ -1,5 +1,5 @@
-name: Killer
-main: name.killer.Killer
+name: KillerGame
+main: name.KillerGame.KillerGame
 version: "0.0.1"
 api:
   - 1.0.0
@@ -10,19 +10,19 @@ loadbefore:
 
 commands:
   killer:
-    usage: /Killer help
+    usage: /killer help
     description: "killer游戏命令"
-    permission: Killer.a
+    permission: KillerGame.a
     aliases:
       - 杀手
   kadmin:
     usage: /kadmin help
     description: "killer管理命令"
-    permission: Killer.b
+    permission: KillerGame.b
     aliases:
       - 杀手管理
 permissions:
-  Killer.a:
+  KillerGame.a:
     default: true
-  Killer.b:
+  KillerGame.b:
     default: op

@@ -1,10 +1,10 @@
-package name.killer.Room;
+package name.KillerGame.Room;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
-import name.killer.Killer;
+import name.KillerGame.KillerGame;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -98,7 +98,7 @@ public class Room {
             }
             this.delPlaying(player);
             rePlayerState(player);
-            player.teleport(Killer.getInstance().getServer().getDefaultLevel().getSafeSpawn());
+            player.teleport(KillerGame.getInstance().getServer().getDefaultLevel().getSafeSpawn());
         }
     }
 
@@ -180,7 +180,7 @@ public class Room {
         return new Position(Integer.parseInt(s[0]),
                 Integer.parseInt(s[1]),
                 Integer.parseInt(s[2]),
-                Killer.getInstance().getServer().getLevelByName(s[3]));
+                KillerGame.getInstance().getServer().getLevelByName(s[3]));
     }
 
     /**
@@ -212,7 +212,7 @@ public class Room {
      * @return 游戏世界
      */
     public Level getWorld() {
-        return Killer.getInstance().getServer().getLevelByName(this.world);
+        return KillerGame.getInstance().getServer().getLevelByName(this.world);
     }
 
 }

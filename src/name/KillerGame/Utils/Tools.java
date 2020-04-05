@@ -1,4 +1,4 @@
-package name.killer.Utils;
+package name.KillerGame.Utils;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.item.EntityFirework;

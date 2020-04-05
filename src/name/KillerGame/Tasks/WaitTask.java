@@ -1,18 +1,18 @@
-package name.killer.Tasks;
+package name.KillerGame.Tasks;
 
 import cn.nukkit.Player;
 import cn.nukkit.scheduler.PluginTask;
-import name.killer.Killer;
-import name.killer.Room.Room;
+import name.KillerGame.KillerGame;
+import name.KillerGame.Room.Room;
 
 import java.util.LinkedHashMap;
 import java.util.Random;
 
-public class WaitTask extends PluginTask<Killer> {
+public class WaitTask extends PluginTask<KillerGame> {
 
     private Room gameRoom;
 
-    public WaitTask(Killer owner, Room gameRoom) {
+    public WaitTask(KillerGame owner, Room gameRoom) {
         super(owner);
         this.gameRoom = gameRoom;
     }
@@ -46,7 +46,7 @@ public class WaitTask extends PluginTask<Killer> {
                 }
                 this.gameRoom.setMode(2);
                 owner.getServer().getScheduler().scheduleRepeatingTask(
-                        Killer.getInstance(), new GameTask(Killer.getInstance(), this.gameRoom), 20,true);
+                        KillerGame.getInstance(), new GameTask(KillerGame.getInstance(), this.gameRoom), 20,true);
                 this.cancel();
             }
         }else {
