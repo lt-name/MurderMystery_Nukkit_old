@@ -2,6 +2,7 @@ package name.killer.Tasks;
 
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
+import cn.nukkit.level.Sound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.PluginTask;
 import name.killer.Killer;
@@ -23,15 +24,10 @@ public class GameTask extends PluginTask<Killer> {
         //游戏时间
         if (this.gameRoom.gameTime >= this.gameRoom.getGameTime()-10) {
             int time = this.gameRoom.gameTime - (this.gameRoom.getGameTime() - 10);
-            switch (time) {
-                case 10: case 9: case 8: case 7: case 6:
-                    this.sendActionBar("杀手将在" + time + "秒后拿到剑！");
-                    break;
-                case 5: case 4: case 3: case 2: case 1:
-                    this.sendMessage("杀手将在" + time + "秒后拿到剑！");
-                    break;
-            }
-            if (time < 1) {
+            this.sendMessage("杀手将在" + time + "秒后拿到剑！");
+            if (time <= 5 && time > 1) {
+                addSound(Sound.RANDOM_CLICK);
+            }else if (time < 1){
                 for (Map.Entry<Player, Integer> entry : this.gameRoom.getPlayers().entrySet()) {
                     if (entry.getValue() == 1) {
                         entry.getKey().getInventory().addItem(Item.get(261, 0, 1));
@@ -87,6 +83,12 @@ public class GameTask extends PluginTask<Killer> {
     private void sendMessage(String string) {
         for (Player player : this.gameRoom.getPlayers().keySet()) {
             player.sendMessage(string);
+        }
+    }
+
+    private void addSound(Sound sound) {
+        for (Player player : this.gameRoom.getPlayers().keySet()) {
+            player.getLevel().addSound(new Vector3(player.x, player.y, player.z), sound);
         }
     }
 
