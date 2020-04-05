@@ -8,6 +8,7 @@ import name.killer.Killer;
 import name.killer.Room.Room;
 
 import java.util.List;
+import java.util.Map;
 
 public class GameTask extends PluginTask<Killer> {
 
@@ -20,7 +21,27 @@ public class GameTask extends PluginTask<Killer> {
 
     public void onRun(int i) {
         //游戏时间
-        if (this.gameRoom.gameTime > 0) {
+        if (this.gameRoom.gameTime >= this.gameRoom.getGameTime()-10) {
+            int time = this.gameRoom.gameTime - (this.gameRoom.getGameTime() - 10);
+            switch (time) {
+                case 10: case 9: case 8: case 7: case 6:
+                    this.sendActionBar("杀手将在" + time + "秒后拿到剑！");
+                    break;
+                case 5: case 4: case 3: case 2: case 1:
+                    this.sendMessage("杀手将在" + time + "秒后拿到剑！");
+                    break;
+            }
+            if (time < 1) {
+                for (Map.Entry<Player, Integer> entry : this.gameRoom.getPlayers().entrySet()) {
+                    if (entry.getValue() == 1) {
+                        entry.getKey().getInventory().addItem(Item.get(261, 0, 1));
+                        entry.getKey().getInventory().addItem(Item.get(262, 0, 1));
+                    }else if (entry.getValue() == 2) {
+                        entry.getKey().getInventory().addItem(Item.get(267, 0, 1));
+                    }
+                }
+            }
+        }else if (this.gameRoom.gameTime > 0) {
             this.gameRoom.gameTime--;
             int j = 0;
             boolean killer = false;
@@ -60,6 +81,12 @@ public class GameTask extends PluginTask<Killer> {
     private void sendActionBar(String string) {
         for (Player player : this.gameRoom.getPlayers().keySet()) {
             player.sendActionBar(string);
+        }
+    }
+
+    private void sendMessage(String string) {
+        for (Player player : this.gameRoom.getPlayers().keySet()) {
+            player.sendMessage(string);
         }
     }
 

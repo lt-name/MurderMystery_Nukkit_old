@@ -197,6 +197,10 @@ public class Room {
         return this.setWaitTime;
     }
 
+    public int getGameTime() {
+        return this.setGameTime;
+    }
+
     /**
      * @return 金锭产出地点
      */

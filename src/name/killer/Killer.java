@@ -126,8 +126,11 @@ public class Killer extends PluginBase {
                             break;
                         case "设置游戏时间":
                             if (args.length == 2) {
-                                SetRoomConfig.setGameTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
-                                sender.sendMessage("§a游戏时间已设置为：" + Integer.valueOf(args[1]));
+                                if (Integer.parseInt(args[1]) > 60) {
+                                    SetRoomConfig.setGameTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
+                                    sender.sendMessage("§a游戏时间已设置为：" + Integer.valueOf(args[1]));
+                                }
+                                sender.sendMessage("§a游戏时间最小不能低于1分钟！");
                             }else {
                                 sender.sendMessage("§a查看帮助：/kadmin help");
                             }
