@@ -25,6 +25,7 @@ public class GameTask extends PluginTask<KillerGame> {
     public void onRun(int i) {
         //游戏时间
         if (this.gameRoom.gameTime >= this.gameRoom.getGameTime()-10) {
+            this.gameRoom.gameTime--;
             int time = this.gameRoom.gameTime - (this.gameRoom.getGameTime() - 10);
             this.sendMessage("杀手将在" + time + "秒后拿到剑！");
             if (time <= 5 && time > 1) {
