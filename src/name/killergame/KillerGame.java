@@ -70,15 +70,19 @@ public class KillerGame extends PluginBase {
                                     return true;
                                 }
                             }
-                            if (args[1] != null && this.rooms.containsKey(args[1])) {
-                                Room room = this.rooms.get(args[1]);
-                                if (room.getMode() == 2 || room.getMode() == 3) {
-                                    sender.sendMessage("§a该房间正在游戏中，请稍后");
+                            if (args.length == 2) {
+                                if (args[1] != null && this.rooms.containsKey(args[1])) {
+                                    Room room = this.rooms.get(args[1]);
+                                    if (room.getMode() == 2 || room.getMode() == 3) {
+                                        sender.sendMessage("§a该房间正在游戏中，请稍后");
+                                    }else {
+                                        room.joinRoom(player);
+                                    }
                                 }else {
-                                    room.joinRoom(player);
+                                    sender.sendMessage("§a该房间不存在！");
                                 }
                             }else {
-                                sender.sendMessage("§a该房间不存在！");
+                                sender.sendMessage("§a查看帮助：/killer help");
                             }
                             break;
                         case "quit": case "退出":
