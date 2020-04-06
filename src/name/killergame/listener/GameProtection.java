@@ -8,8 +8,11 @@ import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.block.ItemFrameDropItemEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityExplodeEvent;
+import cn.nukkit.event.entity.ProjectileHitEvent;
 import cn.nukkit.event.inventory.CraftItemEvent;
+import cn.nukkit.event.inventory.InventoryPickupArrowEvent;
 import cn.nukkit.event.inventory.StartBrewEvent;
+import cn.nukkit.event.player.PlayerDeathEvent;
 import cn.nukkit.event.player.PlayerDropItemEvent;
 import cn.nukkit.event.player.PlayerFoodLevelChangeEvent;
 import cn.nukkit.level.Level;
@@ -134,10 +137,47 @@ public class GameProtection implements Listener {
      * @param event 事件
      */
     @EventHandler(ignoreCancelled = true)
-    public void on(EntityDamageEvent event) {
+    public void onEntityDamage(EntityDamageEvent event) {
         Level level = event.getEntity().getLevel();
         if (level != null && KillerGame.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
+        }
+    }
+
+    /**
+     * 收起发射出去的箭事件
+     * @param event 事件
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onPickupArrow(InventoryPickupArrowEvent event) {
+        Level level = event.getArrow().getLevel();
+        if (level != null && KillerGame.getInstance().getRooms().containsKey(level.getName())) {
+            event.setCancelled();
+        }
+    }
+
+    /**
+     * 当一个抛射物击中物体时
+     * @param event 事件
+     */
+    @EventHandler
+    public void onProjectileHit(ProjectileHitEvent event) {
+        Level level = event.getEntity().getLevel();
+        if (level != null && KillerGame.getInstance().getRooms().containsKey(level.getName())) {
+            event.getEntity().close();
+        }
+    }
+
+    /**
+     * 玩家死亡事件
+     * @param event 事件
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Level level = event.getEntity().getLevel();
+        if (level != null && KillerGame.getInstance().getRooms().containsKey(level.getName())) {
+            event.setKeepInventory(true);
+            event.setKeepExperience(true);
         }
     }
 
