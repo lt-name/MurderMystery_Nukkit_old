@@ -1,5 +1,5 @@
 name: KillerGame
-main: name.killergame.killergame
+main: name.killergame.KillerGame
 version: "0.0.1"
 api:
   - 1.0.0
