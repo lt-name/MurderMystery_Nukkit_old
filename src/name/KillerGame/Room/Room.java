@@ -65,8 +65,10 @@ public class Room {
      * 结束本局游戏
      */
     public void endGame() {
-        for (Player player : this.players.keySet()) {
-            quitRoom(player);
+        if (this.players.values().size() > 0 ){
+            for (Player player : this.players.keySet()) {
+                quitRoom(player);
+            }
         }
         this.waitTime = this.setWaitTime;
         this.gameTime = this.setGameTime;
@@ -80,11 +82,9 @@ public class Room {
      * @param player 玩家
      */
     public void joinRoom(Player player) {
-        if (player.getGamemode() != 0) {
-            player.setGamemode(0);
-        }
-        rePlayerState(player);
         this.addPlaying(player);
+        rePlayerState(player);
+        player.setNameTagAlwaysVisible(false);
         player.teleport(this.getSpawn());
     }
 
@@ -94,11 +94,9 @@ public class Room {
      */
     public void quitRoom(Player player) {
         if (this.isPlaying(player)) {
-            if (player.getGamemode() != 0) {
-                player.setGamemode(0);
-            }
             this.delPlaying(player);
             rePlayerState(player);
+            player.setNameTagAlwaysVisible(true);
             player.teleport(KillerGame.getInstance().getServer().getDefaultLevel().getSafeSpawn());
         }
     }
@@ -108,6 +106,14 @@ public class Room {
      * @param player 玩家
      */
     public void rePlayerState(Player player) {
+        if (player.getGamemode() != 0) {
+            player.setGamemode(0);
+        }
+        if (player.isSprinting()) {
+            player.setMovementSpeed(0.13F);
+        }else {
+            player.setMovementSpeed(0.1F);
+        }
         player.getInventory().clearAll();
         player.setHealth(player.getMaxHealth());
         player.getFoodData().setLevel(player.getFoodData().getMaxLevel());

@@ -32,9 +32,9 @@ public class VictoryTask extends PluginTask<KillerGame> {
                 }
             }
             if (victory == 3) {
-                sendActionBar("§e恭喜杀手获得胜利！");
+                this.sendActionBar("§e恭喜杀手获得胜利！");
             }else {
-                sendActionBar("§e恭喜侦探和平民获得胜利！");
+                this.sendActionBar("§e恭喜侦探和平民获得胜利！");
             }
         }
     }

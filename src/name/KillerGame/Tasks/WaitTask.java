@@ -10,22 +10,22 @@ import java.util.Random;
 
 public class WaitTask extends PluginTask<KillerGame> {
 
-    private Room gameRoom;
+    private Room room;
 
     public WaitTask(KillerGame owner, Room gameRoom) {
         super(owner);
-        this.gameRoom = gameRoom;
+        this.room = gameRoom;
     }
 
     @Override
     public void onRun(int i) {
-        if (this.gameRoom.getPlayers().size() >= 5) {
-            if (this.gameRoom.waitTime > 0) {
-                this.gameRoom.waitTime--;
-                this.sendActionBar("§a当前已有" + this.gameRoom.getPlayers().size() + "位玩家" +
-                        "\n§a游戏还有" + this.gameRoom.waitTime + "秒开始！");
+        if (this.room.getPlayers().size() >= 5) {
+            if (this.room.waitTime > 0) {
+                this.room.waitTime--;
+                this.sendActionBar("§a当前已有: " + this.room.getPlayers().size() + " 位玩家" +
+                        "\n§a游戏还有: " + this.room.waitTime + " 秒开始！");
             }else {
-                LinkedHashMap<Player, Integer> players = this.gameRoom.getPlayers();
+                LinkedHashMap<Player, Integer> players = this.room.getPlayers();
                 int random1 = new Random().nextInt(players.size()) + 1;
                 int random2;
                 do {
@@ -34,31 +34,34 @@ public class WaitTask extends PluginTask<KillerGame> {
                 int j = 0;
                 for (Player player : players.keySet()) {
                     j++;
+                    //侦探
                     if (j == random1) {
-                        this.gameRoom.addPlaying(player, 2);
+                        this.room.addPlaying(player, 2);
                         continue;
                     }
+                    //杀手
                     if (j == random2) {
-                        this.gameRoom.addPlaying(player, 3);
+                        this.room.addPlaying(player, 3);
+                        player.setMovementSpeed(player.getMovementSpeed() + 0.01F);
                         continue;
                     }
-                    this.gameRoom.addPlaying(player, 1);
+                    this.room.addPlaying(player, 1);
                 }
-                this.gameRoom.setMode(2);
+                this.room.setMode(2);
                 owner.getServer().getScheduler().scheduleRepeatingTask(
-                        KillerGame.getInstance(), new GameTask(KillerGame.getInstance(), this.gameRoom), 20,true);
+                        KillerGame.getInstance(), new GameTask(KillerGame.getInstance(), this.room), 20,true);
                 this.cancel();
             }
-        }else {
-            if (this.gameRoom.waitTime != this.gameRoom.getWaitTime()) {
-                this.gameRoom.waitTime = this.gameRoom.getWaitTime();
+        }else if (this.room.getPlayers().size() > 0) {
+            if (this.room.waitTime != this.room.getWaitTime()) {
+                this.room.waitTime = this.room.getWaitTime();
             }
-            this.sendActionBar("§c等待玩家加入中,当前已有" + this.gameRoom.getPlayers().size() + "位玩家");
+            this.sendActionBar("§c等待玩家加入中,当前已有: " + this.room.getPlayers().size() + " 位玩家");
         }
     }
 
     private void sendActionBar(String string) {
-        for (Player player : this.gameRoom.getPlayers().keySet()) {
+        for (Player player : this.room.getPlayers().keySet()) {
             player.sendTip(string);
         }
     }

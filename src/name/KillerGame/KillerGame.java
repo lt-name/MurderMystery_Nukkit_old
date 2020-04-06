@@ -69,7 +69,11 @@ public class KillerGame extends PluginBase {
                             }
                             if (args[1] != null && this.rooms.containsKey(args[1])) {
                                 Room room = this.rooms.get(args[1]);
-                                room.joinRoom(player);
+                                if (room.getMode() == 2 || room.getMode() == 3) {
+                                    sender.sendMessage("§a该房间正在游戏中，请稍后");
+                                }else {
+                                    room.joinRoom(player);
+                                }
                             }else {
                                 sender.sendMessage("§a该房间不存在！");
                             }
@@ -84,7 +88,7 @@ public class KillerGame extends PluginBase {
                             break;
                         default:
                             sender.sendMessage("§e/killer--命令帮助");
-                            sender.sendMessage("§a/killer 加入 房间 §e加入游戏");
+                            sender.sendMessage("§a/killer 加入 房间名称 §e加入游戏");
                             sender.sendMessage("§a/killer 退出 §e退出游戏");
                             break;
                     }
@@ -136,19 +140,23 @@ public class KillerGame extends PluginBase {
                                 sender.sendMessage("§a查看帮助：/kadmin help");
                             }
                             break;
+                        case "reload": case "重载":
+                            this.reLoadRooms();
+                            break;
                         default:
                             sender.sendMessage("§e killer管理--命令帮助");
                             sender.sendMessage("§a/kadmin 设置出生点 §e设置当前位置为游戏出生点");
                             sender.sendMessage("§a/kadmin 添加金锭生成点 §e将当前位置设置为金锭生成点");
                             sender.sendMessage("§a/kadmin 设置等待时间 数字 §e设置游戏人数足够后的等待时间");
                             sender.sendMessage("§a/kadmin 设置游戏时间 数字 §e设置每轮游戏最长时间");
+                            sender.sendMessage("§a/kadmin reload §e重载所有房间");
                             break;
                     }
                 }else {
-                    sender.sendMessage("/kadmin help 查看帮助");
+                    sender.sendMessage("§a/kadmin help §e查看帮助");
                 }
             }else {
-                sender.sendMessage("请在游戏内输入！");
+                sender.sendMessage("§a请在游戏内输入！");
             }
             return true;
         }
@@ -176,7 +184,7 @@ public class KillerGame extends PluginBase {
     }
 
     /**
-     * 加载已有房间
+     * 加载所有房间
      */
     private void loadRooms() {
         File[] s = new File(getDataFolder() + "/Rooms").listFiles();
@@ -192,6 +200,20 @@ public class KillerGame extends PluginBase {
                 }
             }
         }
+    }
+
+    /**
+     * 重载所有房间
+     */
+    private void reLoadRooms() {
+        for (String string : this.rooms.keySet()) {
+            this.rooms.get(string).endGame();
+            this.rooms.remove(string);
+        }
+        for (String string : this.roomConfigs.keySet()) {
+            this.roomConfigs.remove(string);
+        }
+        this.loadRooms();
     }
 
 }

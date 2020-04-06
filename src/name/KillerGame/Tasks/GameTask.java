@@ -7,9 +7,9 @@ import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.PluginTask;
-import com.google.gson.internal.$Gson$Preconditions;
 import name.KillerGame.KillerGame;
 import name.KillerGame.Room.Room;
+import name.KillerGame.Utils.Tools;
 
 import java.util.List;
 import java.util.Map;
@@ -26,23 +26,23 @@ public class GameTask extends PluginTask<KillerGame> {
     public void onRun(int i) {
         //游戏时间
         if (this.gameRoom.gameTime >= this.gameRoom.getGameTime()-10) {
-            this.gameRoom.gameTime--;
             int time = this.gameRoom.gameTime - (this.gameRoom.getGameTime() - 10);
             if (time <= 5 && time >= 1) {
                 this.sendMessage("§e杀手将在" + time + "秒后拿到剑！");
-                addSound();
+                Tools.addSound(this.gameRoom, Sound.RANDOM_CLICK);
             }else if (time < 1){
                 this.sendMessage("§e杀手已拿到剑！");
                 for (Map.Entry<Player, Integer> entry : this.gameRoom.getPlayers().entrySet()) {
                     if (entry.getValue() == 2) {
-                        entry.getKey().getInventory().addItem(Item.get(261, 0, 1));
+                        entry.getKey().getInventory().setItem(1, Item.get(261, 0, 1));
                         entry.getKey().getInventory().addItem(Item.get(262, 0, 1));
                     }else if (entry.getValue() == 3) {
-                        entry.getKey().getInventory().addItem(Item.get(267, 0, 1));
+                        entry.getKey().getInventory().setItem(1, Item.get(267, 0, 1));
                     }
                 }
             }
-        }else if (this.gameRoom.gameTime > 0) {
+        }
+        if (this.gameRoom.gameTime > 0) {
             this.gameRoom.gameTime--;
             int j = 0;
             boolean killer = false;
@@ -54,7 +54,7 @@ public class GameTask extends PluginTask<KillerGame> {
                     killer = true;
                 }
             }
-            this.sendActionBar("§a距游戏结束还有"+ this.gameRoom.gameTime + "秒\n当前还有：§e" + j + " §a人存活");
+            this.sendActionBar("§a距游戏结束还有"+ this.gameRoom.gameTime + "秒\n当前还有： §e" + j + " §a人存活");
             if (killer) {
                 if (j < 2) {
                     victory(3);
@@ -110,12 +110,6 @@ public class GameTask extends PluginTask<KillerGame> {
     private void sendMessage(String string) {
         for (Player player : this.gameRoom.getPlayers().keySet()) {
             player.sendMessage(string);
-        }
-    }
-
-    private void addSound() {
-        for (Player player : this.gameRoom.getPlayers().keySet()) {
-            player.getLevel().addSound(new Vector3(player.x, player.y, player.z), Sound.RANDOM_CLICK);
         }
     }
 

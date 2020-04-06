@@ -4,16 +4,30 @@ import cn.nukkit.Player;
 import cn.nukkit.entity.item.EntityFirework;
 import cn.nukkit.item.ItemFirework;
 import cn.nukkit.level.Level;
+import cn.nukkit.level.Sound;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.utils.DyeColor;
+import name.KillerGame.Room.Room;
 
 import java.util.Random;
 
 public class Tools {
+
+    /**
+     * 添加声音
+     * @param room 房间
+     * @param sound 声音
+     */
+    public static void addSound(Room room, Sound sound) {
+        for (Player player : room.getPlayers().keySet()) {
+            player.getLevel().addSound(new Vector3(player.x, player.y, player.z), sound);
+        }
+    }
 
     /**
      * 放烟花

@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="KillerGame">
+  <artifact type="jar" build-on-make="true" name="KillerGame-SNAPSHOT">
     <output-path>$PROJECT_DIR$/../../Nukkit开发测试平台/plugins</output-path>
-    <root id="archive" name="KillerGame.jar">
+    <root id="archive" name="KillerGame-SNAPSHOT.jar">
       <element id="module-output" name="KillerGame" />
     </root>
   </artifact>
