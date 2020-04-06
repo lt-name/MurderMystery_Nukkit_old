@@ -50,6 +50,8 @@ public class WaitTask extends PluginTask<KillerGame> {
                 this.room.setMode(2);
                 owner.getServer().getScheduler().scheduleRepeatingTask(
                         KillerGame.getInstance(), new GameTask(KillerGame.getInstance(), this.room), 20,true);
+                owner.getServer().getScheduler().scheduleRepeatingTask(
+                        KillerGame.getInstance(), new GameTipsTask(KillerGame.getInstance(), this.room), 10, true);
                 this.cancel();
             }
         }else if (this.room.getPlayers().size() > 0) {

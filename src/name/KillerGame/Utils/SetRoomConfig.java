@@ -26,7 +26,7 @@ public class SetRoomConfig {
      * @param config 配置文件
      */
     public static void addGoldSpawn(Player player, Config config) {
-        addGoldSpawn(player.getFloorX(), player.getFloorY(), player.getFloorZ(), config);
+        addGoldSpawn(player.getFloorX(), player.getFloorY() + 1, player.getFloorZ(), config);
     }
 
     /**

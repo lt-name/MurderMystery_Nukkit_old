@@ -2,8 +2,10 @@ package name.KillerGame.Tasks;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.EntityHuman;
 import cn.nukkit.entity.item.EntityItem;
 import cn.nukkit.item.Item;
+import cn.nukkit.level.Level;
 import cn.nukkit.level.Sound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.PluginTask;
@@ -11,7 +13,6 @@ import name.KillerGame.KillerGame;
 import name.KillerGame.Room.Room;
 import name.KillerGame.Utils.Tools;
 
-import java.util.List;
 import java.util.Map;
 
 public class GameTask extends PluginTask<KillerGame> {
@@ -54,7 +55,6 @@ public class GameTask extends PluginTask<KillerGame> {
                     killer = true;
                 }
             }
-            this.sendActionBar("§a距游戏结束还有"+ this.gameRoom.gameTime + "秒\n当前还有： §e" + j + " §a人存活");
             if (killer) {
                 if (j < 2) {
                     victory(3);
@@ -67,9 +67,8 @@ public class GameTask extends PluginTask<KillerGame> {
         }
         //金锭生成
         if (this.gameRoom.goldSpawnTime < 1) {
-            List<String> goldSpawn = this.gameRoom.getGoldSpawn();
-            this.cleanEntityItem();
-            for (String spawn : goldSpawn) {
+            this.cleanEntityItem(this.gameRoom.getWorld());
+            for (String spawn : this.gameRoom.getGoldSpawn()) {
                 String[] s = spawn.split(":");
                 this.gameRoom.getWorld().dropItem(new Vector3(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])),
                         Item.get(266, 0));
@@ -101,12 +100,6 @@ public class GameTask extends PluginTask<KillerGame> {
         }
     }
 
-    private void sendActionBar(String string) {
-        for (Player player : this.gameRoom.getPlayers().keySet()) {
-            player.sendActionBar(string);
-        }
-    }
-
     private void sendMessage(String string) {
         for (Player player : this.gameRoom.getPlayers().keySet()) {
             player.sendMessage(string);
@@ -114,7 +107,7 @@ public class GameTask extends PluginTask<KillerGame> {
     }
 
     private void victory(int i) {
-        this.cleanEntityItem();
+        this.cleanEntityItem(this.gameRoom.getWorld());
         this.gameRoom.setMode(3);
         for (Player player : this.gameRoom.getPlayers().keySet()) {
             if (i == 3) {
@@ -128,9 +121,9 @@ public class GameTask extends PluginTask<KillerGame> {
         this.cancel();
     }
 
-    private void cleanEntityItem(){
-        for (Entity entity : this.gameRoom.getWorld().getEntities()) {
-            if (entity instanceof EntityItem) {
+    private void cleanEntityItem(Level level){
+        for (Entity entity : level.getEntities()) {
+            if (!(entity instanceof EntityHuman)) {
                 entity.close();
             }
         }

@@ -16,6 +16,10 @@ import name.KillerGame.Room.Room;
  */
 public class PlayerGame implements Listener {
 
+    /**
+     * 实体受到另一实体伤害事件
+     * @param event 事件
+     */
     @EventHandler
     public void onDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getDamager() == null || event.getEntity() == null) {
@@ -28,13 +32,10 @@ public class PlayerGame implements Listener {
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
             Player player1 = (Player) event.getDamager();
             Player player2 = (Player) event.getEntity();
-            if (player1 == null || player2 == null) {
-                return;
-            }
             Room gameRoom = KillerGame.getInstance().getRooms().get(player1.getLevel().getName());
             if (gameRoom.getPlayerMode(player1) == 3 && player1.getInventory().getItemInHand().getId() == 267) {
                 player1.sendMessage("§a你成功击杀了一位玩家！");
-                player2.sendTitle("§c你已死亡", "§c你被杀手杀死了", 20, 40, 20);
+                player2.sendTitle("§c死亡", "§c你被杀手杀死了", 20, 60, 20);
                 player2.setGamemode(3);
                 gameRoom.addPlaying(player2, 0);
             }
@@ -42,24 +43,35 @@ public class PlayerGame implements Listener {
         event.setCancelled();
     }
 
+    /**
+     * 实体受到另一个子实体伤害事件
+     * @param event 事件
+     */
     @EventHandler
     public void onDamageByChild(EntityDamageByChildEntityEvent event) {
         if (event.getDamager() == null || event.getEntity() == null) {
             return;
         }
+        Level level = event.getDamager().getLevel();
+        if (level == null || !KillerGame.getInstance().getRooms().containsKey(level.getName())) {
+            return;
+        }
         if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
             Player player1 = ((Player) event.getDamager()).getPlayer();
             Player player2 = ((Player) event.getEntity()).getPlayer();
-            if (player1 == null || player2 == null) {
+            if (player1 == player2) {
                 return;
             }
             Room room = KillerGame.getInstance().getRooms().get(player1.getLevel().getName());
-            if (room.getPlayerMode(player2) == 3 && event.getChild().getId() == 262) {
+            if (room.getPlayerMode(player1) == 3) {
+                event.setCancelled();
+                return;
+            } else if (room.getPlayerMode(player2) == 3 && event.getChild().getId() == 262) {
                 player1.sendMessage("你成功击杀了杀手！");
-                player2.sendTitle("§c你已死亡", "§c你被平民或侦探打死了", 20, 40, 20);
+                player2.sendTitle("§c死亡", "§c你被平民或侦探打死了", 20, 60, 20);
             } else {
-                player1.sendTitle("§c你已死亡", "§c你击中了队友", 20, 40, 20);
-                player2.sendTitle("§c你已死亡", "§c你被队友打死了", 20, 40, 20);
+                player1.sendTitle("§c死亡", "§c你击中了队友", 20, 60, 20);
+                player2.sendTitle("§c死亡", "§c你被队友打死了", 20, 60, 20);
                 player1.setGamemode(3);
                 room.addPlaying(player1, 0);
             }
@@ -116,10 +128,12 @@ public class PlayerGame implements Listener {
     public void onShootBow(EntityShootBowEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = ((Player) event.getEntity()).getPlayer();
-            if (!KillerGame.getInstance().getRooms().containsKey(player.getLevel().getName())) {
+            String levelName = player.getLevel().getName();
+            if (!KillerGame.getInstance().getRooms().containsKey(levelName)) {
                 return;
             }
-            if (KillerGame.getInstance().getRooms().get(player.getLevel().getName()).getPlayers().get(player) == 2) {
+            Room room = KillerGame.getInstance().getRooms().get(levelName);
+            if (room.getPlayerMode(player) == 2) {
                 player.getInventory().addItem(Item.get(262, 0, 1));
                 return;
             }

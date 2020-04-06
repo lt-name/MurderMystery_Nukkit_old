@@ -136,11 +136,11 @@ public class Room {
      */
     public void addPlaying(Player player, Integer mode) {
         if (mode == 1) {
-            player.sendTitle("§a你已被选为平民", "想办法活下去吧", 10, 40, 10);
+            player.sendTitle("§a平民", "活下去，就是胜利", 10, 40, 10);
         }else if (mode == 2) {
-            player.sendTitle("§e你已被选为侦探", "想办法找出杀手吧", 10, 40, 10);
+            player.sendTitle("§e侦探", "找出杀手，并用弓箭击中他", 10, 40, 10);
         }else if (mode == 3) {
-            player.sendTitle("§c你已被选为杀手", "想办法杀光所有人吧", 10, 40, 10);
+            player.sendTitle("§c杀手", "杀掉所有人", 10, 40, 10);
         }
         this.players.put(player, mode);
     }
