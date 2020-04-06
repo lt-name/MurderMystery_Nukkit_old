@@ -83,8 +83,8 @@ public class Room {
      */
     public void joinRoom(Player player) {
         this.addPlaying(player);
-        rePlayerState(player);
-        player.setNameTagAlwaysVisible(false);
+        this.rePlayerState(player);
+        this.setNameTagVisible(player, false);
         player.teleport(this.getSpawn());
     }
 
@@ -95,10 +95,20 @@ public class Room {
     public void quitRoom(Player player) {
         if (this.isPlaying(player)) {
             this.delPlaying(player);
-            rePlayerState(player);
-            player.setNameTagAlwaysVisible(true);
+            this.rePlayerState(player);
+            this.setNameTagVisible(player, true);
             player.teleport(KillerGame.getInstance().getServer().getDefaultLevel().getSafeSpawn());
         }
+    }
+
+    /**
+     * 设置玩家名称是否可见
+     * @param player 玩家
+     * @param canSee 是否可见
+     */
+    private void setNameTagVisible(Player player, boolean canSee) {
+        player.setNameTagAlwaysVisible(canSee);
+        player.setNameTagVisible(canSee);
     }
 
     /**
