@@ -15,7 +15,7 @@ import java.util.List;
 public class Room {
 
     private int mode; //0等待重置 1玩家等待中 2玩家游戏中 3胜利结算中
-    public int waitTime, gameTime, victoryTime = 10, goldSpawnTime; //秒
+    public int waitTime, gameTime, victoryTime, goldSpawnTime; //秒
     private int setWaitTime, setGameTime, setGoldSpawnTime;
     private LinkedHashMap<Player, Integer> players = new LinkedHashMap<>(); //0未分配 1平民 2侦探 3杀手
     private List<String> goldSpawn;
@@ -36,6 +36,7 @@ public class Room {
         this.goldSpawn = config.getStringList("goldSpawn");
         this.setGoldSpawnTime = config.getInt("goldSpawnTime", 15);
         this.goldSpawnTime = this.setGoldSpawnTime;
+        this.victoryTime = 10;
         this.world = config.getString("World", null);
         this.mode = 0;
     }
@@ -65,7 +66,7 @@ public class Room {
      * 结束本局游戏
      */
     public void endGame() {
-        if (this.players.values().size() > 0 ){
+        if (this.players.values().size() > 0 ) {
             for (Player player : this.players.keySet()) {
                 quitRoom(player, true);
             }
@@ -110,7 +111,7 @@ public class Room {
      * @param canSee 是否可见
      */
     private void setNameTagVisible(Player player, boolean canSee) {
-        player.setNameTagAlwaysVisible(canSee);
+        //player.setNameTagAlwaysVisible(canSee);
         player.setNameTagVisible(canSee);
     }
 
@@ -132,8 +133,12 @@ public class Room {
         player.getFoodData().setLevel(player.getFoodData().getMaxLevel());
     }
 
+    /**
+     * 清空玩家背包
+     * @param player 玩家
+     */
     public void clearInventory(Player player) {
-        //player.getInventory().close(player);
+        player.getInventory().close(player);
         player.getInventory().clearAll();
     }
 
