@@ -21,13 +21,13 @@ public class TipsTask extends PluginTask<KillerGame> {
     public void onRun(int i) {
         if (this.room.getMode() == 2) {
             if (this.room.getPlayers().values().size() > 0) {
-                int j = 0;
+                int x = 0;
                 for (Integer integer : this.room.getPlayers().values()) {
                     if (integer != 0) {
-                        j++;
+                        x++;
                     }
                 }
-                this.sendActionBar("§a距游戏结束还有 "+ this.room.gameTime + " 秒\n当前还有： §e" + j + " §a人存活");
+                this.sendActionBar("§a距游戏结束还有 "+ this.room.gameTime + " 秒\n当前还有： §e" + x + " §a人存活");
             }
         }else {
             this.cancel();
