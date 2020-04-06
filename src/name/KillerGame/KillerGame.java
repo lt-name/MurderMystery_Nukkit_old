@@ -147,6 +147,7 @@ public class KillerGame extends PluginBase {
                             sender.sendMessage("§e killer管理--命令帮助");
                             sender.sendMessage("§a/kadmin 设置出生点 §e设置当前位置为游戏出生点");
                             sender.sendMessage("§a/kadmin 添加金锭生成点 §e将当前位置设置为金锭生成点");
+                            sender.sendMessage("§a/kadmin 设置金锭产出间隔 数字 §e设置金锭生成间隔");
                             sender.sendMessage("§a/kadmin 设置等待时间 数字 §e设置游戏人数足够后的等待时间");
                             sender.sendMessage("§a/kadmin 设置游戏时间 数字 §e设置每轮游戏最长时间");
                             sender.sendMessage("§a/kadmin reload §e重载所有房间");
@@ -206,12 +207,16 @@ public class KillerGame extends PluginBase {
      * 重载所有房间
      */
     private void reLoadRooms() {
-        for (String string : this.rooms.keySet()) {
-            this.rooms.get(string).endGame();
-            this.rooms.remove(string);
+        if (this.rooms.values().size() > 0) {
+            for (String string : this.rooms.keySet()) {
+                this.rooms.get(string).endGame();
+                this.rooms.remove(string);
+            }
         }
-        for (String string : this.roomConfigs.keySet()) {
-            this.roomConfigs.remove(string);
+        if (this.roomConfigs.values().size() > 0) {
+            for (String string : this.roomConfigs.keySet()) {
+                this.roomConfigs.remove(string);
+            }
         }
         this.loadRooms();
     }

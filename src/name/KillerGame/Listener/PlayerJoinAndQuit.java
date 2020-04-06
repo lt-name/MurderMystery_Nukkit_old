@@ -6,6 +6,7 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.event.player.PlayerTeleportEvent;
+import cn.nukkit.scheduler.Task;
 import name.KillerGame.KillerGame;
 import name.KillerGame.Room.Room;
 
@@ -17,11 +18,19 @@ public class PlayerJoinAndQuit implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        for (Room room : KillerGame.getInstance().getRooms().values()) {
-            if (player != null && room.isPlaying(player)) {
-                room.quitRoom(player);
+        KillerGame.getInstance().getServer().getScheduler().scheduleDelayedTask(new Task() {
+            @Override
+            public void onRun(int i) {
+                for (Room room : KillerGame.getInstance().getRooms().values()) {
+                    if (player != null && room.isPlaying(player)) {
+                        room.quitRoom(player);
+                    }
+                }
+                if (player != null && KillerGame.getInstance().getRooms().containsKey(player.getLevel().getName())) {
+                    player.teleport(KillerGame.getInstance().getServer().getDefaultLevel().getSafeSpawn());
+                }
             }
-        }
+        }, 100);
     }
 
     @EventHandler

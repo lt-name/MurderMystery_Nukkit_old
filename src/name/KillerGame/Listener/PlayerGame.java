@@ -49,7 +49,8 @@ public class PlayerGame implements Listener {
      */
     @EventHandler
     public void onDamageByChild(EntityDamageByChildEntityEvent event) {
-        if (event.getDamager() == null || event.getEntity() == null) {
+        if (event.getDamager() == null || event.getEntity() == null ||
+                event.getChild() == null || event.getChild().getId() != 262) {
             return;
         }
         Level level = event.getDamager().getLevel();
@@ -66,7 +67,7 @@ public class PlayerGame implements Listener {
             if (room.getPlayerMode(player1) == 3) {
                 event.setCancelled();
                 return;
-            } else if (room.getPlayerMode(player2) == 3 && event.getChild().getId() == 262) {
+            } else if (room.getPlayerMode(player2) == 3) {
                 player1.sendMessage("你成功击杀了杀手！");
                 player2.sendTitle("§c死亡", "§c你被平民或侦探打死了", 20, 60, 20);
             } else {
