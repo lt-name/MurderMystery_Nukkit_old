@@ -1,4 +1,4 @@
-package name.KillerGame.Listener;
+package name.killergame.listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
@@ -8,8 +8,9 @@ import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityShootBowEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
-import name.KillerGame.KillerGame;
-import name.KillerGame.Room.Room;
+import cn.nukkit.scheduler.Task;
+import name.killergame.KillerGame;
+import name.killergame.room.Room;
 
 /**
  * 游戏监听器
@@ -141,20 +142,26 @@ public class PlayerGame implements Listener {
                 player.getInventory().addItem(Item.get(262, 0, 1));
                 return;
             }
-            int j = 0; //箭的数量
-            boolean bow = false;
-            for (Item item : player.getInventory().getContents().values()) {
-                if (item.getId() == 262) {
-                    j += item.getCount();
-                    continue;
+            //回收平民的弓
+            KillerGame.getInstance().getServer().getScheduler().scheduleDelayedTask(new Task() {
+                @Override
+                public void onRun(int i) {
+                    int j = 0; //箭的数量
+                    boolean bow = false;
+                    for (Item item : player.getInventory().getContents().values()) {
+                        if (item.getId() == 262) {
+                            j += item.getCount();
+                            continue;
+                        }
+                        if (item.getId() == 261) {
+                            bow = true;
+                        }
+                    }
+                    if (j < 1 && bow) {
+                        player.getInventory().removeItem(Item.get(261, 0, 1));
+                    }
                 }
-                if (item.getId() == 261) {
-                    bow = true;
-                }
-            }
-            if (j < 1 && bow) {
-                player.getInventory().removeItem(Item.get(261, 0, 1));
-            }
+            }, 20, true);
         }
     }
 

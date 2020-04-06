@@ -1,4 +1,4 @@
-package name.KillerGame.Listener;
+package name.killergame.listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
@@ -13,7 +13,7 @@ import cn.nukkit.event.inventory.StartBrewEvent;
 import cn.nukkit.event.player.PlayerDropItemEvent;
 import cn.nukkit.event.player.PlayerFoodLevelChangeEvent;
 import cn.nukkit.level.Level;
-import name.KillerGame.KillerGame;
+import name.killergame.KillerGame;
 
 /**
  * 游戏保护

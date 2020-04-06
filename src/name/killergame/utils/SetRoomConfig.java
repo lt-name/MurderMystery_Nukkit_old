@@ -1,4 +1,4 @@
-package name.KillerGame.Utils;
+package name.killergame.utils;
 
 import cn.nukkit.Player;
 import cn.nukkit.utils.Config;

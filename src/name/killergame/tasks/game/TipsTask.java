@@ -1,15 +1,18 @@
-package name.KillerGame.Tasks;
+package name.killergame.tasks.game;
 
 import cn.nukkit.Player;
 import cn.nukkit.scheduler.PluginTask;
-import name.KillerGame.KillerGame;
-import name.KillerGame.Room.Room;
+import name.killergame.KillerGame;
+import name.killergame.room.Room;
 
-public class GameTipsTask extends PluginTask<KillerGame> {
+/**
+ * 信息显示
+ */
+public class TipsTask extends PluginTask<KillerGame> {
 
     private Room room;
 
-    public GameTipsTask(KillerGame owner, Room room) {
+    public TipsTask(KillerGame owner, Room room) {
         super(owner);
         this.room = room;
     }
@@ -23,7 +26,7 @@ public class GameTipsTask extends PluginTask<KillerGame> {
                     j++;
                 }
             }
-            this.sendActionBar("§a距游戏结束还有"+ this.room.gameTime + "秒\n当前还有： §e" + j + " §a人存活");
+            this.sendActionBar("§a距游戏结束还有 "+ this.room.gameTime + " 秒\n当前还有： §e" + j + " §a人存活");
         }else {
             this.cancel();
         }

@@ -1,4 +1,4 @@
-package name.KillerGame.Listener;
+package name.killergame.listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
@@ -7,8 +7,8 @@ import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.event.player.PlayerTeleportEvent;
 import cn.nukkit.scheduler.Task;
-import name.KillerGame.KillerGame;
-import name.KillerGame.Room.Room;
+import name.killergame.KillerGame;
+import name.killergame.room.Room;
 
 /**
  * 玩家进入/退出服务器 或传送到其他世界时，退出房间
@@ -23,7 +23,7 @@ public class PlayerJoinAndQuit implements Listener {
             public void onRun(int i) {
                 for (Room room : KillerGame.getInstance().getRooms().values()) {
                     if (player != null && room.isPlaying(player)) {
-                        room.quitRoom(player);
+                        room.quitRoom(player, true);
                     }
                 }
                 if (player != null && KillerGame.getInstance().getRooms().containsKey(player.getLevel().getName())) {
@@ -38,7 +38,7 @@ public class PlayerJoinAndQuit implements Listener {
         Player player = event.getPlayer();
         for (Room room : KillerGame.getInstance().getRooms().values()) {
             if (player != null && room.isPlaying(player)) {
-                room.quitRoom(player);
+                room.quitRoom(player, false);
             }
         }
     }
@@ -53,7 +53,7 @@ public class PlayerJoinAndQuit implements Listener {
             if (KillerGame.getInstance().getRooms().containsKey(fromLevel)) {
                 Room room = KillerGame.getInstance().getRooms().get(fromLevel);
                 if (room.isPlaying(player)) {
-                    room.quitRoom(player);
+                    room.quitRoom(player, false);
                 }
             }
             if (!player.isOp() && KillerGame.getInstance().getRooms().containsKey(toLevel) &&

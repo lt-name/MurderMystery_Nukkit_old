@@ -1,9 +1,9 @@
-package name.KillerGame.Tasks;
+package name.killergame.tasks;
 
 import cn.nukkit.scheduler.PluginTask;
-import name.KillerGame.KillerGame;
-import name.KillerGame.Room.Room;
-import name.KillerGame.Utils.LevelFileReset;
+import name.killergame.KillerGame;
+import name.killergame.room.Room;
+import name.killergame.utils.LevelFileReset;
 
 
 public class ResetLevelTask extends PluginTask<KillerGame> {

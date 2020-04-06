@@ -1,10 +1,10 @@
-package name.KillerGame.Room;
+package name.killergame.room;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
-import name.KillerGame.KillerGame;
+import name.killergame.KillerGame;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,14 +28,14 @@ public class Room {
      */
     public Room(Config config) {
         this.config = config;
-        this.waitTime = config.getInt("等待时间", 120);
-        this.setWaitTime = this.waitTime;
-        this.gameTime = config.getInt("游戏时间", 600);
-        this.setGameTime = this.gameTime;
+        this.setWaitTime = config.getInt("等待时间", 120);
+        this.waitTime = this.setWaitTime;
+        this.setGameTime = config.getInt("游戏时间", 600);
+        this.gameTime = this.setGameTime;
         this.spawn = config.getString("出生点", null);
         this.goldSpawn = config.getStringList("goldSpawn");
-        this.goldSpawnTime = config.getInt("goldSpawnTime", 15);
-        this.setGoldSpawnTime = this.goldSpawnTime;
+        this.setGoldSpawnTime = config.getInt("goldSpawnTime", 15);
+        this.goldSpawnTime = this.setGoldSpawnTime;
         this.world = config.getString("World", null);
         this.mode = 0;
     }
@@ -67,7 +67,7 @@ public class Room {
     public void endGame() {
         if (this.players.values().size() > 0 ){
             for (Player player : this.players.keySet()) {
-                quitRoom(player);
+                quitRoom(player, true);
             }
         }
         this.waitTime = this.setWaitTime;
@@ -91,12 +91,15 @@ public class Room {
     /**
      * 退出房间
      * @param player 玩家
+     * @param tp 是否传送
      */
-    public void quitRoom(Player player) {
+    public void quitRoom(Player player, boolean tp) {
         if (this.isPlaying(player)) {
             this.delPlaying(player);
             this.rePlayerState(player);
             this.setNameTagVisible(player, true);
+        }
+        if (tp) {
             player.teleport(KillerGame.getInstance().getServer().getDefaultLevel().getSafeSpawn());
         }
     }
@@ -130,7 +133,7 @@ public class Room {
     }
 
     public void clearInventory(Player player) {
-        player.getInventory().close(player);
+        //player.getInventory().close(player);
         player.getInventory().clearAll();
     }
 
@@ -153,7 +156,7 @@ public class Room {
         if (mode == 1) {
             player.sendTitle("§a平民", "活下去，就是胜利", 10, 40, 10);
         }else if (mode == 2) {
-            player.sendTitle("§e侦探", "找出杀手，并用弓箭击中他", 10, 40, 10);
+            player.sendTitle("§e侦探", "找出杀手，并用弓箭击杀他", 10, 40, 10);
         }else if (mode == 3) {
             player.sendTitle("§c杀手", "杀掉所有人", 10, 40, 10);
         }

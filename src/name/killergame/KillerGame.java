@@ -1,4 +1,4 @@
-package name.KillerGame;
+package name.killergame;
 
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
@@ -6,12 +6,12 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
-import name.KillerGame.Listener.GameProtection;
-import name.KillerGame.Listener.PlayerGame;
-import name.KillerGame.Listener.PlayerJoinAndQuit;
-import name.KillerGame.Room.Room;
-import name.KillerGame.Tasks.WaitTask;
-import name.KillerGame.Utils.SetRoomConfig;
+import name.killergame.listener.GameProtection;
+import name.killergame.listener.PlayerGame;
+import name.killergame.listener.PlayerJoinAndQuit;
+import name.killergame.room.Room;
+import name.killergame.tasks.WaitTask;
+import name.killergame.utils.SetRoomConfig;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -47,8 +47,11 @@ public class KillerGame extends PluginBase {
     @Override
     public void onDisable() {
         this.config.save();
-        for (Room gameRoom : this.rooms.values()) {
-            gameRoom.getConfig().save();
+        if (this.rooms.values().size() > 0) {
+            for (Room room : this.rooms.values()) {
+                room.endGame();
+                room.getConfig().save();
+            }
         }
         getLogger().info("§c已卸载！");
     }
@@ -81,7 +84,7 @@ public class KillerGame extends PluginBase {
                         case "quit": case "退出":
                             for (Room gameRoom : this.rooms.values()) {
                                 if (gameRoom.getPlayers().containsKey(player)) {
-                                    gameRoom.quitRoom(player);
+                                    gameRoom.quitRoom(player, true);
                                     sender.sendMessage("§a你已退出房间");
                                 }
                             }
@@ -142,6 +145,7 @@ public class KillerGame extends PluginBase {
                             break;
                         case "reload": case "重载":
                             this.reLoadRooms();
+                            sender.sendMessage("§a配置重载完成！");
                             break;
                         default:
                             sender.sendMessage("§e killer管理--命令帮助");

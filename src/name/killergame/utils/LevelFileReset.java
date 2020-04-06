@@ -1,7 +1,7 @@
-package name.KillerGame.Utils;
+package name.killergame.utils;
 
 import cn.nukkit.level.Level;
-import name.KillerGame.KillerGame;
+import name.killergame.KillerGame;
 
 import java.io.*;
 

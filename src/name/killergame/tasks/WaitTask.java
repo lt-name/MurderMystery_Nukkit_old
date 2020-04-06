@@ -1,9 +1,14 @@
-package name.KillerGame.Tasks;
+package name.killergame.tasks;
 
 import cn.nukkit.Player;
+import cn.nukkit.level.Sound;
 import cn.nukkit.scheduler.PluginTask;
-import name.KillerGame.KillerGame;
-import name.KillerGame.Room.Room;
+import name.killergame.KillerGame;
+import name.killergame.room.Room;
+import name.killergame.tasks.game.GoldTask;
+import name.killergame.tasks.game.TimeTask;
+import name.killergame.tasks.game.TipsTask;
+import name.killergame.utils.Tools;
 
 import java.util.LinkedHashMap;
 import java.util.Random;
@@ -24,6 +29,9 @@ public class WaitTask extends PluginTask<KillerGame> {
                 this.room.waitTime--;
                 this.sendActionBar("§a当前已有: " + this.room.getPlayers().size() + " 位玩家" +
                         "\n§a游戏还有: " + this.room.waitTime + " 秒开始！");
+                if (this.room.waitTime <= 5) {
+                    Tools.addSound(this.room, Sound.RANDOM_CLICK);
+                }
             }else {
                 LinkedHashMap<Player, Integer> players = this.room.getPlayers();
                 int random1 = new Random().nextInt(players.size()) + 1;
@@ -49,9 +57,11 @@ public class WaitTask extends PluginTask<KillerGame> {
                 }
                 this.room.setMode(2);
                 owner.getServer().getScheduler().scheduleRepeatingTask(
-                        KillerGame.getInstance(), new GameTask(KillerGame.getInstance(), this.room), 20,true);
+                        KillerGame.getInstance(), new TimeTask(KillerGame.getInstance(), this.room), 20,true);
+                owner.getServer().getScheduler().scheduleDelayedTask(
+                        KillerGame.getInstance(), new GoldTask(KillerGame.getInstance(), this.room), 20, true);
                 owner.getServer().getScheduler().scheduleRepeatingTask(
-                        KillerGame.getInstance(), new GameTipsTask(KillerGame.getInstance(), this.room), 10, true);
+                        KillerGame.getInstance(), new TipsTask(KillerGame.getInstance(), this.room), 10, true);
                 this.cancel();
             }
         }else if (this.room.getPlayers().size() > 0) {

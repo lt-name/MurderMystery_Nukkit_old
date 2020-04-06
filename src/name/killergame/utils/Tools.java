@@ -1,6 +1,8 @@
-package name.KillerGame.Utils;
+package name.killergame.utils;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.EntityHuman;
 import cn.nukkit.entity.item.EntityFirework;
 import cn.nukkit.item.ItemFirework;
 import cn.nukkit.level.Level;
@@ -12,7 +14,7 @@ import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.utils.DyeColor;
-import name.KillerGame.Room.Room;
+import name.killergame.room.Room;
 
 import java.util.Random;
 
@@ -26,6 +28,18 @@ public class Tools {
     public static void addSound(Room room, Sound sound) {
         for (Player player : room.getPlayers().keySet()) {
             player.getLevel().addSound(new Vector3(player.x, player.y, player.z), sound);
+        }
+    }
+
+    /**
+     * 清理非玩家实体
+     * @param level 世界
+     */
+    public static void cleanEntity(Level level){
+        for (Entity entity : level.getEntities()) {
+            if (!(entity instanceof EntityHuman)) {
+                entity.close();
+            }
         }
     }
 
