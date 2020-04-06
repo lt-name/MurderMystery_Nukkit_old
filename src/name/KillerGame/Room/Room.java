@@ -124,9 +124,14 @@ public class Room {
         }else {
             player.setMovementSpeed(0.1F);
         }
-        player.getInventory().clearAll();
+        this.clearInventory(player);
         player.setHealth(player.getMaxHealth());
         player.getFoodData().setLevel(player.getFoodData().getMaxLevel());
+    }
+
+    public void clearInventory(Player player) {
+        player.getInventory().close(player);
+        player.getInventory().clearAll();
     }
 
     /**

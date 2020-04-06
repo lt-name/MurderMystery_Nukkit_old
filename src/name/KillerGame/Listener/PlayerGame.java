@@ -32,12 +32,13 @@ public class PlayerGame implements Listener {
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
             Player player1 = (Player) event.getDamager();
             Player player2 = (Player) event.getEntity();
-            Room gameRoom = KillerGame.getInstance().getRooms().get(player1.getLevel().getName());
-            if (gameRoom.getPlayerMode(player1) == 3 && player1.getInventory().getItemInHand().getId() == 267) {
+            Room room = KillerGame.getInstance().getRooms().get(player1.getLevel().getName());
+            if (room.getPlayerMode(player1) == 3 && player1.getInventory().getItemInHand().getId() == 267) {
                 player1.sendMessage("§a你成功击杀了一位玩家！");
                 player2.sendTitle("§c死亡", "§c你被杀手杀死了", 20, 60, 20);
+                room.clearInventory(player2);
                 player2.setGamemode(3);
-                gameRoom.addPlaying(player2, 0);
+                room.addPlaying(player2, 0);
             }
         }
         event.setCancelled();
@@ -73,9 +74,11 @@ public class PlayerGame implements Listener {
             } else {
                 player1.sendTitle("§c死亡", "§c你击中了队友", 20, 60, 20);
                 player2.sendTitle("§c死亡", "§c你被队友打死了", 20, 60, 20);
+                room.clearInventory(player1);
                 player1.setGamemode(3);
                 room.addPlaying(player1, 0);
             }
+            room.clearInventory(player2);
             player2.setGamemode(3);
             room.addPlaying(player2, 0);
         }
