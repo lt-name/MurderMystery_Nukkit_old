@@ -22,6 +22,9 @@ public class GoldTask extends PluginTask<MysteryMurder> {
 
     @Override
     public void onRun(int i) {
+        if (this.room.getMode() != 2) {
+            this.cancel();
+        }
         //金锭生成
         if (this.room.goldSpawnTime < 1) {
             Tools.cleanEntity(this.room.getWorld());
