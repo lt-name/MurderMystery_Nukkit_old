@@ -1,21 +1,21 @@
-package name.mysterymurder.tasks.game;
+package name.murdermystery.tasks.game;
 
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.PluginTask;
-import name.mysterymurder.MysteryMurder;
-import name.mysterymurder.room.Room;
-import name.mysterymurder.utils.Tools;
+import name.murdermystery.MurderMystery;
+import name.murdermystery.room.Room;
+import name.murdermystery.utils.Tools;
 
 /**
  * 金锭生成 金锭自动兑换
  */
-public class GoldTask extends PluginTask<MysteryMurder> {
+public class GoldTask extends PluginTask<MurderMystery> {
 
     private Room room;
 
-    public GoldTask(MysteryMurder owner, Room room) {
+    public GoldTask(MurderMystery owner, Room room) {
         super(owner);
         this.room = room;
     }

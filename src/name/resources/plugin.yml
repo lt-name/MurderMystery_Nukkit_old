@@ -1,5 +1,5 @@
-name: MysteryMurder
-main: name.mysterymurder.MysteryMurder
+name: MurderMystery
+main: name.murdermystery.MurderMystery
 version: "0.0.1"
 api:
   - 1.0.0
@@ -11,19 +11,19 @@ loadbefore:
 commands:
   killer:
     usage: /killer help
-    description: "MysteryMurder 游戏命令"
-    permission: MysteryMurder.a
+    description: "MurderMystery 游戏命令"
+    permission: MurderMystery.a
     aliases:
       - 杀手
-      - MysteryMurder
+      - MurderMystery
   kadmin:
     usage: /kadmin help
-    description: "MysteryMurder 管理命令"
-    permission: MysteryMurder.b
+    description: "MurderMystery 管理命令"
+    permission: MurderMystery.b
     aliases:
       - 杀手管理
 permissions:
-  MysteryMurder.a:
+  MurderMystery.a:
     default: true
-  MysteryMurder.b:
+  MurderMystery.b:
     default: op

@@ -1,9 +1,9 @@
-package name.mysterymurder.api;
+package name.murdermystery.api;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Level;
-import name.mysterymurder.MysteryMurder;
-import name.mysterymurder.room.Room;
+import name.murdermystery.MurderMystery;
+import name.murdermystery.room.Room;
 
 import java.util.LinkedHashMap;
 
@@ -15,7 +15,7 @@ public class Api {
      * @return 房间列表
      */
     public static LinkedHashMap<String, Room> getRooms() {
-        return MysteryMurder.getInstance().getRooms();
+        return MurderMystery.getInstance().getRooms();
     }
 
     /**
@@ -43,7 +43,7 @@ public class Api {
      * @return 玩家身份
      */
     public static String getPlayerMode(String player) {
-        return getPlayerMode(MysteryMurder.getInstance().getServer().getPlayer(player));
+        return getPlayerMode(MurderMystery.getInstance().getServer().getPlayer(player));
     }
 
     /**

@@ -1,11 +1,11 @@
-package name.mysterymurder.utils;
+package name.murdermystery.utils;
 
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.Config;
 import com.sun.istack.internal.NotNull;
-import name.mysterymurder.MysteryMurder;
+import name.murdermystery.MurderMystery;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -24,7 +24,7 @@ public class SavePlayerInventory {
      * @param restore 是否为还原
      */
     public static void savePlayerInventory(Player player, boolean restore) {
-        File file = new File(MysteryMurder.getInstance().getDataFolder() + "/PlayerInventory/" + player.getName() + ".json");
+        File file = new File(MurderMystery.getInstance().getDataFolder() + "/PlayerInventory/" + player.getName() + ".json");
         Config config = new Config(file, 1);
         if (restore) {
             if (file.exists() && file.delete()) {

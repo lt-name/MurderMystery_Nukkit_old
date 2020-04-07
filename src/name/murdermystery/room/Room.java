@@ -1,15 +1,14 @@
-package name.mysterymurder.room;
+package name.murdermystery.room;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
-import name.mysterymurder.MysteryMurder;
-import name.mysterymurder.tasks.WaitTask;
-import name.mysterymurder.utils.SavePlayerInventory;
-import name.mysterymurder.utils.Tools;
+import name.murdermystery.MurderMystery;
+import name.murdermystery.tasks.WaitTask;
+import name.murdermystery.utils.SavePlayerInventory;
+import name.murdermystery.utils.Tools;
 
-import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -49,8 +48,8 @@ public class Room {
     public void initTask() {
         if (this.getMode() == 0) {
             this.setMode(1);
-            MysteryMurder.getInstance().getServer().getScheduler().scheduleRepeatingTask(
-                    MysteryMurder.getInstance(), new WaitTask(MysteryMurder.getInstance(), this), 20,true);
+            MurderMystery.getInstance().getServer().getScheduler().scheduleRepeatingTask(
+                    MurderMystery.getInstance(), new WaitTask(MurderMystery.getInstance(), this), 20,true);
         }
     }
 
@@ -116,7 +115,7 @@ public class Room {
         if (online) {
             Tools.rePlayerState(player, true);
             SavePlayerInventory.savePlayerInventory(player, true);
-            player.teleport(MysteryMurder.getInstance().getServer().getDefaultLevel().getSafeSpawn());
+            player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn());
         }
     }
 
@@ -196,7 +195,7 @@ public class Room {
         return new Position(Integer.parseInt(s[0]),
                 Integer.parseInt(s[1]),
                 Integer.parseInt(s[2]),
-                MysteryMurder.getInstance().getServer().getLevelByName(s[3]));
+                MurderMystery.getInstance().getServer().getLevelByName(s[3]));
     }
 
     /**
@@ -228,7 +227,7 @@ public class Room {
      * @return 游戏世界
      */
     public Level getWorld() {
-        return MysteryMurder.getInstance().getServer().getLevelByName(this.world);
+        return MurderMystery.getInstance().getServer().getLevelByName(this.world);
     }
 
 }

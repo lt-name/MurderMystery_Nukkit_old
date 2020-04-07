@@ -1,4 +1,4 @@
-package name.mysterymurder.listener;
+package name.murdermystery.listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
@@ -7,10 +7,10 @@ import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.event.player.PlayerTeleportEvent;
 import cn.nukkit.scheduler.Task;
-import name.mysterymurder.MysteryMurder;
-import name.mysterymurder.room.Room;
-import name.mysterymurder.utils.SavePlayerInventory;
-import name.mysterymurder.utils.Tools;
+import name.murdermystery.MurderMystery;
+import name.murdermystery.room.Room;
+import name.murdermystery.utils.SavePlayerInventory;
+import name.murdermystery.utils.Tools;
 
 import java.util.LinkedHashMap;
 
@@ -22,13 +22,13 @@ public class PlayerJoinAndQuit implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if (player != null && MysteryMurder.getInstance().getRooms().containsKey(player.getLevel().getName())) {
-            MysteryMurder.getInstance().getServer().getScheduler().scheduleDelayedTask(new Task() {
+        if (player != null && MurderMystery.getInstance().getRooms().containsKey(player.getLevel().getName())) {
+            MurderMystery.getInstance().getServer().getScheduler().scheduleDelayedTask(new Task() {
                 @Override
                 public void onRun(int i) {
                     Tools.rePlayerState(player ,true);
                     SavePlayerInventory.savePlayerInventory(player, true);
-                    player.teleport(MysteryMurder.getInstance().getServer().getDefaultLevel().getSafeSpawn());
+                    player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn());
                 }
             }, 120);
         }
@@ -37,7 +37,7 @@ public class PlayerJoinAndQuit implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        for (Room room : MysteryMurder.getInstance().getRooms().values()) {
+        for (Room room : MurderMystery.getInstance().getRooms().values()) {
             if (player != null && room.isPlaying(player)) {
                 room.quitRoom(player, false);
             }
@@ -51,7 +51,7 @@ public class PlayerJoinAndQuit implements Listener {
         String toLevel = event.getTo().getLevel().getName();
         if (player == null || fromLevel == null || toLevel == null) { return; }
         if (!fromLevel.equals(toLevel)) {
-            LinkedHashMap<String, Room> room =  MysteryMurder.getInstance().getRooms();
+            LinkedHashMap<String, Room> room =  MurderMystery.getInstance().getRooms();
             if (room.containsKey(fromLevel) && room.get(fromLevel).isPlaying(player)) {
                 event.setCancelled();
                 player.sendMessage("§e >> §c退出房间请使用：/killer quit");

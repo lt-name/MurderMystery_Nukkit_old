@@ -1,4 +1,4 @@
-package name.mysterymurder.utils;
+package name.murdermystery.utils;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
@@ -14,7 +14,7 @@ import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.utils.DyeColor;
-import name.mysterymurder.room.Room;
+import name.murdermystery.room.Room;
 
 import java.util.Random;
 
@@ -34,7 +34,8 @@ public class Tools {
         }else {
             player.setMovementSpeed(0.1F);
         }
-        player.setNameTagVisible(canSee);
+        player.setNameTagAlwaysVisible(canSee);
+        player.setNameTag("");
         player.setHealth(player.getMaxHealth());
         player.getFoodData().setLevel(player.getFoodData().getMaxLevel());
     }

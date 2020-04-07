@@ -1,4 +1,4 @@
-package name.mysterymurder.utils;
+package name.murdermystery.utils;
 
 import cn.nukkit.Player;
 import cn.nukkit.utils.Config;
