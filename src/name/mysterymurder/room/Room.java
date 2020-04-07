@@ -1,10 +1,10 @@
-package name.killergame.room;
+package name.mysterymurder.room;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
-import name.killergame.KillerGame;
+import name.mysterymurder.MysteryMurder;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -101,7 +101,7 @@ public class Room {
             this.setNameTagVisible(player, true);
         }
         if (tp) {
-            player.teleport(KillerGame.getInstance().getServer().getDefaultLevel().getSafeSpawn());
+            player.teleport(MysteryMurder.getInstance().getServer().getDefaultLevel().getSafeSpawn());
         }
     }
 
@@ -210,7 +210,7 @@ public class Room {
         return new Position(Integer.parseInt(s[0]),
                 Integer.parseInt(s[1]),
                 Integer.parseInt(s[2]),
-                KillerGame.getInstance().getServer().getLevelByName(s[3]));
+                MysteryMurder.getInstance().getServer().getLevelByName(s[3]));
     }
 
     /**
@@ -242,7 +242,7 @@ public class Room {
      * @return 游戏世界
      */
     public Level getWorld() {
-        return KillerGame.getInstance().getServer().getLevelByName(this.world);
+        return MysteryMurder.getInstance().getServer().getLevelByName(this.world);
     }
 
 }

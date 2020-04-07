@@ -1,4 +1,4 @@
-package name.killergame.utils;
+package name.mysterymurder.utils;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
@@ -14,7 +14,7 @@ import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.utils.DyeColor;
-import name.killergame.room.Room;
+import name.mysterymurder.room.Room;
 
 import java.util.Random;
 

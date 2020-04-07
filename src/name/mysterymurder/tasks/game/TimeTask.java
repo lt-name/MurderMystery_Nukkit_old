@@ -1,25 +1,25 @@
-package name.killergame.tasks.game;
+package name.mysterymurder.tasks.game;
 
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
 import cn.nukkit.scheduler.PluginTask;
-import name.killergame.KillerGame;
-import name.killergame.room.Room;
-import name.killergame.tasks.VictoryTask;
-import name.killergame.tasks.WaitTask;
-import name.killergame.utils.Tools;
+import name.mysterymurder.MysteryMurder;
+import name.mysterymurder.room.Room;
+import name.mysterymurder.tasks.VictoryTask;
+import name.mysterymurder.tasks.WaitTask;
+import name.mysterymurder.utils.Tools;
 
 import java.util.Map;
 
 /**
  * 游戏时间计算
  */
-public class TimeTask extends PluginTask<KillerGame> {
+public class TimeTask extends PluginTask<MysteryMurder> {
 
     private Room room;
 
-    public TimeTask(KillerGame owner, Room gameRoom) {
+    public TimeTask(MysteryMurder owner, Room gameRoom) {
         super(owner);
         this.room = gameRoom;
     }
@@ -86,10 +86,10 @@ public class TimeTask extends PluginTask<KillerGame> {
                 }
             }
             owner.getServer().getScheduler().scheduleRepeatingTask(
-                    KillerGame.getInstance(), new VictoryTask(KillerGame.getInstance(), this.room, i), 20,true);
+                    MysteryMurder.getInstance(), new VictoryTask(MysteryMurder.getInstance(), this.room, i), 20,true);
         }else {
             owner.getServer().getScheduler().scheduleRepeatingTask(
-                    KillerGame.getInstance(), new WaitTask(KillerGame.getInstance(), this.room), 20,true);
+                    MysteryMurder.getInstance(), new WaitTask(MysteryMurder.getInstance(), this.room), 20,true);
         }
         this.cancel();
     }

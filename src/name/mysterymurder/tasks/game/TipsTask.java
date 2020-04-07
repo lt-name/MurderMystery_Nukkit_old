@@ -1,18 +1,18 @@
-package name.killergame.tasks.game;
+package name.mysterymurder.tasks.game;
 
 import cn.nukkit.Player;
 import cn.nukkit.scheduler.PluginTask;
-import name.killergame.KillerGame;
-import name.killergame.room.Room;
+import name.mysterymurder.MysteryMurder;
+import name.mysterymurder.room.Room;
 
 /**
  * 信息显示
  */
-public class TipsTask extends PluginTask<KillerGame> {
+public class TipsTask extends PluginTask<MysteryMurder> {
 
     private Room room;
 
-    public TipsTask(KillerGame owner, Room room) {
+    public TipsTask(MysteryMurder owner, Room room) {
         super(owner);
         this.room = room;
     }

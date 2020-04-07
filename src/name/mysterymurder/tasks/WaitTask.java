@@ -1,23 +1,23 @@
-package name.killergame.tasks;
+package name.mysterymurder.tasks;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Sound;
 import cn.nukkit.scheduler.PluginTask;
-import name.killergame.KillerGame;
-import name.killergame.room.Room;
-import name.killergame.tasks.game.GoldTask;
-import name.killergame.tasks.game.TimeTask;
-import name.killergame.tasks.game.TipsTask;
-import name.killergame.utils.Tools;
+import name.mysterymurder.MysteryMurder;
+import name.mysterymurder.room.Room;
+import name.mysterymurder.tasks.game.GoldTask;
+import name.mysterymurder.tasks.game.TimeTask;
+import name.mysterymurder.tasks.game.TipsTask;
+import name.mysterymurder.utils.Tools;
 
 import java.util.LinkedHashMap;
 import java.util.Random;
 
-public class WaitTask extends PluginTask<KillerGame> {
+public class WaitTask extends PluginTask<MysteryMurder> {
 
     private Room room;
 
-    public WaitTask(KillerGame owner, Room gameRoom) {
+    public WaitTask(MysteryMurder owner, Room gameRoom) {
         super(owner);
         this.room = gameRoom;
     }
@@ -57,11 +57,11 @@ public class WaitTask extends PluginTask<KillerGame> {
                 }
                 this.room.setMode(2);
                 owner.getServer().getScheduler().scheduleRepeatingTask(
-                        KillerGame.getInstance(), new TimeTask(KillerGame.getInstance(), this.room), 20,true);
+                        MysteryMurder.getInstance(), new TimeTask(MysteryMurder.getInstance(), this.room), 20,true);
                 owner.getServer().getScheduler().scheduleDelayedTask(
-                        KillerGame.getInstance(), new GoldTask(KillerGame.getInstance(), this.room), 20, true);
+                        MysteryMurder.getInstance(), new GoldTask(MysteryMurder.getInstance(), this.room), 20, true);
                 owner.getServer().getScheduler().scheduleRepeatingTask(
-                        KillerGame.getInstance(), new TipsTask(KillerGame.getInstance(), this.room), 10, true);
+                        MysteryMurder.getInstance(), new TipsTask(MysteryMurder.getInstance(), this.room), 10, true);
                 this.cancel();
             }
         }else if (this.room.getPlayers().size() > 0) {

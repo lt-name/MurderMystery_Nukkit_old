@@ -1,16 +1,16 @@
-package name.killergame.tasks;
+package name.mysterymurder.tasks;
 
 import cn.nukkit.scheduler.PluginTask;
-import name.killergame.KillerGame;
-import name.killergame.room.Room;
-import name.killergame.utils.LevelFileReset;
+import name.mysterymurder.MysteryMurder;
+import name.mysterymurder.room.Room;
+import name.mysterymurder.utils.LevelFileReset;
 
 
-public class ResetLevelTask extends PluginTask<KillerGame> {
+public class ResetLevelTask extends PluginTask<MysteryMurder> {
 
     private Room gameRoom;
 
-    public ResetLevelTask(KillerGame owner, Room gameRoom) {
+    public ResetLevelTask(MysteryMurder owner, Room gameRoom) {
         super(owner);
         this.gameRoom = gameRoom;
     }

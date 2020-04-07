@@ -1,7 +1,7 @@
-package name.killergame.utils;
+package name.mysterymurder.utils;
 
 import cn.nukkit.level.Level;
-import name.killergame.KillerGame;
+import name.mysterymurder.MysteryMurder;
 
 import java.io.*;
 
@@ -9,8 +9,8 @@ import java.io.*;
 public class LevelFileReset {
 
     public boolean resetLevel(Level level) {
-        KillerGame.getInstance().getServer().unloadLevel(level);
-        //KillerGame.getInstance().getDataFolder()
+        MysteryMurder.getInstance().getServer().unloadLevel(level);
+        //MysteryMurder.getInstance().getDataFolder()
 
         return true;
     }

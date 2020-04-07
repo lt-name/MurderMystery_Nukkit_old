@@ -1,4 +1,4 @@
-package name.killergame;
+package name.mysterymurder;
 
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
@@ -6,32 +6,32 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
-import name.killergame.listener.GameProtection;
-import name.killergame.listener.PlayerGame;
-import name.killergame.listener.PlayerJoinAndQuit;
-import name.killergame.room.Room;
-import name.killergame.tasks.WaitTask;
-import name.killergame.utils.SetRoomConfig;
+import name.mysterymurder.listener.GameProtection;
+import name.mysterymurder.listener.PlayerGame;
+import name.mysterymurder.listener.PlayerJoinAndQuit;
+import name.mysterymurder.room.Room;
+import name.mysterymurder.tasks.WaitTask;
+import name.mysterymurder.utils.SetRoomConfig;
 
 import java.io.File;
 import java.util.LinkedHashMap;
 
-//MysteryMurden
 /**
+ * MysteryMurder
  * @author lt_name
  */
-public class KillerGame extends PluginBase {
+public class MysteryMurder extends PluginBase {
 
-    private static KillerGame killer;
+    private static MysteryMurder mysteryMurder;
     private Config config;
     private LinkedHashMap<String, Config> roomConfigs = new LinkedHashMap<>();
     private LinkedHashMap<String, Room> rooms = new LinkedHashMap<>();
 
-    public static KillerGame getInstance() { return killer; }
+    public static MysteryMurder getInstance() { return mysteryMurder; }
 
     @Override
     public void onEnable() {
-        killer = this;
+        mysteryMurder = this;
         this.config = new Config(getDataFolder() + "/config.yml", 2);
         getServer().getPluginManager().registerEvents(new PlayerJoinAndQuit(), this);
         getServer().getPluginManager().registerEvents(new GameProtection(), this);

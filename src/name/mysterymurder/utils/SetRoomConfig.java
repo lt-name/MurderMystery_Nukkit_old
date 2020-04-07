@@ -1,4 +1,4 @@
-package name.killergame.utils;
+package name.mysterymurder.utils;
 
 import cn.nukkit.Player;
 import cn.nukkit.utils.Config;

@@ -1,17 +1,17 @@
-package name.killergame.tasks;
+package name.mysterymurder.tasks;
 
 import cn.nukkit.Player;
 import cn.nukkit.scheduler.PluginTask;
-import name.killergame.KillerGame;
-import name.killergame.room.Room;
-import name.killergame.utils.Tools;
+import name.mysterymurder.MysteryMurder;
+import name.mysterymurder.room.Room;
+import name.mysterymurder.utils.Tools;
 
-public class VictoryTask extends PluginTask<KillerGame> {
+public class VictoryTask extends PluginTask<MysteryMurder> {
 
     private Room room;
     private int victory;
 
-    public VictoryTask(KillerGame owner, Room room, int victory) {
+    public VictoryTask(MysteryMurder owner, Room room, int victory) {
         super(owner);
         this.room = room;
         this.victory = victory;
@@ -22,7 +22,7 @@ public class VictoryTask extends PluginTask<KillerGame> {
         if (this.room.victoryTime < 1) {
             this.room.endGame();
             owner.getServer().getScheduler().scheduleRepeatingTask(
-                    KillerGame.getInstance(), new WaitTask(KillerGame.getInstance(), this.room), 20,true);
+                    MysteryMurder.getInstance(), new WaitTask(MysteryMurder.getInstance(), this.room), 20,true);
             this.cancel();
         }else {
             this.room.victoryTime--;

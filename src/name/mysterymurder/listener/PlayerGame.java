@@ -1,4 +1,4 @@
-package name.killergame.listener;
+package name.mysterymurder.listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
@@ -9,8 +9,8 @@ import cn.nukkit.event.entity.EntityShootBowEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.scheduler.Task;
-import name.killergame.KillerGame;
-import name.killergame.room.Room;
+import name.mysterymurder.MysteryMurder;
+import name.mysterymurder.room.Room;
 
 /**
  * 游戏监听器
@@ -27,13 +27,13 @@ public class PlayerGame implements Listener {
             return;
         }
         Level level = event.getDamager().getLevel();
-        if (level == null || !KillerGame.getInstance().getRooms().containsKey(level.getName())) {
+        if (level == null || !MysteryMurder.getInstance().getRooms().containsKey(level.getName())) {
             return;
         }
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
             Player player1 = (Player) event.getDamager();
             Player player2 = (Player) event.getEntity();
-            Room room = KillerGame.getInstance().getRooms().get(player1.getLevel().getName());
+            Room room = MysteryMurder.getInstance().getRooms().get(player1.getLevel().getName());
             if (room.getPlayerMode(player1) == 3 && player1.getInventory().getItemInHand().getId() == 267) {
                 player1.sendMessage("§a你成功击杀了一位玩家！");
                 player2.sendTitle("§c死亡", "§c你被杀手杀死了", 20, 60, 20);
@@ -56,7 +56,7 @@ public class PlayerGame implements Listener {
             return;
         }
         Level level = event.getDamager().getLevel();
-        if (level == null || !KillerGame.getInstance().getRooms().containsKey(level.getName())) {
+        if (level == null || !MysteryMurder.getInstance().getRooms().containsKey(level.getName())) {
             return;
         }
         if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
@@ -65,7 +65,7 @@ public class PlayerGame implements Listener {
             if (player1 == player2) {
                 return;
             }
-            Room room = KillerGame.getInstance().getRooms().get(player1.getLevel().getName());
+            Room room = MysteryMurder.getInstance().getRooms().get(player1.getLevel().getName());
             if (room.getPlayerMode(player1) == 3) {
                 event.setCancelled();
                 return;
@@ -95,16 +95,16 @@ public class PlayerGame implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = ((Player) event.getEntity()).getPlayer();
             String levelName = player.getLevel().getName();
-            if (!KillerGame.getInstance().getRooms().containsKey(levelName)) {
+            if (!MysteryMurder.getInstance().getRooms().containsKey(levelName)) {
                 return;
             }
-            Room room = KillerGame.getInstance().getRooms().get(levelName);
+            Room room = MysteryMurder.getInstance().getRooms().get(levelName);
             if (room.getPlayerMode(player) == 2) {
                 player.getInventory().addItem(Item.get(262, 0, 1));
                 return;
             }
             //回收平民的弓
-            KillerGame.getInstance().getServer().getScheduler().scheduleDelayedTask(new Task() {
+            MysteryMurder.getInstance().getServer().getScheduler().scheduleDelayedTask(new Task() {
                 @Override
                 public void onRun(int i) {
                     int j = 0; //箭的数量
