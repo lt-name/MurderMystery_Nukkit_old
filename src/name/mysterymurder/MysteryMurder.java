@@ -36,9 +36,13 @@ public class MysteryMurder extends PluginBase {
         getServer().getPluginManager().registerEvents(new PlayerJoinAndQuit(), this);
         getServer().getPluginManager().registerEvents(new GameProtection(), this);
         getServer().getPluginManager().registerEvents(new PlayerGame(), this);
-        File file = new File(this.getDataFolder() + "/Rooms");
-        if (!file.exists() && !file.mkdirs()) {
+        File file1 = new File(this.getDataFolder() + "/Rooms");
+        File file2 = new File(this.getDataFolder() + "/PlayerInventory");
+        if (!file1.exists() && !file1.mkdirs()) {
             getLogger().error("Rooms 文件夹初始化失败");
+        }
+        if (!file2.exists() && !file2.mkdirs()) {
+            getLogger().error("PlayerInventory 文件夹初始化失败");
         }
         loadRooms();
         getLogger().info("§a插件加载完成！");
