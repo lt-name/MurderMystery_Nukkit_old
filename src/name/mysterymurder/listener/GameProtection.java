@@ -28,7 +28,7 @@ public class GameProtection implements Listener {
      * 物品合成事件
      * @param event 事件
      */
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onCraft(CraftItemEvent event) {
         Level level = event.getPlayer().getLevel();
         if (level != null && MysteryMurder.getInstance().getRooms().containsKey(level.getName())) {
@@ -40,7 +40,7 @@ public class GameProtection implements Listener {
      * 开始酿造事件
      * @param event 事件
      */
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onStartBrew(StartBrewEvent event) {
         Level level = event.getBrewingStand().getLevel();
         if (level != null && MysteryMurder.getInstance().getRooms().containsKey(level.getName())) {
@@ -52,7 +52,7 @@ public class GameProtection implements Listener {
      * 方块放置事件
      * @param event 事件
      */
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         if (player != null && player.isOp()) {
@@ -68,7 +68,7 @@ public class GameProtection implements Listener {
      * 方块破坏事件
      * @param event 事件
      */
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         if (player != null && player.isOp()) {
@@ -84,7 +84,7 @@ public class GameProtection implements Listener {
      * 实体爆炸事件
      * @param event 事件
      */
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onEntityExplode(EntityExplodeEvent event) {
         Level level = event.getEntity().getLevel();
         if (level != null && MysteryMurder.getInstance().getRooms().containsKey(level.getName())) {
@@ -96,7 +96,7 @@ public class GameProtection implements Listener {
      * 物品展示框丢出事件
      * @param event 事件
      */
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onFrameDropItem(ItemFrameDropItemEvent event) {
         Player player = event.getPlayer();
         if (player != null && player.isOp()) {
@@ -112,7 +112,7 @@ public class GameProtection implements Listener {
      * 饥饿值变化事件
      * @param event 事件
      */
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onFoodLevelChange(PlayerFoodLevelChangeEvent event) {
         Level level = event.getPlayer().getLevel();
         if (level != null && MysteryMurder.getInstance().getRooms().containsKey(level.getName())) {
@@ -124,7 +124,7 @@ public class GameProtection implements Listener {
      * 丢出物品事件
      * @param event 事件
      */
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onDropItem(PlayerDropItemEvent event) {
         Level level = event.getPlayer().getLevel();
         if (level != null && MysteryMurder.getInstance().getRooms().containsKey(level.getName())) {
@@ -136,7 +136,7 @@ public class GameProtection implements Listener {
      * 伤害事件
      * @param event 事件
      */
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         Level level = event.getEntity().getLevel();
         if (level != null && MysteryMurder.getInstance().getRooms().containsKey(level.getName())) {
@@ -148,7 +148,7 @@ public class GameProtection implements Listener {
      * 收起发射出去的箭事件
      * @param event 事件
      */
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onPickupArrow(InventoryPickupArrowEvent event) {
         Level level = event.getArrow().getLevel();
         if (level != null && MysteryMurder.getInstance().getRooms().containsKey(level.getName())) {
@@ -172,7 +172,7 @@ public class GameProtection implements Listener {
      * 玩家死亡事件
      * @param event 事件
      */
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Level level = event.getEntity().getLevel();
         if (level != null && MysteryMurder.getInstance().getRooms().containsKey(level.getName())) {

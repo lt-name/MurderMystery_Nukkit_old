@@ -44,7 +44,7 @@ public class PlayerJoinAndQuit implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onPlayerTp(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
         String fromLevel = event.getFrom().getLevel().getName();
