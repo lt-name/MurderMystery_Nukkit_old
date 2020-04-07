@@ -18,7 +18,26 @@ import name.mysterymurder.room.Room;
 
 import java.util.Random;
 
+
 public class Tools {
+
+    /**
+     * 重置玩家状态
+     * @param player 玩家
+     */
+    public static void rePlayerState(Player player, boolean canSee) {
+        if (player.getGamemode() != 0) {
+            player.setGamemode(0);
+        }
+        if (player.isSprinting()) {
+            player.setMovementSpeed(0.13F);
+        }else {
+            player.setMovementSpeed(0.1F);
+        }
+        player.setNameTagVisible(canSee);
+        player.setHealth(player.getMaxHealth());
+        player.getFoodData().setLevel(player.getFoodData().getMaxLevel());
+    }
 
     /**
      * 添加声音
