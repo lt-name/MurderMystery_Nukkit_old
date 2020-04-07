@@ -59,8 +59,10 @@ public class TimeTask extends PluginTask<MysteryMurder> {
                     killer = true;
                 }
             }
-            if (killer && playerNumber < 2) {
-                victory(3);
+            if (killer) {
+                if (playerNumber < 2) {
+                    victory(3);
+                }
             }else {
                 victory(1);
             }
