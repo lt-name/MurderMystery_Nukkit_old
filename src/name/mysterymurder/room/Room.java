@@ -6,7 +6,10 @@ import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
 import name.mysterymurder.MysteryMurder;
 import name.mysterymurder.tasks.WaitTask;
+import name.mysterymurder.utils.SavePlayerInventory;
+import name.mysterymurder.utils.Tools;
 
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -71,7 +74,7 @@ public class Room {
     public void endGame() {
         if (this.players.values().size() > 0 ) {
             for (Player player : this.players.keySet()) {
-                quitRoom(player, true);
+                quitRoom(player);
             }
         }
         this.waitTime = this.setWaitTime;
@@ -88,53 +91,33 @@ public class Room {
     public void joinRoom(Player player) {
         this.initTask();
         this.addPlaying(player);
-        this.rePlayerState(player);
-        this.setNameTagVisible(player, false);
+        Tools.rePlayerState(player, false);
+        this.savePlayerInventory(player, false);
         player.teleport(this.getSpawn());
     }
 
     /**
      * 退出房间
      * @param player 玩家
-     * @param tp 是否传送
      */
-    public void quitRoom(Player player, boolean tp) {
+    public void quitRoom(Player player) {
+        this.quitRoom(player, true);
+    }
+
+    /**
+     * 退出房间
+     * @param player 玩家
+     * @param online 是否在线
+     */
+    public void quitRoom(Player player, boolean online) {
         if (this.isPlaying(player)) {
             this.delPlaying(player);
-            this.rePlayerState(player);
-            this.setNameTagVisible(player, true);
         }
-        if (tp) {
+        if (online) {
+            Tools.rePlayerState(player, true);
+            this.savePlayerInventory(player, true);
             player.teleport(MysteryMurder.getInstance().getServer().getDefaultLevel().getSafeSpawn());
         }
-    }
-
-    /**
-     * 设置玩家名称是否可见
-     * @param player 玩家
-     * @param canSee 是否可见
-     */
-    private void setNameTagVisible(Player player, boolean canSee) {
-        //player.setNameTagAlwaysVisible(canSee);
-        player.setNameTagVisible(canSee);
-    }
-
-    /**
-     * 重置玩家状态
-     * @param player 玩家
-     */
-    public void rePlayerState(Player player) {
-        if (player.getGamemode() != 0) {
-            player.setGamemode(0);
-        }
-        if (player.isSprinting()) {
-            player.setMovementSpeed(0.13F);
-        }else {
-            player.setMovementSpeed(0.1F);
-        }
-        this.clearInventory(player);
-        player.setHealth(player.getMaxHealth());
-        player.getFoodData().setLevel(player.getFoodData().getMaxLevel());
     }
 
     /**
@@ -142,8 +125,27 @@ public class Room {
      * @param player 玩家
      */
     public void clearInventory(Player player) {
-        player.getInventory().close(player);
         player.getInventory().clearAll();
+    }
+
+    /**
+     * 保存玩家背包
+     * @param player 玩家
+     * @param restore 是否为还原
+     */
+    private void savePlayerInventory(Player player, boolean restore) {
+        File file = new File(MysteryMurder.getInstance().getDataFolder() + "/PlayerInventory/" + player.getName() + ".json");
+        Config config = new Config(file, 1);
+        if (restore) {
+            if (file.exists() && file.delete()) {
+                player.getInventory().clearAll();
+                SavePlayerInventory.PutInventory(player, config.get("Inventory", null));
+            }
+        }else {
+            config.set("Inventory", SavePlayerInventory.InventoryToJson(player));
+            config.save();
+            player.getInventory().clearAll();
+        }
     }
 
     /**
