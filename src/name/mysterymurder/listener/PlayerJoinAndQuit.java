@@ -9,6 +9,7 @@ import cn.nukkit.event.player.PlayerTeleportEvent;
 import cn.nukkit.scheduler.Task;
 import name.mysterymurder.MysteryMurder;
 import name.mysterymurder.room.Room;
+import name.mysterymurder.utils.SavePlayerInventory;
 import name.mysterymurder.utils.Tools;
 
 import java.util.LinkedHashMap;
@@ -26,9 +27,10 @@ public class PlayerJoinAndQuit implements Listener {
                 @Override
                 public void onRun(int i) {
                     Tools.rePlayerState(player ,true);
+                    SavePlayerInventory.savePlayerInventory(player, true);
                     player.teleport(MysteryMurder.getInstance().getServer().getDefaultLevel().getSafeSpawn());
                 }
-            }, 100);
+            }, 120);
         }
     }
 

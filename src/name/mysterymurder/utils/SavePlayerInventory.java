@@ -3,8 +3,11 @@ package name.mysterymurder.utils;
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.utils.Config;
 import com.sun.istack.internal.NotNull;
+import name.mysterymurder.MysteryMurder;
 
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +17,26 @@ import java.util.Map;
  * @author 若水
  */
 public class SavePlayerInventory {
+
+    /**
+     * 保存玩家背包
+     * @param player 玩家
+     * @param restore 是否为还原
+     */
+    public static void savePlayerInventory(Player player, boolean restore) {
+        File file = new File(MysteryMurder.getInstance().getDataFolder() + "/PlayerInventory/" + player.getName() + ".json");
+        Config config = new Config(file, 1);
+        if (restore) {
+            if (file.exists() && file.delete()) {
+                player.getInventory().clearAll();
+                PutInventory(player, config.get("Inventory", null));
+            }
+        }else {
+            config.set("Inventory", InventoryToJson(player));
+            config.save();
+            player.getInventory().clearAll();
+        }
+    }
 
     public static LinkedHashMap<String, Object> InventoryToJson(@NotNull Player player) {
         LinkedHashMap<String, Object> Inventory = new LinkedHashMap<>();

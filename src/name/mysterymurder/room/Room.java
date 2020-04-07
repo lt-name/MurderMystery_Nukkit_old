@@ -92,7 +92,7 @@ public class Room {
         this.initTask();
         this.addPlaying(player);
         Tools.rePlayerState(player, false);
-        this.savePlayerInventory(player, false);
+        SavePlayerInventory.savePlayerInventory(player, false);
         player.teleport(this.getSpawn());
     }
 
@@ -115,7 +115,7 @@ public class Room {
         }
         if (online) {
             Tools.rePlayerState(player, true);
-            this.savePlayerInventory(player, true);
+            SavePlayerInventory.savePlayerInventory(player, true);
             player.teleport(MysteryMurder.getInstance().getServer().getDefaultLevel().getSafeSpawn());
         }
     }
@@ -126,26 +126,6 @@ public class Room {
      */
     public void clearInventory(Player player) {
         player.getInventory().clearAll();
-    }
-
-    /**
-     * 保存玩家背包
-     * @param player 玩家
-     * @param restore 是否为还原
-     */
-    private void savePlayerInventory(Player player, boolean restore) {
-        File file = new File(MysteryMurder.getInstance().getDataFolder() + "/PlayerInventory/" + player.getName() + ".json");
-        Config config = new Config(file, 1);
-        if (restore) {
-            if (file.exists() && file.delete()) {
-                player.getInventory().clearAll();
-                SavePlayerInventory.PutInventory(player, config.get("Inventory", null));
-            }
-        }else {
-            config.set("Inventory", SavePlayerInventory.InventoryToJson(player));
-            config.save();
-            player.getInventory().clearAll();
-        }
     }
 
     /**
