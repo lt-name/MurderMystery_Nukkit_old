@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 
 public class Api {
 
+
+
     /**
      * @return 房间列表
      */
@@ -67,6 +69,44 @@ public class Api {
             }
         }
         return "无";
+    }
+
+    /**
+     * 根据玩家获取倒计时
+     * @param player 玩家
+     * @return 剩余时间
+     */
+    public static String getTime(Player player) {
+        for (Room room : getRooms().values()) {
+            if (room.isPlaying(player)) {
+                if (room.getMode() == 1) {
+                    return "§a游戏还有： " + room.waitTime + "秒开始！";
+                }else if (room.getMode() == 2) {
+                    return "§a距游戏结束还有" + room.gameTime + "秒！";
+                }
+            }
+        }
+        return "游戏未开始";
+    }
+
+    /**
+     * 获取存活玩家
+     * @param player 玩家
+     * @return 存活玩家数量
+     */
+    public static String getSurvivor(Player player) {
+        for (Room room : getRooms().values()) {
+            if (room.isPlaying(player)) {
+                int playerNumber = 0;
+                for (Integer integer : room.getPlayers().values()) {
+                    if (integer != 0) {
+                        playerNumber++;
+                    }
+                }
+                return playerNumber + "";
+            }
+        }
+        return null;
     }
 
 }
