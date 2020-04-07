@@ -23,6 +23,7 @@ public class GoldTask extends PluginTask<MysteryMurder> {
     @Override
     public void onRun(int i) {
         if (this.room.getMode() != 2) {
+            Tools.cleanEntity(this.room.getWorld());
             this.cancel();
         }
         //金锭生成
@@ -38,23 +39,25 @@ public class GoldTask extends PluginTask<MysteryMurder> {
             this.room.goldSpawnTime--;
         }
         //判断玩家金锭数量
-        for (Player player : this.room.getPlayers().keySet()) {
-            int x = 0;
-            boolean bow = true;
-            for (Item item : player.getInventory().getContents().values()) {
-                if (item.getId() == 266) {
-                    x += item.getCount();
-                    continue;
+        if (this.room.getPlayers().values().size() > 0) {
+            for (Player player : this.room.getPlayers().keySet()) {
+                int x = 0;
+                boolean bow = true;
+                for (Item item : player.getInventory().getContents().values()) {
+                    if (item.getId() == 266) {
+                        x += item.getCount();
+                        continue;
+                    }
+                    if (item.getId() == 261) {
+                        bow = false;
+                    }
                 }
-                if (item.getId() == 261) {
-                    bow = false;
-                }
-            }
-            if (x > 9) {
-                player.getInventory().removeItem(Item.get(266, 0, 10));
-                player.getInventory().addItem(Item.get(262, 0, 1));
-                if (bow) {
-                    player.getInventory().addItem(Item.get(261, 0, 1));
+                if (x > 9) {
+                    player.getInventory().removeItem(Item.get(266, 0, 10));
+                    player.getInventory().addItem(Item.get(262, 0, 1));
+                    if (bow) {
+                        player.getInventory().addItem(Item.get(261, 0, 1));
+                    }
                 }
             }
         }

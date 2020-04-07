@@ -19,19 +19,22 @@ public class TimeTask extends PluginTask<MysteryMurder> {
 
     private Room room;
 
-    public TimeTask(MysteryMurder owner, Room gameRoom) {
+    public TimeTask(MysteryMurder owner, Room room) {
         super(owner);
-        this.room = gameRoom;
+        this.room = room;
     }
 
     public void onRun(int i) {
+        if (this.room.getMode() != 2) {
+            this.cancel();
+        }
         //开局10秒后给物品
         if (this.room.gameTime >= this.room.getGameTime()-10) {
             int time = this.room.gameTime - (this.room.getGameTime() - 10);
             if (time <= 5 && time >= 1) {
                 this.sendMessage("§e杀手将在" + time + "秒后拿到剑！");
                 Tools.addSound(this.room, Sound.RANDOM_CLICK);
-            }else if (time < 1){
+            }else if (time < 1) {
                 this.sendMessage("§e杀手已拿到剑！");
                 for (Map.Entry<Player, Integer> entry : this.room.getPlayers().entrySet()) {
                     if (entry.getValue() == 2) {
@@ -46,20 +49,18 @@ public class TimeTask extends PluginTask<MysteryMurder> {
         //计时与胜利判断
         if (this.room.gameTime > 0) {
             this.room.gameTime--;
-            int j = 0;
+            int playerNumber = 0;
             boolean killer = false;
             for (Integer integer : this.room.getPlayers().values()) {
                 if (integer != 0) {
-                    j++;
+                    playerNumber++;
                 }
                 if (integer == 3) {
                     killer = true;
                 }
             }
-            if (killer) {
-                if (j < 2) {
-                    victory(3);
-                }
+            if (killer && playerNumber < 2) {
+                victory(3);
             }else {
                 victory(1);
             }
@@ -74,20 +75,20 @@ public class TimeTask extends PluginTask<MysteryMurder> {
         }
     }
 
-    private void victory(int i) {
-        Tools.cleanEntity(this.room.getWorld());
-        this.room.setMode(3);
+    private void victory(int victoryMode) {
         if (this.room.getPlayers().values().size() > 0) {
+            this.room.setMode(3);
             for (Player player : this.room.getPlayers().keySet()) {
-                if (i == 3) {
+                if (victoryMode == 3) {
                     player.sendTitle("§a杀手获得胜利！", "", 10, 30, 10);
                 }else {
                     player.sendTitle("§a平民和侦探获得胜利！", "", 10, 30, 10);
                 }
             }
             owner.getServer().getScheduler().scheduleRepeatingTask(
-                    MysteryMurder.getInstance(), new VictoryTask(MysteryMurder.getInstance(), this.room, i), 20,true);
+                    MysteryMurder.getInstance(), new VictoryTask(MysteryMurder.getInstance(), this.room, victoryMode), 20,true);
         }else {
+            this.room.setMode(1);
             owner.getServer().getScheduler().scheduleRepeatingTask(
                     MysteryMurder.getInstance(), new WaitTask(MysteryMurder.getInstance(), this.room), 20,true);
         }

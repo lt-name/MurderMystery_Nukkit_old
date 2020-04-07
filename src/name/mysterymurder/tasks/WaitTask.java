@@ -17,14 +17,17 @@ public class WaitTask extends PluginTask<MysteryMurder> {
 
     private Room room;
 
-    public WaitTask(MysteryMurder owner, Room gameRoom) {
+    public WaitTask(MysteryMurder owner, Room room) {
         super(owner);
-        this.room = gameRoom;
+        this.room = room;
     }
 
     @Override
     public void onRun(int i) {
         if (this.room.getPlayers().size() >= 5) {
+            if (this.room.getMode() != 1) {
+                this.cancel();
+            }
             if (this.room.waitTime > 0) {
                 this.room.waitTime--;
                 this.sendActionBar("§a当前已有: " + this.room.getPlayers().size() + " 位玩家" +

@@ -19,8 +19,12 @@ public class VictoryTask extends PluginTask<MysteryMurder> {
 
     @Override
     public void onRun(int i) {
+        if (this.room.getMode() != 3) {
+            this.cancel();
+        }
         if (this.room.victoryTime < 1) {
             this.room.endGame();
+            this.room.setMode(1);
             owner.getServer().getScheduler().scheduleRepeatingTask(
                     MysteryMurder.getInstance(), new WaitTask(MysteryMurder.getInstance(), this.room), 20,true);
             this.cancel();
@@ -34,7 +38,7 @@ public class VictoryTask extends PluginTask<MysteryMurder> {
             if (victory == 3) {
                 this.sendActionBar("§e恭喜杀手获得胜利！");
             }else {
-                this.sendActionBar("§e恭喜侦探和平民获得胜利！");
+                this.sendActionBar("§e恭喜平民和侦探获得胜利！");
             }
         }
     }

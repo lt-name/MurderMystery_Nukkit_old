@@ -5,6 +5,7 @@ import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
 import name.mysterymurder.MysteryMurder;
+import name.mysterymurder.tasks.WaitTask;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,14 +21,12 @@ public class Room {
     private LinkedHashMap<Player, Integer> players = new LinkedHashMap<>(); //0未分配 1平民 2侦探 3杀手
     private List<String> goldSpawn;
     private String spawn, world;
-    private Config config;
 
     /**
      * 初始化
      * @param config 配置文件
      */
     public Room(Config config) {
-        this.config = config;
         this.setWaitTime = config.getInt("等待时间", 120);
         this.waitTime = this.setWaitTime;
         this.setGameTime = config.getInt("游戏时间", 600);
@@ -42,10 +41,14 @@ public class Room {
     }
 
     /**
-     * @return 配置文件
+     * 初始化Task
      */
-    public Config getConfig() {
-        return this.config;
+    public void initTask() {
+        if (this.getMode() == 0) {
+            this.setMode(1);
+            MysteryMurder.getInstance().getServer().getScheduler().scheduleRepeatingTask(
+                    MysteryMurder.getInstance(), new WaitTask(MysteryMurder.getInstance(), this), 20,true);
+        }
     }
 
     /**
@@ -83,6 +86,7 @@ public class Room {
      * @param player 玩家
      */
     public void joinRoom(Player player) {
+        this.initTask();
         this.addPlaying(player);
         this.rePlayerState(player);
         this.setNameTagVisible(player, false);
@@ -172,7 +176,7 @@ public class Room {
      * 删除记录
      * @param player 玩家
      */
-    public void delPlaying(Player player) {
+    private void delPlaying(Player player) {
         this.players.remove(player);
     }
 

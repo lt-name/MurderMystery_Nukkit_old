@@ -50,7 +50,6 @@ public class MysteryMurder extends PluginBase {
         if (this.rooms.values().size() > 0) {
             for (Room room : this.rooms.values()) {
                 room.endGame();
-                room.getConfig().save();
             }
         }
         getLogger().info("§c已卸载！");
@@ -172,15 +171,19 @@ public class MysteryMurder extends PluginBase {
         return false;
     }
 
+    public Config getConfig() {
+        return this.config;
+    }
+
     public LinkedHashMap<String, Room> getRooms() {
         return this.rooms;
     }
 
-    public Config getRoomConfig(Level level) {
+    private Config getRoomConfig(Level level) {
         return getRoomConfig(level.getName());
     }
 
-    public Config getRoomConfig(String level) {
+    private Config getRoomConfig(String level) {
         if (this.roomConfigs.containsKey(level)) {
             return this.roomConfigs.get(level);
         }
@@ -203,9 +206,7 @@ public class MysteryMurder extends PluginBase {
                 if (fileName.length > 0) {
                     Room room = new Room(getRoomConfig(fileName[0]));
                     this.rooms.put(fileName[0], room);
-                    getServer().getScheduler().scheduleRepeatingTask(
-                            this, new WaitTask(this, room), 20,true);
-                    getLogger().info("房间：" + fileName[0] + " 已加载！");
+                    getLogger().info("§a房间：" + fileName[0] + " 已加载！");
                 }
             }
         }

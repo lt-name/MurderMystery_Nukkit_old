@@ -23,27 +23,32 @@ public class TipsTask extends PluginTask<MysteryMurder> {
             this.cancel();
         }
         if (this.room.getPlayers().values().size() > 0) {
-            int x = 0;
+            int playerNumber = 0;
             for (Integer integer : this.room.getPlayers().values()) {
                 if (integer != 0) {
-                    x++;
+                    playerNumber++;
                 }
             }
-            this.sendActionBar("§a距游戏结束还有 "+ this.room.gameTime + " 秒\n当前还有： §e" + x + " §a人存活");
+            this.sendActionBar("§a距游戏结束还有 "+ this.room.gameTime + " 秒\n当前还有： §e" + playerNumber + " §a人存活");
         }
     }
 
     private void sendActionBar(String string) {
         String mode;
         for (Player player : this.room.getPlayers().keySet()) {
-            if (this.room.getPlayerMode(player) == 1) {
-                mode = "平民";
-            }else if (this.room.getPlayerMode(player) == 2) {
-                mode = "侦探";
-            }else if (this.room.getPlayerMode(player) == 3) {
-                mode = "杀手";
-            }else {
-                mode = "死亡";
+            switch (this.room.getPlayerMode(player)) {
+                case 1:
+                    mode = "平民";
+                    break;
+                case 2:
+                    mode = "侦探";
+                    break;
+                case 3:
+                    mode = "杀手";
+                    break;
+                default:
+                    mode = "死亡";
+                    break;
             }
             player.sendActionBar("§a身份：" + mode + "\n" + string);
         }
