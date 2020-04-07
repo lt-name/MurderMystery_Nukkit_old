@@ -61,7 +61,7 @@ public class WaitTask extends PluginTask<MurderMystery> {
                 this.room.setMode(2);
                 owner.getServer().getScheduler().scheduleRepeatingTask(
                         MurderMystery.getInstance(), new TimeTask(MurderMystery.getInstance(), this.room), 20,true);
-                owner.getServer().getScheduler().scheduleDelayedTask(
+                owner.getServer().getScheduler().scheduleRepeatingTask(
                         MurderMystery.getInstance(), new GoldTask(MurderMystery.getInstance(), this.room), 20, true);
                 owner.getServer().getScheduler().scheduleRepeatingTask(
                         MurderMystery.getInstance(), new TipsTask(MurderMystery.getInstance(), this.room), 10, true);
