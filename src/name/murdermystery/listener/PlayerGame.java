@@ -52,7 +52,7 @@ public class PlayerGame implements Listener {
     @EventHandler
     public void onDamageByChild(EntityDamageByChildEntityEvent event) {
         if (event.getDamager() == null || event.getEntity() == null ||
-                event.getChild() == null || event.getChild().getId() != 262) {
+                event.getChild() == null) {
             return;
         }
         Level level = event.getDamager().getLevel();
