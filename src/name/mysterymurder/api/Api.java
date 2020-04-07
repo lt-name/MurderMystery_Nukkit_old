@@ -51,24 +51,26 @@ public class Api {
      * @return 玩家身份
      */
     public static String getPlayerMode(Player player) {
+        String mode = "当前身份: ";
         for (Room room : getRooms().values()) {
             if (room.getMode() == 2) {
                 if (room.isPlaying(player)) {
-                    int mode = room.getPlayerMode(player);
-                    switch (mode) {
+                    switch (room.getPlayerMode(player)) {
                         case 1:
-                            return "平民";
+                            mode += "平民";
                         case 2:
-                            return "侦探";
+                            mode += "侦探";
                         case 3:
-                            return "杀手";
+                            mode += "杀手";
                         default:
-                            return "死亡";
+                            mode += "死亡";
                     }
+                    return mode;
                 }
             }
         }
-        return "无";
+        mode +=  "无";
+        return mode;
     }
 
     /**
@@ -80,9 +82,9 @@ public class Api {
         for (Room room : getRooms().values()) {
             if (room.isPlaying(player)) {
                 if (room.getMode() == 1) {
-                    return "§a游戏还有： " + room.waitTime + "秒开始！";
+                    return "游戏还有： " + room.waitTime + "秒开始！";
                 }else if (room.getMode() == 2) {
-                    return "§a距游戏结束还有" + room.gameTime + "秒！";
+                    return "距游戏结束还有" + room.gameTime + "秒！";
                 }
             }
         }
