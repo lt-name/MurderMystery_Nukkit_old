@@ -57,7 +57,9 @@ public class Tools {
     public static void cleanEntity(Level level){
         for (Entity entity : level.getEntities()) {
             if (!(entity instanceof EntityHuman)) {
-                entity.close();
+                if (!entity.getNameTag().equals("§e侦探之弓")) {
+                    entity.close();
+                }
             }
         }
     }

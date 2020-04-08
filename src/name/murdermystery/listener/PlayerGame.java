@@ -6,6 +6,8 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityDamageByChildEntityEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityShootBowEvent;
+import cn.nukkit.event.inventory.InventoryPickupItemEvent;
+import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Sound;
@@ -25,9 +27,6 @@ public class PlayerGame implements Listener {
      */
     @EventHandler
     public void onDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getDamager() == null || event.getEntity() == null) {
-            return;
-        }
         Level level = event.getDamager().getLevel();
         if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             return;
@@ -35,10 +34,18 @@ public class PlayerGame implements Listener {
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
             Player player1 = (Player) event.getDamager();
             Player player2 = (Player) event.getEntity();
+            if (player1 == null || player2 == null) {
+                return;
+            }
             Room room = MurderMystery.getInstance().getRooms().get(player1.getLevel().getName());
             if (room.getPlayerMode(player1) == 3 && player1.getInventory().getItemInHand().getId() == 267) {
                 player1.sendMessage("§a你成功击杀了一位玩家！");
                 player2.sendTitle("§c死亡", "§c你被杀手杀死了", 20, 60, 20);
+                if (room.getPlayerMode(player2) == 2) {
+                    Item item = Item.get(261, 0, 1);
+                    item.setCustomName("§e侦探之弓");
+                    room.getWorld().dropItem(player2, item);
+                }
                 room.clearInventory(player2);
                 player2.setGamemode(3);
                 room.addPlaying(player2, 0);
@@ -74,10 +81,17 @@ public class PlayerGame implements Listener {
                 return;
             } else if (room.getPlayerMode(player2) == 3) {
                 player1.sendMessage("你成功击杀了杀手！");
-                player2.sendTitle("§c死亡", "§c你被平民或侦探打死了", 20, 60, 20);
+                player2.sendTitle("§c死亡", "§c你被击杀了", 10, 20, 20);
             } else {
                 player1.sendTitle("§c死亡", "§c你击中了队友", 20, 60, 20);
                 player2.sendTitle("§c死亡", "§c你被队友打死了", 20, 60, 20);
+                Item item = Item.get(261, 0, 1);
+                item.setCustomName("§e侦探之弓");
+                if (room.getPlayerMode(player1) == 2) {
+                    room.getWorld().dropItem(player1, item);
+                }else if (room.getPlayerMode(player2) == 2) {
+                    room.getWorld().dropItem(player2, item);
+                }
                 room.clearInventory(player1);
                 player1.setGamemode(3);
                 room.addPlaying(player1, 0);
@@ -102,7 +116,7 @@ public class PlayerGame implements Listener {
                 return;
             }
             Room room = MurderMystery.getInstance().getRooms().get(levelName);
-            if (room.getPlayerMode(player) == 2) {
+            if (player.getInventory().getItemInHand().getCustomName().equals("§e侦探之弓")) {
                 player.getInventory().addItem(Item.get(262, 0, 1));
                 return;
             }
@@ -126,6 +140,25 @@ public class PlayerGame implements Listener {
                     }
                 }
             }, 20, true);
+        }
+    }
+
+    /**
+     * 收起掉落的物品时
+     * @param event 事件
+     */
+    @EventHandler
+    public void onPickupItem(InventoryPickupItemEvent event) {
+        Level level = event.getItem().getLevel();
+        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
+            return;
+        }
+        if (event.getInventory() != null && event.getInventory() instanceof PlayerInventory) {
+            Player player = (Player) event.getInventory().getHolder();
+            if (event.getItem().getItem().getCustomName().equals("§e侦探之弓") &&
+                    MurderMystery.getInstance().getRooms().get(level.getName()).getPlayerMode(player) != 1) {
+                event.setCancelled();
+            }
         }
     }
 
