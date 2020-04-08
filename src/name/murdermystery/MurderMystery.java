@@ -13,7 +13,9 @@ import name.murdermystery.room.Room;
 import name.murdermystery.utils.SetRoomConfig;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * MurderMystery
@@ -220,15 +222,16 @@ public class MurderMystery extends PluginBase {
      */
     private void reLoadRooms() {
         if (this.rooms.values().size() > 0) {
-            for (String string : this.rooms.keySet()) {
-                this.rooms.get(string).endGame();
-                this.rooms.remove(string);
+            Iterator<Map.Entry<String, Room>> it = this.rooms.entrySet().iterator();
+            while(it.hasNext()){
+                Map.Entry<String, Room> entry = it.next();
+                entry.getValue().endGame();
+                getLogger().info("§c房间：" + entry.getKey() + " 已卸载！");
+                it.remove();
             }
         }
         if (this.roomConfigs.values().size() > 0) {
-            for (String string : this.roomConfigs.keySet()) {
-                this.roomConfigs.remove(string);
-            }
+            this.roomConfigs.clear();
         }
         this.loadRooms();
     }
