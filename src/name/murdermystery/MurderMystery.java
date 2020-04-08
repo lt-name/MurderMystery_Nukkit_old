@@ -32,7 +32,9 @@ public class MurderMystery extends PluginBase {
 
     @Override
     public void onEnable() {
-        murderMystery = this;
+        if (murderMystery == null) {
+            murderMystery = this;
+        }
         this.config = new Config(getDataFolder() + "/config.yml", 2);
         getServer().getPluginManager().registerEvents(new PlayerJoinAndQuit(), this);
         getServer().getPluginManager().registerEvents(new GameProtection(), this);
@@ -53,10 +55,16 @@ public class MurderMystery extends PluginBase {
     public void onDisable() {
         this.config.save();
         if (this.rooms.values().size() > 0) {
-            for (Room room : this.rooms.values()) {
-                room.endGame();
+            Iterator<Map.Entry<String, Room>> it = this.rooms.entrySet().iterator();
+            while(it.hasNext()){
+                Map.Entry<String, Room> entry = it.next();
+                entry.getValue().endGame();
+                getLogger().info("§c房间：" + entry.getKey() + " 已卸载！");
+                it.remove();
             }
         }
+        this.rooms.clear();
+        this.roomConfigs.clear();
         getLogger().info("§c已卸载！");
     }
 
