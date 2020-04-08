@@ -25,7 +25,7 @@ import name.murdermystery.MurderMystery;
  * 为方便op操作，部分事件不应限制op
  * @author lt_name
  */
-public class GameProtection implements Listener {
+public class RoomLevelProtection implements Listener {
 
     /**
      * 物品合成事件

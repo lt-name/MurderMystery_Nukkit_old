@@ -6,7 +6,7 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
-import name.murdermystery.listener.GameProtection;
+import name.murdermystery.listener.RoomLevelProtection;
 import name.murdermystery.listener.PlayerGame;
 import name.murdermystery.listener.PlayerJoinAndQuit;
 import name.murdermystery.room.Room;
@@ -37,7 +37,7 @@ public class MurderMystery extends PluginBase {
         }
         this.config = new Config(getDataFolder() + "/config.yml", 2);
         getServer().getPluginManager().registerEvents(new PlayerJoinAndQuit(), this);
-        getServer().getPluginManager().registerEvents(new GameProtection(), this);
+        getServer().getPluginManager().registerEvents(new RoomLevelProtection(), this);
         getServer().getPluginManager().registerEvents(new PlayerGame(), this);
         File file1 = new File(this.getDataFolder() + "/Rooms");
         File file2 = new File(this.getDataFolder() + "/PlayerInventory");
