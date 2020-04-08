@@ -9,8 +9,10 @@ import name.murdermystery.tasks.WaitTask;
 import name.murdermystery.utils.SavePlayerInventory;
 import name.murdermystery.utils.Tools;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 房间实体类
@@ -72,8 +74,11 @@ public class Room {
      */
     public void endGame() {
         if (this.players.values().size() > 0 ) {
-            for (Player player : this.players.keySet()) {
-                quitRoom(player);
+            Iterator<Map.Entry<Player, Integer>> it = this.players.entrySet().iterator();
+            while(it.hasNext()) {
+                Map.Entry<Player, Integer> entry = it.next();
+                it.remove();
+                quitRoom(entry.getKey());
             }
         }
         this.waitTime = this.setWaitTime;
