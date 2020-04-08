@@ -35,7 +35,6 @@ public class Tools {
             player.setMovementSpeed(0.1F);
         }
         player.setNameTagAlwaysVisible(canSee);
-        player.setNameTag("");
         player.setHealth(player.getMaxHealth());
         player.getFoodData().setLevel(player.getFoodData().getMaxLevel());
     }
