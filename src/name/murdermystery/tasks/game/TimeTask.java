@@ -3,6 +3,8 @@ package name.murdermystery.tasks.game;
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
+import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.nbt.tag.Tag;
 import cn.nukkit.scheduler.PluginTask;
 import name.murdermystery.MurderMystery;
 import name.murdermystery.room.Room;
@@ -28,24 +30,6 @@ public class TimeTask extends PluginTask<MurderMystery> {
         if (this.room.getMode() != 2) {
             this.cancel();
         }
-        //开局10秒后给物品
-        if (this.room.gameTime >= this.room.getGameTime()-10) {
-            int time = this.room.gameTime - (this.room.getGameTime() - 10);
-            if (time <= 5 && time >= 1) {
-                this.sendMessage("§e杀手将在" + time + "秒后拿到剑！");
-                Tools.addSound(this.room, Sound.RANDOM_CLICK);
-            }else if (time < 1) {
-                this.sendMessage("§e杀手已拿到剑！");
-                for (Map.Entry<Player, Integer> entry : this.room.getPlayers().entrySet()) {
-                    if (entry.getValue() == 2) {
-                        entry.getKey().getInventory().setItem(1, Item.get(261, 0, 1));
-                        entry.getKey().getInventory().setItem(2, Item.get(262, 0, 1));
-                    }else if (entry.getValue() == 3) {
-                        entry.getKey().getInventory().setItem(1, Item.get(267, 0, 1));
-                    }
-                }
-            }
-        }
         //计时与胜利判断
         if (this.room.gameTime > 0) {
             this.room.gameTime--;
@@ -68,6 +52,28 @@ public class TimeTask extends PluginTask<MurderMystery> {
             }
         }else {
             victory(1);
+        }
+        //开局10秒后给物品
+        if (this.room.gameTime >= this.room.getGameTime()-10) {
+            int time = this.room.gameTime - (this.room.getGameTime() - 10);
+            if (time <= 5 && time >= 1) {
+                this.sendMessage("§e杀手将在" + time + "秒后拿到剑！");
+                Tools.addSound(this.room, Sound.RANDOM_CLICK);
+            }else if (time < 1) {
+                this.sendMessage("§e杀手已拿到剑！");
+                for (Map.Entry<Player, Integer> entry : this.room.getPlayers().entrySet()) {
+                    if (entry.getValue() == 2) {
+                        Item item = Item.get(261, 0, 1);
+                        item.setCustomName("§e侦探之弓");
+                        entry.getKey().getInventory().setItem(1, item);
+                        entry.getKey().getInventory().setItem(2, Item.get(262, 0, 1));
+                    }else if (entry.getValue() == 3) {
+                        Item item = Item.get(267, 0, 1);
+                        item.setCustomName("§c杀手之剑");
+                        entry.getKey().getInventory().setItem(1, item);
+                    }
+                }
+            }
         }
     }
 
