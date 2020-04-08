@@ -32,6 +32,9 @@ public class VictoryTask extends PluginTask<MurderMystery> {
             this.room.victoryTime--;
             for (Player player : this.room.getPlayers().keySet()) {
                 if (this.room.getPlayers().get(player) != 0) {
+                    if (victory == 1 && this.room.getPlayers().get(player) == 3) {
+                       continue;
+                    }
                     Tools.spawnFirework(player);
                 }
             }
