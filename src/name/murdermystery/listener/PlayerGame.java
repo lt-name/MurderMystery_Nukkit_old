@@ -8,9 +8,11 @@ import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityShootBowEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
+import cn.nukkit.level.Sound;
 import cn.nukkit.scheduler.Task;
 import name.murdermystery.MurderMystery;
 import name.murdermystery.room.Room;
+import name.murdermystery.utils.Tools;
 
 /**
  * 游戏监听器
@@ -40,6 +42,7 @@ public class PlayerGame implements Listener {
                 room.clearInventory(player2);
                 player2.setGamemode(3);
                 room.addPlaying(player2, 0);
+                Tools.addSound(room, Sound.GAME_PLAYER_HURT);
             }
         }
         event.setCancelled();
