@@ -97,10 +97,18 @@ public class MurderMystery extends PluginBase {
                                 }
                             }
                             break;
+                        case "list": case "列表":
+                            StringBuilder list = new StringBuilder().append("§e房间列表： §a");
+                            for (String string : this.rooms.keySet()) {
+                                list.append(string).append(" ");
+                            }
+                            sender.sendMessage(String.valueOf(list));
+                            break;
                         default:
                             sender.sendMessage("§e/killer--命令帮助");
-                            sender.sendMessage("§a/killer 加入 房间名称 §e加入游戏");
-                            sender.sendMessage("§a/killer 退出 §e退出游戏");
+                            sender.sendMessage("§a/killer join 房间名称 §e加入游戏");
+                            sender.sendMessage("§a/killer quit §e退出游戏");
+                            sender.sendMessage("§a/killer list §e查看房间列表");
                             break;
                     }
                 }else {
