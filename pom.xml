@@ -33,7 +33,8 @@
                         <arg>-Xlint:deprecation</arg>
                     </compilerArgs>
                     <compilerArguments>
-                        <bootclasspath>${java.home}\lib\rt.jar;${java.home}\lib\jce.jar</bootclasspath>
+                        <verbose/>
+                        <bootclasspath>${java.home}/lib/rt.jar${path.separator}${java.home}/lib/jce.jar</bootclasspath>
                     </compilerArguments>
                     <source>1.8</source>
                     <target>1.8</target>

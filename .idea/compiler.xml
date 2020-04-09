@@ -15,7 +15,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="MurderMystery" options="-bootclasspath &quot;C:/Program Files/Java/jdk1.8.0_221/jre\lib\rt.jar;C:/Program Files/Java/jdk1.8.0_221/jre\lib\jce.jar&quot; -Xlint:deprecation" />
+      <module name="MurderMystery" options="-verbose -bootclasspath &quot;C:/Program Files/Java/jdk1.8.0_221/jre/lib/rt.jar;C:/Program Files/Java/jdk1.8.0_221/jre/lib/jce.jar&quot; -Xlint:deprecation" />
     </option>
   </component>
 </project>
