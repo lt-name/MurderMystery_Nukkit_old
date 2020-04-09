@@ -85,6 +85,7 @@ public class Room {
         this.gameTime = this.setGameTime;
         this.victoryTime = 10;
         this.goldSpawnTime = this.setGoldSpawnTime;
+        Tools.cleanEntity(this.getWorld(), true);
         this.mode = 0;
     }
 

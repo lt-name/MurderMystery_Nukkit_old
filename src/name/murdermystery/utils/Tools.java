@@ -51,10 +51,24 @@ public class Tools {
     }
 
     /**
+     * 清理所有实体
+     * @param level 世界
+     */
+    public static void cleanEntity(Level level, boolean clearAll) {
+        if (clearAll) {
+            for (Entity entity : level.getEntities()) {
+                entity.close();
+            }
+        }else {
+            cleanEntity(level);
+        }
+    }
+
+    /**
      * 清理非玩家实体
      * @param level 世界
      */
-    public static void cleanEntity(Level level){
+    public static void cleanEntity(Level level) {
         for (Entity entity : level.getEntities()) {
             if (!(entity instanceof EntityHuman)) {
                 if (!entity.getNameTag().equals("§e侦探之弓")) {
