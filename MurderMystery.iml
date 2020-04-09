@@ -10,6 +10,7 @@
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="NukkitX" level="project" />
+    <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.13.1" level="project" />
     <orderEntry type="library" name="Maven: cn.nukkit:nukkit:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-impl:2.2.11" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:13.0" level="project" />
