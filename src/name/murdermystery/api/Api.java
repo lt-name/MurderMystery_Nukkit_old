@@ -51,26 +51,23 @@ public class Api {
      * @return 玩家身份
      */
     public static String getPlayerMode(Player player) {
-        String mode = "当前身份: ";
         for (Room room : getRooms().values()) {
             if (room.getMode() == 2) {
                 if (room.isPlaying(player)) {
                     switch (room.getPlayerMode(player)) {
                         case 1:
-                            mode += "平民";
+                            return "平民";
                         case 2:
-                            mode += "侦探";
+                            return "侦探";
                         case 3:
-                            mode += "杀手";
+                            return "杀手";
                         default:
-                            mode += "死亡";
+                            return "死亡";
                     }
-                    return mode;
                 }
             }
         }
-        mode +=  "无";
-        return mode;
+        return "未分配";
     }
 
     /**
@@ -78,25 +75,25 @@ public class Api {
      * @param player 玩家
      * @return 剩余时间
      */
-    public static String getTime(Player player) {
+    public static Integer getTime(Player player) {
         for (Room room : getRooms().values()) {
             if (room.isPlaying(player)) {
                 if (room.getMode() == 1) {
-                    return "游戏还有： " + room.waitTime + "秒开始！";
+                    return room.waitTime;
                 }else if (room.getMode() == 2) {
-                    return "距游戏结束还有" + room.gameTime + "秒！";
+                    return room.gameTime;
                 }
             }
         }
-        return "游戏未开始";
+        return null;
     }
 
     /**
-     * 获取存活玩家
+     * 获取存活玩家数量
      * @param player 玩家
      * @return 存活玩家数量
      */
-    public static String getSurvivor(Player player) {
+    public static Integer getSurvivor(Player player) {
         for (Room room : getRooms().values()) {
             if (room.isPlaying(player)) {
                 int playerNumber = 0;
@@ -105,7 +102,7 @@ public class Api {
                         playerNumber++;
                     }
                 }
-                return playerNumber + "";
+                return playerNumber;
             }
         }
         return null;
