@@ -26,12 +26,10 @@ public class PlayerJoinAndQuit implements Listener {
             MurderMystery.getInstance().getServer().getScheduler().scheduleDelayedTask(new Task() {
                 @Override
                 public void onRun(int i) {
-                    for (Player p : MurderMystery.getInstance().getServer().getOnlinePlayers().values()) {
-                        if (p == player) {
-                            Tools.rePlayerState(player ,true);
-                            SavePlayerInventory.savePlayerInventory(player, true);
-                            player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn());
-                        }
+                    if (MurderMystery.getInstance().getServer().getOnlinePlayers().containsValue(player)) {
+                        Tools.rePlayerState(player ,true);
+                        SavePlayerInventory.savePlayerInventory(player, true);
+                        player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn());
                     }
                 }
             }, 120);
