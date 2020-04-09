@@ -41,7 +41,6 @@ public class PlayerGame implements Listener {
                 item.setCustomName("§e侦探之弓");
                 room.getWorld().dropItem(player2, item);
             }
-            MurderMystery.getInstance().getServer().getPluginManager().callEvent(new MurderMysteryPlayerDeath(room, player2));
         }else { //攻击者是平民或侦探
             if (room.getPlayerMode(player2) == 3) {
                 player1.sendMessage("你成功击杀了杀手！");
@@ -51,12 +50,12 @@ public class PlayerGame implements Listener {
                 player2.sendTitle("§c死亡", "§c你被队友打死了", 20, 60, 20);
                 MurderMystery.getInstance().getServer().getPluginManager().callEvent(new MurderMysteryPlayerDeath(room, player1));
             }
-            MurderMystery.getInstance().getServer().getPluginManager().callEvent(new MurderMysteryPlayerDeath(room, player2));
         }
+        MurderMystery.getInstance().getServer().getPluginManager().callEvent(new MurderMysteryPlayerDeath(room, player2));
     }
 
     /**
-     * 玩家死亡事件
+     * 玩家死亡事件（游戏中死亡）
      * @param event 事件
      */
     @EventHandler
@@ -66,14 +65,14 @@ public class PlayerGame implements Listener {
         room.clearInventory(player);
         player.setGamemode(3);
         room.addPlaying(player, 0);
-        if (room.getPlayerMode(player) != 3) {
-            Tools.addSound(room, Sound.GAME_PLAYER_HURT);
-        }
-        if (room.getPlayerMode(player) == 2) {
+        if (room.getPlayerMode(player) == 3) {
+            return;
+        }else if (room.getPlayerMode(player) == 2) {
             Item item = Item.get(261, 0, 1);
             item.setCustomName("§e侦探之弓");
             room.getWorld().dropItem(player, item);
         }
+        Tools.addSound(room, Sound.GAME_PLAYER_HURT);
     }
 
 
@@ -96,17 +95,6 @@ public class PlayerGame implements Listener {
             Room room = MurderMystery.getInstance().getRooms().get(player1.getLevel().getName());
             if (room.getPlayerMode(player1) == 3 && player1.getInventory().getItemInHand().getId() == 267) {
                 MurderMystery.getInstance().getServer().getPluginManager().callEvent(new MurderMysteryPlayerDamage(player1, player2));
-/*                player1.sendMessage("§a你成功击杀了一位玩家！");
-                player2.sendTitle("§c死亡", "§c你被杀手杀死了", 20, 60, 20);
-                if (room.getPlayerMode(player2) == 2) {
-                    Item item = Item.get(261, 0, 1);
-                    item.setCustomName("§e侦探之弓");
-                    room.getWorld().dropItem(player2, item);
-                }
-                room.clearInventory(player2);
-                player2.setGamemode(3);
-                room.addPlaying(player2, 0);
-                Tools.addSound(room, Sound.GAME_PLAYER_HURT);*/
             }
         }
         event.setCancelled();
@@ -133,29 +121,9 @@ public class PlayerGame implements Listener {
                 return;
             }
             Room room = MurderMystery.getInstance().getRooms().get(player1.getLevel().getName());
-            if (room.getPlayerMode(player1) == 3) {
-                event.setCancelled();
-                return;
-            } else if (room.getPlayerMode(player2) == 3) {
-                player1.sendMessage("你成功击杀了杀手！");
-                player2.sendTitle("§c死亡", "§c你被击杀了", 10, 20, 20);
-            } else {
-                player1.sendTitle("§c死亡", "§c你击中了队友", 20, 60, 20);
-                player2.sendTitle("§c死亡", "§c你被队友打死了", 20, 60, 20);
-                Item item = Item.get(261, 0, 1);
-                item.setCustomName("§e侦探之弓");
-                if (room.getPlayerMode(player1) == 2) {
-                    room.getWorld().dropItem(player1, item);
-                }else if (room.getPlayerMode(player2) == 2) {
-                    room.getWorld().dropItem(player2, item);
-                }
-                room.clearInventory(player1);
-                player1.setGamemode(3);
-                room.addPlaying(player1, 0);
+            if (room.getPlayerMode(player1) != 3) {
+                MurderMystery.getInstance().getServer().getPluginManager().callEvent(new MurderMysteryPlayerDamage(player1, player2));
             }
-            room.clearInventory(player2);
-            player2.setGamemode(3);
-            room.addPlaying(player2, 0);
         }
         event.setCancelled();
     }
