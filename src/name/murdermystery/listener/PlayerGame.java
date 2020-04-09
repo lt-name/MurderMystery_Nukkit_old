@@ -1,6 +1,8 @@
 package name.murdermystery.listener;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.data.IntPositionEntityData;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityDamageByChildEntityEvent;
@@ -11,8 +13,11 @@ import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Sound;
+import cn.nukkit.math.Vector3;
+import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.scheduler.Task;
 import name.murdermystery.MurderMystery;
+import name.murdermystery.entity.PlayerCorpse;
 import name.murdermystery.event.MurderMysteryPlayerDamage;
 import name.murdermystery.event.MurderMysteryPlayerDeath;
 import name.murdermystery.room.Room;
@@ -73,6 +78,18 @@ public class PlayerGame implements Listener {
             room.getWorld().dropItem(player, item);
         }
         Tools.addSound(room, Sound.GAME_PLAYER_HURT);
+        CompoundTag nbt = Entity.getDefaultNBT(player,
+                new Vector3(player.motionX,player.motionY,player.motionZ),(float) player.yaw,(float) player.pitch);
+        nbt.putString("NameTag", player.getName()).putFloat("scale",1.0F);
+        nbt.putBoolean("isCorpse",true);
+        nbt.putCompound("Skin",new CompoundTag()
+                .putByteArray("Data", player.getSkin().getSkinData().data)
+                .putString("ModelId", player.getSkin().getSkinId()));
+        PlayerCorpse entity = new PlayerCorpse(player.getChunk(),nbt);
+        entity.setNameTagAlwaysVisible(false);
+        entity.setDataProperty(new IntPositionEntityData(28, (int)player.x, (int)player.y, (int)player.z));
+        entity.setDataFlag(26, 1, true);
+        entity.spawnToAll();
     }
 
 
