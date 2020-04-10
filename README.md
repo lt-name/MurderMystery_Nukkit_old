@@ -1,4 +1,5 @@
 # MurderMystery  
+![Java CI](https://github.com/lt-name/MurderMystery_Nukkit/workflows/Java%20CI/badge.svg)
 #### 本插件仍在开发中！  
 密室杀人游戏  
 #### 已实现功能：  
