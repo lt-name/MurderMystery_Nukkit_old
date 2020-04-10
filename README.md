@@ -9,7 +9,7 @@
 - [X] 进退游戏保存背包  
 #### 需要添加的内容：   
 - [ ] 给玩家设置随机皮肤  
-  
+- [ ] 聊天限制  
 #### 对于开发者：
 API请参考：  
 main/java/name/murdermystery/api/Api.java  
