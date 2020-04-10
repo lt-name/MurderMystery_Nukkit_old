@@ -7,9 +7,14 @@
   - [X] 侦探死后掉弓  
   - [X] 被杀生成尸体  
 - [X] 进退游戏保存背包  
+- [X] 聊天限制  
 #### 需要添加的内容：   
 - [ ] 给玩家设置随机皮肤  
-- [ ] 聊天限制  
+#### 安装PlaceholderAPI后可用：  
+- 房间状态: %MurderRoomMode%  
+- 当前身份: %MurderPlayerMode%  
+- 剩余时间: %MurderTime%  
+- 存活人数: %MurderSurvivorNumber%  
 #### 对于开发者：
 API请参考：  
 main/java/name/murdermystery/api/Api.java  

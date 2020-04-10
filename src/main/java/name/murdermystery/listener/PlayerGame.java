@@ -10,6 +10,7 @@ import cn.nukkit.event.entity.EntityDamageByChildEntityEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityShootBowEvent;
 import cn.nukkit.event.inventory.InventoryPickupItemEvent;
+import cn.nukkit.event.player.PlayerChatEvent;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
@@ -207,6 +208,32 @@ public class PlayerGame implements Listener {
             if (event.getItem().getItem().getCustomName().equals("§e侦探之弓") &&
                     MurderMystery.getInstance().getRooms().get(level.getName()).getPlayerMode(player) != 1) {
                 event.setCancelled();
+            }
+        }
+    }
+
+    /**
+     * 发送消息事件
+     * @param event 事件
+     */
+    @EventHandler
+    public void onPlayerChat(PlayerChatEvent event) {
+        Player player = event.getPlayer();
+        String string = event.getFormat();
+        if (player == null || string == null || string.startsWith("/")) {
+            return;
+        }
+        Level level = player.getLevel();
+        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
+            return;
+        }
+        Room room = MurderMystery.getInstance().getRooms().get(player.getLevel().getName());
+        if (room.getMode() == 2 && room.getPlayerMode(player) == 0) {
+            event.setCancelled(true);
+            for (Player p : room.getPlayers().keySet()) {
+                if (room.getPlayerMode(p) == 0) {
+                    p.sendMessage("§c[死亡] " + player.getName() + "§b >>> " + string);
+                }
             }
         }
     }
