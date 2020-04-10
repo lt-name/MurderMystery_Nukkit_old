@@ -7,6 +7,7 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
+import com.creeperface.nukkit.placeholderapi.api.PlaceholderAPI;
 import main.java.name.murdermystery.api.Api;
 import main.java.name.murdermystery.listener.PlayerGame;
 import main.java.name.murdermystery.listener.PlayerJoinAndQuit;
@@ -51,7 +52,11 @@ public class MurderMystery extends PluginBase {
         }
         loadRooms();
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            Api.regPApi();
+            PlaceholderAPI api = PlaceholderAPI.getInstance();
+            api.visitorSensitivePlaceholder("MurderPlayerMode", (player, placeholderParameters) -> Api.getPlayerMode(player), 20, true);
+            api.visitorSensitivePlaceholder("MurderTime", (player, placeholderParameters) -> Api.getTime(player), 20, true);
+            api.visitorSensitivePlaceholder("MurderSurvivorNumber", (player, placeholderParameters) -> Api.getSurvivor(player), 20, true);
+            api.visitorSensitivePlaceholder("MurderRoomMode", (player, placeholderParameters) -> Api.getRoomMode(player), 20, true);
         }
         getLogger().info("§a插件加载完成！");
     }

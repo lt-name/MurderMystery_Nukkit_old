@@ -2,22 +2,12 @@ package main.java.name.murdermystery.api;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Level;
-import com.creeperface.nukkit.placeholderapi.api.PlaceholderAPI;
 import main.java.name.murdermystery.MurderMystery;
 import main.java.name.murdermystery.room.Room;
 
 import java.util.LinkedHashMap;
 
 public class Api {
-
-    public static void regPApi() {
-        PlaceholderAPI api = PlaceholderAPI.getInstance();
-        api.visitorSensitivePlaceholder("MurderPlayerMode", (player, placeholderParameters) -> getPlayerMode(player), 20, true);
-        api.visitorSensitivePlaceholder("MurderTime", (player, placeholderParameters) -> getTime(player), 20, true);
-        api.visitorSensitivePlaceholder("MurderSurvivorNumber", (player, placeholderParameters) -> getSurvivor(player), 20, true);
-        api.visitorSensitivePlaceholder("MurderRoomMode", (player, placeholderParameters) ->getRoomMode(player), 20, true);
-    }
-
 
     /**
      * @return 房间列表
