@@ -94,11 +94,13 @@ public class Room {
      * @param player 玩家
      */
     public void joinRoom(Player player) {
-        this.initTask();
-        this.addPlaying(player);
-        Tools.rePlayerState(player, false);
-        SavePlayerInventory.savePlayerInventory(player, false);
-        player.teleport(this.getSpawn());
+        if (this.players.values().size() < 16) {
+            this.initTask();
+            this.addPlaying(player);
+            Tools.rePlayerState(player, false);
+            SavePlayerInventory.savePlayerInventory(player, false);
+            player.teleport(this.getSpawn());
+        }
     }
 
     /**

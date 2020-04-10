@@ -76,8 +76,6 @@ public class MurderMystery extends PluginBase {
                 if (args.length >0) {
                     switch (args[0]) {
                         case "join": case "加入":
-                            //if (player.isPassenger())
-
                             for (Room room : this.rooms.values()) {
                                 if (room.isPlaying(player)) {
                                     sender.sendMessage("§c你已经在一个房间中了!");
@@ -89,7 +87,9 @@ public class MurderMystery extends PluginBase {
                                     Room room = this.rooms.get(args[1]);
                                     if (room.getMode() == 2 || room.getMode() == 3) {
                                         sender.sendMessage("§a该房间正在游戏中，请稍后");
-                                    }else {
+                                    }else if (room.getPlayers().values().size() > 15) {
+                                        sender.sendMessage("§a该房间已满人，请稍后");
+                                    } else {
                                         room.joinRoom(player);
                                     }
                                 }else {
