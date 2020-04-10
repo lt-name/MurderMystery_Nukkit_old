@@ -2,12 +2,22 @@ package main.java.name.murdermystery.api;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Level;
+import com.creeperface.nukkit.placeholderapi.api.PlaceholderAPI;
 import main.java.name.murdermystery.MurderMystery;
 import main.java.name.murdermystery.room.Room;
 
 import java.util.LinkedHashMap;
 
 public class Api {
+
+    public static void regPApi() {
+        PlaceholderAPI api = PlaceholderAPI.getInstance();
+        api.visitorSensitivePlaceholder("MurderPlayerMode", (player, placeholderParameters) -> getPlayerMode(player), 20, true);
+        api.visitorSensitivePlaceholder("MurderTime", (player, placeholderParameters) -> getTime(player), 20, true);
+        api.visitorSensitivePlaceholder("MurderSurvivorNumber", (player, placeholderParameters) -> getSurvivor(player), 20, true);
+        api.visitorSensitivePlaceholder("MurderRoomMode", (player, placeholderParameters) ->getRoomMode(player), 20, true);
+    }
+
 
     /**
      * @return 房间列表
@@ -73,17 +83,17 @@ public class Api {
      * @param player 玩家
      * @return 剩余时间
      */
-    public static Integer getTime(Player player) {
+    public static String getTime(Player player) {
         for (Room room : getRooms().values()) {
             if (room.isPlaying(player)) {
                 if (room.getMode() == 1) {
-                    return room.waitTime;
+                    return room.waitTime + "";
                 }else if (room.getMode() == 2) {
-                    return room.gameTime;
+                    return room.gameTime + "";
                 }
             }
         }
-        return null;
+        return "未加入房间";
     }
 
     /**
@@ -91,19 +101,42 @@ public class Api {
      * @param player 玩家
      * @return 存活玩家数量
      */
-    public static Integer getSurvivor(Player player) {
+    public static String getSurvivor(Player player) {
         for (Room room : getRooms().values()) {
             if (room.isPlaying(player)) {
-                int playerNumber = 0;
-                for (Integer integer : room.getPlayers().values()) {
-                    if (integer != 0) {
-                        playerNumber++;
+                if (room.getMode() == 1) {
+                    return room.getPlayers().size() + "";
+                }else {
+                    int playerNumber = 0;
+                    for (Integer integer : room.getPlayers().values()) {
+                        if (integer != 0) {
+                            playerNumber++;
+                        }
                     }
+                    return playerNumber + "";
                 }
-                return playerNumber;
             }
         }
-        return null;
+        return "未加入房间";
+    }
+
+    /**
+     * 获取房间状态
+     * @param player 玩家
+     * @return 房间状态
+     */
+    public static String getRoomMode(Player player) {
+        if (getRoomByLevel(player.getLevel()) != null) {
+            switch (getRoomByLevel(player.getLevel()).getMode()) {
+                case 2:
+                    return "游戏中";
+                case 3:
+                    return "胜利结算";
+                default:
+                    return "等待中";
+            }
+        }
+        return "未加入房间";
     }
 
 }
