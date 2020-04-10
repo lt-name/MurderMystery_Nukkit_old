@@ -1,26 +1,27 @@
 package main.java.name.murdermystery.event;
 
 import cn.nukkit.Player;
+import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
-import cn.nukkit.event.player.PlayerEvent;
 import main.java.name.murdermystery.room.Room;
 
-public class MurderMysteryPlayerDeath extends PlayerEvent {
+public class MurderPlayerDamageEvent extends MurderEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
-    private Room room;
+    private Player damage;
 
     public static HandlerList getHandlers() {
         return handlers;
     }
 
-    public MurderMysteryPlayerDeath(Room room, Player player) {
+    public MurderPlayerDamageEvent(Room room, Player damage, Player player) {
         this.room = room;
+        this.damage = damage;
         this.player = player;
     }
 
-    public Room getRoom() {
-        return this.room;
+    public Player getDamage() {
+        return this.damage;
     }
 
 }

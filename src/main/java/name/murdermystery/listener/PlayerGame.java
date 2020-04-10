@@ -1,6 +1,7 @@
 package main.java.name.murdermystery.listener;
 
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.data.IntPositionEntityData;
 import cn.nukkit.event.EventHandler;
@@ -18,8 +19,8 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.scheduler.Task;
 import main.java.name.murdermystery.MurderMystery;
 import main.java.name.murdermystery.entity.PlayerCorpse;
-import main.java.name.murdermystery.event.MurderMysteryPlayerDamage;
-import main.java.name.murdermystery.event.MurderMysteryPlayerDeath;
+import main.java.name.murdermystery.event.MurderPlayerDamageEvent;
+import main.java.name.murdermystery.event.MurderPlayerDeathEvent;
 import main.java.name.murdermystery.room.Room;
 import main.java.name.murdermystery.utils.Tools;
 
@@ -33,10 +34,13 @@ public class PlayerGame implements Listener {
      * @param event 事件
      */
     @EventHandler
-    public void onPlayerDamage(MurderMysteryPlayerDamage event) {
+    public void onPlayerDamage(MurderPlayerDamageEvent event) {
         Player player1 = event.getDamage();
         Player player2 = event.getPlayer();
-        Room room = MurderMystery.getInstance().getRooms().get(player2.getLevel().getName());
+        Room room = event.getRoom();
+        if (player1 == null || player2 == null || room == null) {
+            return;
+        }
         //攻击者是杀手
         if (room.getPlayerMode(player1) == 3) {
             player1.sendMessage("§a你成功击杀了一位玩家！");
@@ -53,10 +57,10 @@ public class PlayerGame implements Listener {
             } else {
                 player1.sendTitle("§c死亡", "§c你击中了队友", 20, 60, 20);
                 player2.sendTitle("§c死亡", "§c你被队友打死了", 20, 60, 20);
-                MurderMystery.getInstance().getServer().getPluginManager().callEvent(new MurderMysteryPlayerDeath(room, player1));
+                Server.getInstance().getPluginManager().callEvent(new MurderPlayerDeathEvent(room, player1));
             }
         }
-        MurderMystery.getInstance().getServer().getPluginManager().callEvent(new MurderMysteryPlayerDeath(room, player2));
+        Server.getInstance().getPluginManager().callEvent(new MurderPlayerDeathEvent(room, player2));
     }
 
     /**
@@ -64,9 +68,12 @@ public class PlayerGame implements Listener {
      * @param event 事件
      */
     @EventHandler
-    public void onPlayerDeath(MurderMysteryPlayerDeath event) {
+    public void onPlayerDeath(MurderPlayerDeathEvent event) {
         Player player = event.getPlayer();
         Room room = event.getRoom();
+        if (player == null || room == null) {
+            return;
+        }
         room.clearInventory(player);
         player.setGamemode(3);
         room.addPlaying(player, 0);
@@ -111,7 +118,7 @@ public class PlayerGame implements Listener {
             }
             Room room = MurderMystery.getInstance().getRooms().get(player1.getLevel().getName());
             if (room.getPlayerMode(player1) == 3 && player1.getInventory().getItemInHand().getId() == 267) {
-                MurderMystery.getInstance().getServer().getPluginManager().callEvent(new MurderMysteryPlayerDamage(player1, player2));
+                Server.getInstance().getPluginManager().callEvent(new MurderPlayerDamageEvent(room, player1, player2));
             }
         }
         event.setCancelled();
@@ -138,8 +145,8 @@ public class PlayerGame implements Listener {
                 return;
             }
             Room room = MurderMystery.getInstance().getRooms().get(player1.getLevel().getName());
-            if (room.getPlayerMode(player1) != 3) {
-                MurderMystery.getInstance().getServer().getPluginManager().callEvent(new MurderMysteryPlayerDamage(player1, player2));
+            if (room.getPlayerMode(player1) != 3 && room.getPlayerMode(player1) != 0) {
+                Server.getInstance().getPluginManager().callEvent(new MurderPlayerDamageEvent(room, player1, player2));
             }
         }
         event.setCancelled();
