@@ -3,6 +3,7 @@ package main.java.name.murdermystery;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
@@ -79,6 +80,12 @@ public class MurderMystery extends PluginBase {
                             for (Room room : this.rooms.values()) {
                                 if (room.isPlaying(player)) {
                                     sender.sendMessage("§c你已经在一个房间中了!");
+                                    return true;
+                                }
+                            }
+                            for(Entity entity : player.getLevel().getEntities()) {
+                                if (entity.isPassenger(player)) {
+                                    sender.sendMessage("§a请勿在骑乘状态下进入房间！");
                                     return true;
                                 }
                             }
