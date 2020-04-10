@@ -73,6 +73,10 @@ public class TimeTask extends PluginTask<MurderMystery> {
                 }
             }
         }
+        //杀手加速cd计算
+        if (room.effectCD > 0) {
+            room.effectCD--;
+        }
     }
 
     private void sendMessage(String string) {

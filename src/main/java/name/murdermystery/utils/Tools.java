@@ -29,11 +29,6 @@ public class Tools {
         if (player.getGamemode() != 0) {
             player.setGamemode(0);
         }
-        if (player.isSprinting()) {
-            player.setMovementSpeed(0.13F);
-        }else {
-            player.setMovementSpeed(0.1F);
-        }
         player.setNameTagAlwaysVisible(canSee);
         player.setHealth(player.getMaxHealth());
         player.getFoodData().setLevel(player.getFoodData().getMaxLevel());

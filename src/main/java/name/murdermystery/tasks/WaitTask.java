@@ -53,7 +53,6 @@ public class WaitTask extends PluginTask<MurderMystery> {
                     //杀手
                     if (j == random2) {
                         this.room.addPlaying(player, 3);
-                        player.setMovementSpeed(player.getMovementSpeed() + 0.02F);
                         continue;
                     }
                     this.room.addPlaying(player, 1);

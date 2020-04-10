@@ -20,7 +20,7 @@ import java.util.Map;
 public class Room {
 
     private int mode; //0等待重置 1玩家等待中 2玩家游戏中 3胜利结算中
-    public int waitTime, gameTime, victoryTime, goldSpawnTime; //秒
+    public int waitTime, gameTime, victoryTime, goldSpawnTime, effectCD; //秒
     private int setWaitTime, setGameTime, setGoldSpawnTime;
     private LinkedHashMap<Player, Integer> players = new LinkedHashMap<>(); //0未分配 1平民 2侦探 3杀手
     private List<String> goldSpawn;

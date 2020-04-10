@@ -46,6 +46,9 @@ public class TipsTask extends PluginTask<MurderMystery> {
                     break;
                 case 3:
                     mode = "杀手";
+                    if (room.effectCD > 0 ) {
+                        mode += " 加速冷却剩余：" + room.effectCD + "秒";
+                    }
                     break;
                 default:
                     mode = "死亡";

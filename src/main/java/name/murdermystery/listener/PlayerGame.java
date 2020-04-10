@@ -11,12 +11,14 @@ import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityShootBowEvent;
 import cn.nukkit.event.inventory.InventoryPickupItemEvent;
 import cn.nukkit.event.player.PlayerChatEvent;
+import cn.nukkit.event.player.PlayerItemHeldEvent;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Sound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.potion.Effect;
 import cn.nukkit.scheduler.Task;
 import main.java.name.murdermystery.MurderMystery;
 import main.java.name.murdermystery.entity.PlayerCorpse;
@@ -235,6 +237,32 @@ public class PlayerGame implements Listener {
                     p.sendMessage("§c[死亡] " + player.getName() + "§b >>> " + string);
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onItemHeld(PlayerItemHeldEvent event) {
+        Player player = event.getPlayer();
+        Item item = event.getItem();
+        if (player == null || item == null) {
+            return;
+        }
+        Level level = player.getLevel();
+        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
+            return;
+        }
+        Room room = MurderMystery.getInstance().getRooms().get(player.getLevel().getName());
+        if (room.getPlayerMode(player) == 3 && item.getCustomName().equals("§c杀手之剑")) {
+            if (room.effectCD < 1) {
+                Effect effect = Effect.getEffect(1);
+                effect.setAmplifier(1);
+                effect.setVisible(false);
+                effect.setDuration(5);
+                player.addEffect(effect);
+                room.effectCD = 10;
+            }
+        }else if (room.getPlayerMode(player) == 3) {
+            player.removeAllEffects();
         }
     }
 
