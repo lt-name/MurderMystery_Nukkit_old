@@ -63,15 +63,19 @@ public class WaitTask extends PluginTask<MurderMystery> {
                         MurderMystery.getInstance(), new TimeTask(MurderMystery.getInstance(), this.room), 20,true);
                 owner.getServer().getScheduler().scheduleRepeatingTask(
                         MurderMystery.getInstance(), new GoldTask(MurderMystery.getInstance(), this.room), 20, true);
-                owner.getServer().getScheduler().scheduleRepeatingTask(
-                        MurderMystery.getInstance(), new TipsTask(MurderMystery.getInstance(), this.room), 10, true);
+                if (owner.getActionBar()) {
+                    owner.getServer().getScheduler().scheduleRepeatingTask(
+                            MurderMystery.getInstance(), new TipsTask(MurderMystery.getInstance(), this.room), 10, true);
+                }
                 this.cancel();
             }
         }else if (this.room.getPlayers().size() > 0) {
             if (this.room.waitTime != this.room.getWaitTime()) {
                 this.room.waitTime = this.room.getWaitTime();
             }
-            this.sendActionBar("§c等待玩家加入中,当前已有: " + this.room.getPlayers().size() + " 位玩家");
+            if (owner.getActionBar()) {
+                this.sendActionBar("§c等待玩家加入中,当前已有: " + this.room.getPlayers().size() + " 位玩家");
+            }
         }
     }
 

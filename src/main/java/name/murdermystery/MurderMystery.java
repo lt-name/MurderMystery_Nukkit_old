@@ -7,6 +7,7 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
+import main.java.name.murdermystery.api.Api;
 import main.java.name.murdermystery.listener.PlayerGame;
 import main.java.name.murdermystery.listener.PlayerJoinAndQuit;
 import main.java.name.murdermystery.listener.RoomLevelProtection;
@@ -49,6 +50,9 @@ public class MurderMystery extends PluginBase {
             getLogger().error("PlayerInventory 文件夹初始化失败");
         }
         loadRooms();
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            Api.regPApi();
+        }
         getLogger().info("§a插件加载完成！");
     }
 
@@ -110,9 +114,9 @@ public class MurderMystery extends PluginBase {
                             for (Room gameRoom : this.rooms.values()) {
                                 if (gameRoom.getPlayers().containsKey(player)) {
                                     gameRoom.quitRoom(player, true);
-                                    sender.sendMessage("§a你已退出房间");
                                 }
                             }
+                            sender.sendMessage("§a你已退出房间");
                             break;
                         case "list": case "列表":
                             StringBuilder list = new StringBuilder().append("§e房间列表： §a");
@@ -203,6 +207,10 @@ public class MurderMystery extends PluginBase {
 
     public Config getConfig() {
         return this.config;
+    }
+
+    public boolean getActionBar() {
+        return this.config.getBoolean("底部显示信息", true);
     }
 
     public LinkedHashMap<String, Room> getRooms() {
