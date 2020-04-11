@@ -1,6 +1,7 @@
 package main.java.name.murdermystery.room;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.data.Skin;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
@@ -9,10 +10,8 @@ import main.java.name.murdermystery.tasks.WaitTask;
 import main.java.name.murdermystery.utils.SavePlayerInventory;
 import main.java.name.murdermystery.utils.Tools;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 
 /**
  * 房间实体类
@@ -23,6 +22,8 @@ public class Room {
     public int waitTime, gameTime, victoryTime, goldSpawnTime, effectCD; //秒
     private int setWaitTime, setGameTime, setGoldSpawnTime;
     private LinkedHashMap<Player, Integer> players = new LinkedHashMap<>(); //0未分配 1平民 2侦探 3杀手
+    private LinkedHashMap<Player, Integer> skinNumber = new LinkedHashMap<>(); //玩家使用皮肤编号，用于防止重复使用
+    private LinkedHashMap<Player, Skin> skinCache = new LinkedHashMap<>(); //缓存玩家皮肤，用于退出房间时还原
     private List<String> goldSpawn;
     private String spawn, world;
 
@@ -101,7 +102,27 @@ public class Room {
             this.addPlaying(player);
             Tools.rePlayerState(player, true);
             SavePlayerInventory.savePlayerInventory(player, false);
+            this.setRandomSkin(player, false);
             player.teleport(this.getSpawn());
+        }
+    }
+
+    public void setRandomSkin(Player player, boolean restore) {
+        if (restore) {
+            if (this.skinCache.containsKey(player)) {
+                player.setSkin(this.skinCache.get(player));
+                this.skinCache.remove(player);
+            }
+            this.skinNumber.remove(player);
+        }else {
+            int random, x=0;
+            do {
+                if (x > 16) { return; }
+                random = new Random().nextInt(MurderMystery.getInstance().getSkins().size());
+                x++;
+            }while (this.skinNumber.containsValue(random) && MurderMystery.getInstance().getSkins().containsKey(random));
+            this.skinCache.put(player, player.getSkin());
+            player.setSkin(MurderMystery.getInstance().getSkins().get(random));
         }
     }
 
@@ -125,6 +146,7 @@ public class Room {
         if (online) {
             Tools.rePlayerState(player, false);
             SavePlayerInventory.savePlayerInventory(player, true);
+            this.setRandomSkin(player, true);
             player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn());
         }
     }

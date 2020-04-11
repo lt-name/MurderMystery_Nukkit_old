@@ -316,13 +316,19 @@ public class MurderMystery extends PluginBase {
                         this.skins.put(x, skin);
                         x++;
                     }else {
-                        getLogger().info(skinName + "加载失败，这可能不是一个正确的图片");
+                        getLogger().warning(skinName + "加载失败，这可能不是一个正确的图片");
                     }
                 } else {
-                    getLogger().info(skinName + "加载失败，请将皮肤文件命名为 skin.png");
+                    getLogger().warning(skinName + "加载失败，请将皮肤文件命名为 skin.png");
                 }
             }
         }
+        if (this.skins.size() > 15) {
+            getLogger().info("§a皮肤加载完成！随机皮肤功能已启用！");
+        }else {
+            getLogger().warning("§c当前皮肤数量小于16，不启用随机皮肤功能");
+        }
+
     }
 
 
