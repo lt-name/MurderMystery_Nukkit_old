@@ -88,6 +88,8 @@ public class Room {
         this.victoryTime = 10;
         this.goldSpawnTime = this.setGoldSpawnTime;
         this.effectCD = 0;
+        this.skinNumber.clear();
+        this.skinCache.clear();
         Tools.cleanEntity(this.getWorld(), true);
         this.mode = 0;
     }
@@ -115,14 +117,13 @@ public class Room {
             }
             this.skinNumber.remove(player);
         }else {
-            int random, x=0;
-            do {
-                if (x > 16) { return; }
-                random = new Random().nextInt(MurderMystery.getInstance().getSkins().size());
-                x++;
-            }while (this.skinNumber.containsValue(random) && MurderMystery.getInstance().getSkins().containsKey(random));
-            this.skinCache.put(player, player.getSkin());
-            player.setSkin(MurderMystery.getInstance().getSkins().get(random));
+            for (Map.Entry<Integer, Skin> entry : MurderMystery.getInstance().getSkins().entrySet()) {
+                if (!this.skinNumber.containsValue(entry.getKey())) {
+                    this.skinCache.put(player, player.getSkin());
+                    player.setSkin(entry.getValue());
+                    this.skinNumber.put(player, entry.getKey());
+                }
+            }
         }
     }
 
@@ -148,6 +149,9 @@ public class Room {
             SavePlayerInventory.savePlayerInventory(player, true);
             this.setRandomSkin(player, true);
             player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn());
+        }else {
+            this.skinNumber.remove(player);
+            this.skinCache.remove(player);
         }
     }
 
