@@ -109,6 +109,11 @@ public class Room {
         }
     }
 
+    /**
+     * 设置玩家随机皮肤
+     * @param player 玩家
+     * @param restore 是否为还原
+     */
     public void setRandomSkin(Player player, boolean restore) {
         if (restore) {
             if (this.skinCache.containsKey(player)) {
