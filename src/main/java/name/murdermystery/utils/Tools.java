@@ -22,6 +22,15 @@ import java.util.Random;
 public class Tools {
 
     /**
+     * 设置玩家是否隐身
+     * @param player 玩家
+     * @param invisible 是否隐身
+     */
+    public static void setPlayerInvisible(Player player, boolean invisible) {
+        player.setDataFlag(0, 5, invisible);
+    }
+
+    /**
      * 重置玩家状态
      * @param player 玩家
      * @param joinRoom 是否为加入房间
@@ -31,14 +40,15 @@ public class Tools {
             if (player.getGamemode() != 2) {
                 player.setGamemode(2);
             }
-            player.setNameTagAlwaysVisible(false);
+            player.setNameTagVisible(false);
             player.setNameTag(" ");
         }else {
             if (player.getGamemode() != 0) {
                 player.setGamemode(0);
             }
-            player.setNameTagAlwaysVisible(true);
+            player.setNameTagVisible(true);
             player.setNameTag(player.getName());
+            setPlayerInvisible(player, false);
         }
         player.setHealth(player.getMaxHealth());
         player.getFoodData().setLevel(player.getFoodData().getMaxLevel());

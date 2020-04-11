@@ -81,9 +81,8 @@ public class PlayerGame implements Listener {
         room.clearInventory(player);
         player.setGamemode(3);
         room.addPlaying(player, 0);
-        if (room.getPlayerMode(player) == 3) {
-            return;
-        }else if (room.getPlayerMode(player) == 2) {
+        Tools.setPlayerInvisible(player, true);
+        if (room.getPlayerMode(player) == 2) {
             Item item = Item.get(261, 0, 1);
             item.setCustomName("§e侦探之弓");
             room.getWorld().dropItem(player, item);
