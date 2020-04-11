@@ -1,6 +1,7 @@
 package main.java.name.murdermystery.room;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.data.Skin;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
@@ -14,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * 房间实体类
  */
@@ -23,6 +25,8 @@ public class Room {
     public int waitTime, gameTime, victoryTime, goldSpawnTime, effectCD; //秒
     private int setWaitTime, setGameTime, setGoldSpawnTime;
     private LinkedHashMap<Player, Integer> players = new LinkedHashMap<>(); //0未分配 1平民 2侦探 3杀手
+    private LinkedHashMap<Player, Integer> skinNumber = new LinkedHashMap<>(); //玩家使用皮肤编号，用于防止重复使用
+    private LinkedHashMap<Player, Skin> skinCache = new LinkedHashMap<>(); //缓存玩家皮肤，用于退出房间时还原
     private List<String> goldSpawn;
     private String spawn, world;
 
@@ -87,6 +91,8 @@ public class Room {
         this.victoryTime = 10;
         this.goldSpawnTime = this.setGoldSpawnTime;
         this.effectCD = 0;
+        this.skinNumber.clear();
+        this.skinCache.clear();
         Tools.cleanEntity(this.getWorld(), true);
         this.mode = 0;
     }
@@ -102,6 +108,7 @@ public class Room {
             Tools.rePlayerState(player, true);
             SavePlayerInventory.savePlayerInventory(player, false);
             player.teleport(this.getSpawn());
+            this.setRandomSkin(player, false);
         }
     }
 
@@ -126,6 +133,10 @@ public class Room {
             Tools.rePlayerState(player, false);
             SavePlayerInventory.savePlayerInventory(player, true);
             player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn());
+            this.setRandomSkin(player, true);
+        }else {
+            this.skinNumber.remove(player);
+            this.skinCache.remove(player);
         }
     }
 
@@ -135,6 +146,30 @@ public class Room {
      */
     public void clearInventory(Player player) {
         player.getInventory().clearAll();
+    }
+
+    /**
+     * 设置玩家随机皮肤
+     * @param player 玩家
+     * @param restore 是否为还原
+     */
+    public void setRandomSkin(Player player, boolean restore) {
+        if (restore) {
+            if (this.skinCache.containsKey(player)) {
+                Tools.setPlayerSkin(player, this.skinCache.get(player));
+                this.skinCache.remove(player);
+            }
+            this.skinNumber.remove(player);
+        }else {
+            for (Map.Entry<Integer, Skin> entry : MurderMystery.getInstance().getSkins().entrySet()) {
+                if (!this.skinNumber.containsValue(entry.getKey())) {
+                    this.skinCache.put(player, player.getSkin());
+                    this.skinNumber.put(player, entry.getKey());
+                    Tools.setPlayerSkin(player, entry.getValue());
+                    return;
+                }
+            }
+        }
     }
 
     /**

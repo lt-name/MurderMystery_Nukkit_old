@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.data.Skin;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
@@ -15,7 +16,10 @@ import main.java.name.murdermystery.listener.RoomLevelProtection;
 import main.java.name.murdermystery.room.Room;
 import main.java.name.murdermystery.utils.SetRoomConfig;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,6 +34,7 @@ public class MurderMystery extends PluginBase {
     private Config config;
     private LinkedHashMap<String, Config> roomConfigs = new LinkedHashMap<>();
     private LinkedHashMap<String, Room> rooms = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, Skin> skins = new LinkedHashMap<>();
 
     public static MurderMystery getInstance() { return murderMystery; }
 
@@ -44,13 +49,20 @@ public class MurderMystery extends PluginBase {
         getServer().getPluginManager().registerEvents(new PlayerGame(), this);
         File file1 = new File(this.getDataFolder() + "/Rooms");
         File file2 = new File(this.getDataFolder() + "/PlayerInventory");
+        File file3 = new File(this.getDataFolder() + "/Skins");
         if (!file1.exists() && !file1.mkdirs()) {
             getLogger().error("Rooms 文件夹初始化失败");
         }
         if (!file2.exists() && !file2.mkdirs()) {
             getLogger().error("PlayerInventory 文件夹初始化失败");
         }
-        loadRooms();
+        if (!file3.exists() && !file3.mkdirs()) {
+            getLogger().error("Skins 文件夹初始化失败");
+        }
+        getLogger().info("§a开始加载房间");
+        this.loadRooms();
+        getLogger().info("§a开始加载皮肤");
+        this.loadSkins();
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             PlaceholderAPI api = PlaceholderAPI.getInstance();
             api.visitorSensitivePlaceholder("MurderPlayerMode", (player, placeholderParameters) -> Api.getPlayerMode(player), 20, true);
@@ -75,6 +87,7 @@ public class MurderMystery extends PluginBase {
         }
         this.rooms.clear();
         this.roomConfigs.clear();
+        this.skins.clear();
         getLogger().info("§c已卸载！");
     }
 
@@ -238,6 +251,10 @@ public class MurderMystery extends PluginBase {
         return config;
     }
 
+    public LinkedHashMap<Integer, Skin> getSkins() {
+        return this.skins;
+    }
+
     /**
      * 加载所有房间
      */
@@ -273,5 +290,46 @@ public class MurderMystery extends PluginBase {
         }
         this.loadRooms();
     }
+
+    /**
+     * 加载所有皮肤
+     */
+    private void loadSkins() {
+        File[] files = (new File(getDataFolder() + "/Skins")).listFiles();
+        if (files != null && files.length > 0) {
+            int x = 0;
+            for (File file : files) {
+                String skinName = file.getName();
+                File skinFile = new File(getDataFolder() + "/Skins/" + skinName + "/skin.png");
+                if (skinFile.exists()) {
+                    Skin skin = new Skin();
+                    BufferedImage skinData = null;
+                    try {
+                        skinData = ImageIO.read(skinFile);
+                    } catch (IOException e) {
+                        System.out.println(skinName + "加载失败");
+                    }
+                    if (skinData != null) {
+                        skin.setSkinData(skinData);
+                        skin.setSkinId(skinName);
+                        getLogger().info("编号： " + x + " 皮肤： " + skinName + " 已加载");
+                        this.skins.put(x, skin);
+                        x++;
+                    }else {
+                        getLogger().warning(skinName + "加载失败，这可能不是一个正确的图片");
+                    }
+                } else {
+                    getLogger().warning(skinName + "加载失败，请将皮肤文件命名为 skin.png");
+                }
+            }
+        }
+        if (this.skins.size() > 15) {
+            getLogger().info("§a皮肤加载完成！");
+        }else {
+            getLogger().warning("§c当前皮肤数量小于16，部分玩家仍可使用自己的皮肤");
+        }
+
+    }
+
 
 }
