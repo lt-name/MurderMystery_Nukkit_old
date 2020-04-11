@@ -44,11 +44,15 @@ public class MurderMystery extends PluginBase {
         getServer().getPluginManager().registerEvents(new PlayerGame(), this);
         File file1 = new File(this.getDataFolder() + "/Rooms");
         File file2 = new File(this.getDataFolder() + "/PlayerInventory");
+        File file3 = new File(this.getDataFolder() + "/Skins");
         if (!file1.exists() && !file1.mkdirs()) {
             getLogger().error("Rooms 文件夹初始化失败");
         }
         if (!file2.exists() && !file2.mkdirs()) {
             getLogger().error("PlayerInventory 文件夹初始化失败");
+        }
+        if (!file3.exists() && !file3.mkdirs()) {
+            getLogger().error("Skins 文件夹初始化失败");
         }
         loadRooms();
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
