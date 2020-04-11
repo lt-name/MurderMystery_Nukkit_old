@@ -97,7 +97,7 @@ public class Room {
         if (this.players.values().size() < 16) {
             this.initTask();
             this.addPlaying(player);
-            Tools.rePlayerState(player, false);
+            Tools.rePlayerState(player, true);
             SavePlayerInventory.savePlayerInventory(player, false);
             player.teleport(this.getSpawn());
         }
@@ -121,7 +121,7 @@ public class Room {
             this.delPlaying(player);
         }
         if (online) {
-            Tools.rePlayerState(player, true);
+            Tools.rePlayerState(player, false);
             SavePlayerInventory.savePlayerInventory(player, true);
             player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn());
         }

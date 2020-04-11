@@ -27,7 +27,7 @@ public class PlayerJoinAndQuit implements Listener {
                 @Override
                 public void onRun(int i) {
                     if (MurderMystery.getInstance().getServer().getOnlinePlayers().containsValue(player)) {
-                        Tools.rePlayerState(player ,true);
+                        Tools.rePlayerState(player ,false);
                         SavePlayerInventory.savePlayerInventory(player, true);
                         player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn());
                     }
