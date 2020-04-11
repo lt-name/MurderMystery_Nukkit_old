@@ -22,6 +22,7 @@ import cn.nukkit.potion.Effect;
 import cn.nukkit.scheduler.Task;
 import main.java.name.murdermystery.MurderMystery;
 import main.java.name.murdermystery.entity.PlayerCorpse;
+import main.java.name.murdermystery.event.MurderPlayerCorpseSpawnEvent;
 import main.java.name.murdermystery.event.MurderPlayerDamageEvent;
 import main.java.name.murdermystery.event.MurderPlayerDeathEvent;
 import main.java.name.murdermystery.room.Room;
@@ -88,6 +89,19 @@ public class PlayerGame implements Listener {
             room.getWorld().dropItem(player, item);
         }
         Tools.addSound(room, Sound.GAME_PLAYER_HURT);
+        Server.getInstance().getPluginManager().callEvent(new MurderPlayerCorpseSpawnEvent(room, player));
+    }
+
+    /**
+     * 尸体生成事件
+     * @param event 事件
+     */
+    @EventHandler
+    public void onCorpseSpawn(MurderPlayerCorpseSpawnEvent event) {
+        Player player = event.getPlayer();
+        if (player == null) {
+            return;
+        }
         CompoundTag nbt = Entity.getDefaultNBT(player,
                 new Vector3(player.motionX,player.motionY,player.motionZ),(float) player.yaw,(float) player.pitch);
         nbt.putString("NameTag", player.getName()).putFloat("scale",1.0F);
@@ -167,7 +181,6 @@ public class PlayerGame implements Listener {
             if (!MurderMystery.getInstance().getRooms().containsKey(levelName)) {
                 return;
             }
-            Room room = MurderMystery.getInstance().getRooms().get(levelName);
             if (player.getInventory().getItemInHand().getCustomName().equals("§e侦探之弓")) {
                 player.getInventory().addItem(Item.get(262, 0, 1));
                 return;
@@ -240,6 +253,10 @@ public class PlayerGame implements Listener {
         }
     }
 
+    /**
+     * 玩家手持物品事件
+     * @param event 事件
+     */
     @EventHandler
     public void onItemHeld(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
