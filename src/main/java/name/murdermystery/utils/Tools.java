@@ -3,6 +3,7 @@ package main.java.name.murdermystery.utils;
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityHuman;
+import cn.nukkit.entity.data.Skin;
 import cn.nukkit.entity.item.EntityFirework;
 import cn.nukkit.item.ItemFirework;
 import cn.nukkit.level.Level;
@@ -13,6 +14,7 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
+import cn.nukkit.network.protocol.PlayerSkinPacket;
 import cn.nukkit.utils.DyeColor;
 import main.java.name.murdermystery.room.Room;
 
@@ -20,6 +22,23 @@ import java.util.Random;
 
 
 public class Tools {
+
+    /**
+     * 设置玩家皮肤
+     * @param player 玩家
+     * @param skin 皮肤
+     */
+    public static void setPlayerSkin(Player player, Skin skin) {
+        PlayerSkinPacket packet = new PlayerSkinPacket();
+        Skin oldSkin = player.getSkin();
+        packet.skin = skin;
+        packet.newSkinName = skin.getSkinId();
+        packet.oldSkinName = oldSkin.getSkinId();
+        packet.uuid = player.getUniqueId();
+        player.setSkin(skin);
+        player.dataPacket(packet);
+        player.setSkin(skin);
+    }
 
     /**
      * 设置玩家是否隐身
@@ -48,7 +67,7 @@ public class Tools {
             }
             player.setNameTagVisible(true);
             player.setNameTag(player.getName());
-            setPlayerInvisible(player, false);
+            //setPlayerInvisible(player, false);
         }
         player.setHealth(player.getMaxHealth());
         player.getFoodData().setLevel(player.getFoodData().getMaxLevel());
