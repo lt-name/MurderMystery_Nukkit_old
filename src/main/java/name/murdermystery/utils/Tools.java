@@ -25,11 +25,18 @@ public class Tools {
      * 重置玩家状态
      * @param player 玩家
      */
-    public static void rePlayerState(Player player, boolean canSee) {
-        if (player.getGamemode() != 0) {
-            player.setGamemode(0);
+    public static void rePlayerState(Player player, boolean joinRoom) {
+        if (joinRoom) {
+            if (player.getGamemode() != 2) {
+                player.setGamemode(2);
+            }
+            player.setNameTagAlwaysVisible(false);
+        }else {
+            if (player.getGamemode() != 0) {
+                player.setGamemode(0);
+            }
+            player.setNameTagAlwaysVisible(true);
         }
-        player.setNameTagAlwaysVisible(canSee);
         player.setHealth(player.getMaxHealth());
         player.getFoodData().setLevel(player.getFoodData().getMaxLevel());
     }
