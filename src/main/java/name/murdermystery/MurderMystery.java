@@ -324,9 +324,9 @@ public class MurderMystery extends PluginBase {
             }
         }
         if (this.skins.size() > 15) {
-            getLogger().info("§a皮肤加载完成！随机皮肤功能已启用！");
+            getLogger().info("§a皮肤加载完成！");
         }else {
-            getLogger().warning("§c当前皮肤数量小于16，不启用随机皮肤功能");
+            getLogger().warning("§c当前皮肤数量小于16，部分玩家仍可使用自己的皮肤");
         }
 
     }
