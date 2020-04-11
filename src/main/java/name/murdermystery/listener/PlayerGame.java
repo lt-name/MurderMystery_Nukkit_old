@@ -118,7 +118,8 @@ public class PlayerGame implements Listener {
     @EventHandler
     public void onDamageByEntity(EntityDamageByEntityEvent event) {
         Level level = event.getDamager().getLevel();
-        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
+        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
+                MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
             return;
         }
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
@@ -146,7 +147,8 @@ public class PlayerGame implements Listener {
             return;
         }
         Level level = event.getDamager().getLevel();
-        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
+        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
+                MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
             return;
         }
         if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
@@ -170,12 +172,17 @@ public class PlayerGame implements Listener {
     @EventHandler
     public void onShootBow(EntityShootBowEvent event) {
         if (event.getEntity() instanceof Player) {
-            final Player player = ((Player) event.getEntity()).getPlayer();
+            Player player = ((Player) event.getEntity()).getPlayer();
+            if (player == null) {
+                return;
+            }
             String levelName = player.getLevel().getName();
-            if (!MurderMystery.getInstance().getRooms().containsKey(levelName)) {
+            if (!MurderMystery.getInstance().getRooms().containsKey(levelName) ||
+                    MurderMystery.getInstance().getRooms().get(levelName).getMode() != 2) {
                 return;
             }
             if (player.getInventory().getItemInHand().getCustomName().equals("§e侦探之弓")) {
+                player.sendMessage("测试");
                 player.getInventory().addItem(Item.get(262, 0, 1));
                 return;
             }
@@ -209,7 +216,8 @@ public class PlayerGame implements Listener {
     @EventHandler
     public void onPickupItem(InventoryPickupItemEvent event) {
         Level level = event.getItem().getLevel();
-        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
+        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
+                MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
             return;
         }
         if (event.getInventory() != null && event.getInventory() instanceof PlayerInventory) {
@@ -259,7 +267,8 @@ public class PlayerGame implements Listener {
             return;
         }
         Level level = player.getLevel();
-        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
+        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
+                MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
             return;
         }
         Room room = MurderMystery.getInstance().getRooms().get(player.getLevel().getName());
