@@ -49,11 +49,6 @@ public class PlayerGame implements Listener {
         if (room.getPlayerMode(player1) == 3) {
             player1.sendMessage("§a你成功击杀了一位玩家！");
             player2.sendTitle("§c死亡", "§c你被杀手杀死了", 20, 60, 20);
-            if (room.getPlayerMode(player2) == 2) {
-                Item item = Item.get(261, 0, 1);
-                item.setCustomName("§e侦探之弓");
-                room.getWorld().dropItem(player2, item);
-            }
         }else { //攻击者是平民或侦探
             if (room.getPlayerMode(player2) == 3) {
                 player1.sendMessage("你成功击杀了杀手！");
