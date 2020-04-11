@@ -24,6 +24,7 @@ public class Tools {
     /**
      * 重置玩家状态
      * @param player 玩家
+     * @param joinRoom 是否为加入房间
      */
     public static void rePlayerState(Player player, boolean joinRoom) {
         if (joinRoom) {
@@ -31,11 +32,13 @@ public class Tools {
                 player.setGamemode(2);
             }
             player.setNameTagAlwaysVisible(false);
+            player.setNameTag(" ");
         }else {
             if (player.getGamemode() != 0) {
                 player.setGamemode(0);
             }
             player.setNameTagAlwaysVisible(true);
+            player.setNameTag(player.getName());
         }
         player.setHealth(player.getMaxHealth());
         player.getFoodData().setLevel(player.getFoodData().getMaxLevel());
