@@ -41,6 +41,7 @@ public class Room {
         this.goldSpawnTime = this.setGoldSpawnTime;
         this.victoryTime = 10;
         this.world = config.getString("World", null);
+        this.effectCD = 0;
         this.mode = 0;
     }
 
@@ -85,6 +86,7 @@ public class Room {
         this.gameTime = this.setGameTime;
         this.victoryTime = 10;
         this.goldSpawnTime = this.setGoldSpawnTime;
+        this.effectCD = 0;
         Tools.cleanEntity(this.getWorld(), true);
         this.mode = 0;
     }
