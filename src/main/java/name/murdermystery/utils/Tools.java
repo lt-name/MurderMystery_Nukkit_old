@@ -8,12 +8,12 @@ import cn.nukkit.entity.item.EntityFirework;
 import cn.nukkit.item.ItemFirework;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Sound;
-import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
+import cn.nukkit.network.protocol.PlaySoundPacket;
 import cn.nukkit.network.protocol.PlayerSkinPacket;
 import cn.nukkit.utils.DyeColor;
 import main.java.name.murdermystery.room.Room;
@@ -77,7 +77,15 @@ public class Tools {
      */
     public static void addSound(Room room, Sound sound) {
         for (Player player : room.getPlayers().keySet()) {
-            player.getLevel().addSound(new Vector3(player.x, player.y, player.z), sound);
+            PlaySoundPacket packet = new PlaySoundPacket();
+            packet.name = sound.getSound();
+            packet.volume = 1.0F;
+            packet.pitch = 1.0F;
+            packet.x = player.getFloorX();
+            packet.y = player.getFloorY();
+            packet.z = player.getFloorZ();
+            player.dataPacket(packet);
+            //player.getLevel().addSound(new Vector3(player.x, player.y, player.z), sound);
         }
     }
 
