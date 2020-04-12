@@ -14,7 +14,6 @@ import main.java.name.murdermystery.listener.PlayerGame;
 import main.java.name.murdermystery.listener.PlayerJoinAndQuit;
 import main.java.name.murdermystery.listener.RoomLevelProtection;
 import main.java.name.murdermystery.room.Room;
-import main.java.name.murdermystery.utils.SetRoomConfig;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -22,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -163,16 +163,16 @@ public class MurderMystery extends PluginBase {
                 if (args.length > 0) {
                     switch (args[0]) {
                         case "设置出生点": case "setspawn": case "SetSpawn":
-                            SetRoomConfig.setSpawn(player, getRoomConfig(player.getLevel()));
+                            this.roomSetSpawn(player, getRoomConfig(player.getLevel()));
                             sender.sendMessage("§a出生点设置成功！");
                             break;
                         case "添加金锭生成点": case "addGoldSpawn":
-                            SetRoomConfig.addGoldSpawn(player, getRoomConfig(player.getLevel()));
+                            this.roomAddGoldSpawn(player, getRoomConfig(player.getLevel()));
                             sender.sendMessage("§a金锭生成点添加成功！");
                             break;
                         case "设置金锭产出间隔":
                             if (args.length == 2) {
-                                SetRoomConfig.setGoldSpawnTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
+                                this.roomSetGoldSpawnTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
                                 sender.sendMessage("§a金锭产出间隔已设置为：" + Integer.valueOf(args[1]));
                             }else {
                                 sender.sendMessage("§a查看帮助：/kadmin help");
@@ -180,7 +180,7 @@ public class MurderMystery extends PluginBase {
                             break;
                         case "设置等待时间":
                             if (args.length == 2) {
-                                SetRoomConfig.setWaitTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
+                                this.roomSetWaitTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
                                 sender.sendMessage("§a等待时间已设置为：" + Integer.valueOf(args[1]));
                             }else {
                                 sender.sendMessage("§a查看帮助：/kadmin help");
@@ -189,7 +189,7 @@ public class MurderMystery extends PluginBase {
                         case "设置游戏时间":
                             if (args.length == 2) {
                                 if (Integer.parseInt(args[1]) > 60) {
-                                    SetRoomConfig.setGameTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
+                                    this.roomSetGameTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
                                     sender.sendMessage("§a游戏时间已设置为：" + Integer.valueOf(args[1]));
                                 }else {
                                     sender.sendMessage("§a游戏时间最小不能低于1分钟！");
@@ -331,5 +331,39 @@ public class MurderMystery extends PluginBase {
 
     }
 
+    private void roomSetSpawn(Player player, Config config) {
+        String spawn = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ()+ ":" + player.getLevel().getName();
+        String world = player.getLevel().getName();
+        config.set("World", world);
+        config.set("出生点", spawn);
+        config.save();
+    }
+
+    private void roomAddGoldSpawn(Player player, Config config) {
+        this.roomAddGoldSpawn(player.getFloorX(), player.getFloorY() + 1, player.getFloorZ(), config);
+    }
+
+    private void roomAddGoldSpawn(int x, int y, int z, Config config) {
+        String s = x + ":" + y + ":" + z;
+        List<String> list = config.getStringList("goldSpawn");
+        list.add(s);
+        config.set("goldSpawn", list);
+        config.save();
+    }
+
+    private void roomSetWaitTime(Integer waitTime, Config config) {
+        config.set("等待时间", waitTime);
+        config.save();
+    }
+
+    private void roomSetGameTime(Integer gameTime, Config config) {
+        config.set("游戏时间", gameTime);
+        config.save();
+    }
+
+    private void roomSetGoldSpawnTime(Integer goldSpawnTime, Config config) {
+        config.set("goldSpawnTime", goldSpawnTime);
+        config.save();
+    }
 
 }
