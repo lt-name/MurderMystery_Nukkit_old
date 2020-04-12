@@ -2,7 +2,6 @@ package main.java.name.murdermystery.listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.data.IntPositionEntityData;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
@@ -76,7 +75,7 @@ public class PlayerGame implements Listener {
         room.clearInventory(player);
         player.setGamemode(3);
         room.addPlaying(player, 0);
-        //Tools.setPlayerInvisible(player, true);
+        Tools.setPlayerInvisible(player, true);
         if (room.getPlayerMode(player) == 2) {
             Item item = Item.get(261, 0, 1);
             item.setCustomName("§e侦探之弓");
@@ -96,20 +95,37 @@ public class PlayerGame implements Listener {
         if (player == null) {
             return;
         }
-        CompoundTag nbt = Entity.getDefaultNBT(player,
-                new Vector3(player.motionX,player.motionY,player.motionZ),(float) player.yaw,(float) player.pitch);
-        nbt.putString("NameTag", player.getName()).putFloat("scale",1.0F);
-        nbt.putBoolean("isCorpse",true);
+        CompoundTag nbt = PlayerCorpse.getDefaultNBT(player);
         nbt.putCompound("Skin",new CompoundTag()
                 .putByteArray("Data", player.getSkin().getSkinData().data)
                 .putString("ModelId", player.getSkin().getSkinId()));
-        PlayerCorpse entity = new PlayerCorpse(player.getChunk(),nbt);
-        entity.setNameTagAlwaysVisible(false);
-        entity.setDataProperty(new IntPositionEntityData(28, (int)player.x, (int)player.y, (int)player.z));
-        entity.setDataFlag(26, 1, true);
-        entity.spawnToAll();
+        nbt.putFloat("scale", -1.0F);
+        PlayerCorpse ent = new PlayerCorpse(player.getChunk(), nbt);
+        ent.setDataProperty(new IntPositionEntityData(28, (int)player.x, (int) player.y, (int)player.z));
+        ent.setPosition(new Vector3(player.getFloorX(), this.getCorpseY(player), player.getFloorZ()));
+        ent.setGliding(true);
+        ent.setRotation(player.getYaw(), 0);
+        ent.setImmobile(true);
+        ent.spawnToAll();
     }
 
+    /**
+     * 获取尸体 Y
+     * @param player 玩家
+     * @return Y
+     */
+    private double getCorpseY(Player player) {
+        for (int y = 0; y < 10; y++) {
+            Level level = player.getLevel();
+            if (level.getBlock(player.getFloorX(), player.getFloorY() - y, player.getFloorZ()).getId() != 0) {
+                if (level.getBlock(player.getFloorX(), player.getFloorY() - y, player.getFloorZ()).getBoundingBox() != null) {
+                    return player.getLevel().getBlock(player.getFloorX(), player.getFloorY() - y, player.getFloorZ()).getBoundingBox().getMaxY() + 0.2;
+                }
+                return player.getLevel().getBlock(player.getFloorX(), player.getFloorY() - y, player.getFloorZ()).getMinY() + 0.2;
+            }
+        }
+        return player.getFloorY();
+    }
 
     /**
      * 实体受到另一实体伤害事件

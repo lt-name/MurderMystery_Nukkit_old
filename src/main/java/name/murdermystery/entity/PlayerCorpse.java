@@ -15,13 +15,14 @@ public class PlayerCorpse extends EntityHuman {
 
     public PlayerCorpse(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
+        this.setNameTagVisible(false);
+        this.setNameTagAlwaysVisible(false);
+        this.setNameTag(" ");
         this.setDataProperty(new FloatEntityData(38, this.namedTag.getFloat("scale")));
-
     }
 
     @Override
     public void spawnTo(Player player) {
-
         if(!this.hasSpawned.containsKey(player.getLoaderId())) {
             this.hasSpawned.put(player.getLoaderId(), player);
             this.server.updatePlayerListData(this.getUniqueId(), this.getId(), this.getName(), this.skin, new Player[]{player});
@@ -38,19 +39,13 @@ public class PlayerCorpse extends EntityHuman {
             pk.speedZ = (float)this.motionZ;
             pk.yaw = (float)this.yaw;
             pk.pitch = (float)this.pitch;
-            this.inventory.setItemInHand(Item.fromString(this.namedTag.getString("Item")));
-            pk.item = player.getInventory().getItemInHand();
+            pk.item = Item.get(0);
             pk.metadata = this.dataProperties;
             player.dataPacket(pk);
             setSkin(player.getSkin());
-            this.inventory.setHelmet(Item.fromString(this.namedTag.getString("Helmet")));
-            this.inventory.setChestplate(Item.fromString(this.namedTag.getString("Chestplate")));
-            this.inventory.setLeggings(Item.fromString(this.namedTag.getString("Leggings")));
-            this.inventory.setBoots(Item.fromString(this.namedTag.getString("Boots")));
-            this.inventory.sendArmorContents(player);
-            this.server.removePlayerListData(this.getUniqueId(), new Player[]{player});
+            this.inventory.setItemInHand(Item.get(0));
             super.spawnTo(player);
         }
-
     }
+
 }
