@@ -30,14 +30,12 @@ public class Tools {
      */
     public static void setPlayerSkin(Player player, Skin skin) {
         PlayerSkinPacket packet = new PlayerSkinPacket();
-        Skin oldSkin = player.getSkin();
         packet.skin = skin;
         packet.newSkinName = skin.getSkinId();
-        packet.oldSkinName = oldSkin.getSkinId();
+        packet.oldSkinName = player.getSkin().getSkinId();
         packet.uuid = player.getUniqueId();
         player.setSkin(skin);
         player.dataPacket(packet);
-        player.setSkin(skin);
     }
 
     /**
@@ -67,7 +65,7 @@ public class Tools {
             }
             player.setNameTagVisible(true);
             player.setNameTag(player.getName());
-            //setPlayerInvisible(player, false);
+            setPlayerInvisible(player, false);
         }
         player.setHealth(player.getMaxHealth());
         player.getFoodData().setLevel(player.getFoodData().getMaxLevel());
