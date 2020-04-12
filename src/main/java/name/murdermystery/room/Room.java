@@ -257,6 +257,9 @@ public class Room {
         return this.setWaitTime;
     }
 
+    /**
+     * @return 游戏时间
+     */
     public int getGameTime() {
         return this.setGameTime;
     }

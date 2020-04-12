@@ -198,7 +198,6 @@ public class PlayerGame implements Listener {
                 return;
             }
             if (player.getInventory().getItemInHand().getCustomName().equals("§e侦探之弓")) {
-                player.sendMessage("测试");
                 player.getInventory().addItem(Item.get(262, 0, 1));
                 return;
             }
@@ -238,8 +237,9 @@ public class PlayerGame implements Listener {
         }
         if (event.getInventory() != null && event.getInventory() instanceof PlayerInventory) {
             Player player = (Player) event.getInventory().getHolder();
-            if (event.getItem().getItem().getCustomName().equals("§e侦探之弓") &&
-                    MurderMystery.getInstance().getRooms().get(level.getName()).getPlayerMode(player) != 1) {
+            Room room = MurderMystery.getInstance().getRooms().get(player.getLevel().getName());
+            if (room.getPlayerMode(player) == 0 || (event.getItem().getItem().getCustomName().equals("§e侦探之弓") &&
+                    room.getPlayerMode(player) != 1)) {
                 event.setCancelled();
             }
         }
