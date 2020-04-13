@@ -78,12 +78,22 @@ public class Room {
      * 结束本局游戏
      */
     public void endGame() {
-        if (this.players.values().size() > 0 ) {
-            Iterator<Map.Entry<Player, Integer>> it = this.players.entrySet().iterator();
-            while(it.hasNext()) {
-                Map.Entry<Player, Integer> entry = it.next();
-                it.remove();
-                quitRoom(entry.getKey());
+        this.endGame(true);
+    }
+
+    /**
+     * 结束本局游戏
+     * @param normal 正常关闭
+     */
+    public void endGame(boolean normal) {
+        if (normal) {
+            if (this.players.values().size() > 0 ) {
+                Iterator<Map.Entry<Player, Integer>> it = this.players.entrySet().iterator();
+                while(it.hasNext()) {
+                    Map.Entry<Player, Integer> entry = it.next();
+                    it.remove();
+                    quitRoom(entry.getKey());
+                }
             }
         }
         this.waitTime = this.setWaitTime;
@@ -276,6 +286,18 @@ public class Room {
      */
     public Level getWorld() {
         return MurderMystery.getInstance().getServer().getLevelByName(this.world);
+    }
+
+    /**
+     * 获取玩家在游戏中使用的皮肤
+     * @param player 玩家
+     * @return 皮肤
+     */
+    public Skin getPlayerSkin(Player player) {
+        if (this.skinNumber.containsKey(player)) {
+            return MurderMystery.getInstance().getSkins().get(this.skinNumber.get(player));
+        }
+        return player.getSkin();
     }
 
 }

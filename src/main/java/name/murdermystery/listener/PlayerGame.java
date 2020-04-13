@@ -2,7 +2,6 @@ package main.java.name.murdermystery.listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import cn.nukkit.entity.data.IntPositionEntityData;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityDamageByChildEntityEvent;
@@ -92,16 +91,17 @@ public class PlayerGame implements Listener {
     @EventHandler
     public void onCorpseSpawn(MurderPlayerCorpseSpawnEvent event) {
         Player player = event.getPlayer();
-        if (player == null) {
+        Room room = event.getRoom();
+        if (player == null || room == null) {
             return;
         }
         CompoundTag nbt = PlayerCorpse.getDefaultNBT(player);
         nbt.putCompound("Skin",new CompoundTag()
-                .putByteArray("Data", player.getSkin().getSkinData().data)
-                .putString("ModelId", player.getSkin().getSkinId()));
+                .putByteArray("Data", room.getPlayerSkin(player).getSkinData().data)
+                .putString("ModelId", room.getPlayerSkin(player).getSkinId()));
         nbt.putFloat("scale", -1.0F);
         PlayerCorpse ent = new PlayerCorpse(player.getChunk(), nbt);
-        ent.setDataProperty(new IntPositionEntityData(28, (int)player.x, (int) player.y, (int)player.z));
+        ent.setSkin(room.getPlayerSkin(player));
         ent.setPosition(new Vector3(player.getFloorX(), this.getCorpseY(player), player.getFloorZ()));
         ent.setGliding(true);
         ent.setRotation(player.getYaw(), 0);

@@ -80,15 +80,19 @@ public class MurderMystery extends PluginBase {
             Iterator<Map.Entry<String, Room>> it = this.rooms.entrySet().iterator();
             while(it.hasNext()){
                 Map.Entry<String, Room> entry = it.next();
-                entry.getValue().endGame();
-                getLogger().info("§c房间：" + entry.getKey() + " 已卸载！");
+                if (entry.getValue().getPlayers().size() > 0) {
+                    entry.getValue().endGame(false);
+                    getLogger().info("§c房间：" + entry.getKey() + " 非正常结束！");
+                }else {
+                    getLogger().info("§c房间：" + entry.getKey() + " 已卸载！");
+                }
                 it.remove();
             }
         }
         this.rooms.clear();
         this.roomConfigs.clear();
         this.skins.clear();
-        getLogger().info("§c已卸载！");
+        getLogger().info("§c插件卸载完成！");
     }
 
     @Override
@@ -202,6 +206,10 @@ public class MurderMystery extends PluginBase {
                             this.reLoadRooms();
                             sender.sendMessage("§a配置重载完成！");
                             break;
+                        case "unload":
+                            this.unloadRooms();
+                            sender.sendMessage("§a已卸载所有房间！");
+                            break;
                         default:
                             sender.sendMessage("§e killer管理--命令帮助");
                             sender.sendMessage("§a/kadmin 设置出生点 §e设置当前位置为游戏出生点");
@@ -210,13 +218,19 @@ public class MurderMystery extends PluginBase {
                             sender.sendMessage("§a/kadmin 设置等待时间 数字 §e设置游戏人数足够后的等待时间");
                             sender.sendMessage("§a/kadmin 设置游戏时间 数字 §e设置每轮游戏最长时间");
                             sender.sendMessage("§a/kadmin reload §e重载所有房间");
+                            sender.sendMessage("§a/kadmin unload §e关闭所有房间,并卸载配置");
                             break;
                     }
                 }else {
                     sender.sendMessage("§a/kadmin help §e查看帮助");
                 }
             }else {
-                sender.sendMessage("§a请在游戏内输入！");
+                if(args.length > 0 && args[0].equals("unload")) {
+                    this.unloadRooms();
+                    sender.sendMessage("§a已卸载所有房间！");
+                }else {
+                    sender.sendMessage("§a请在游戏内输入！");
+                }
             }
             return true;
         }
@@ -273,9 +287,9 @@ public class MurderMystery extends PluginBase {
     }
 
     /**
-     * 重载所有房间
+     * 卸载所有房间
      */
-    private void reLoadRooms() {
+    private void unloadRooms() {
         if (this.rooms.values().size() > 0) {
             Iterator<Map.Entry<String, Room>> it = this.rooms.entrySet().iterator();
             while(it.hasNext()){
@@ -284,10 +298,18 @@ public class MurderMystery extends PluginBase {
                 getLogger().info("§c房间：" + entry.getKey() + " 已卸载！");
                 it.remove();
             }
+            this.rooms.clear();
         }
         if (this.roomConfigs.values().size() > 0) {
             this.roomConfigs.clear();
         }
+    }
+
+    /**
+     * 重载所有房间
+     */
+    private void reLoadRooms() {
+        this.unloadRooms();
         this.loadRooms();
     }
 
@@ -328,7 +350,6 @@ public class MurderMystery extends PluginBase {
         }else {
             getLogger().warning("§c当前皮肤数量小于16，部分玩家仍可使用自己的皮肤");
         }
-
     }
 
     private void roomSetSpawn(Player player, Config config) {
