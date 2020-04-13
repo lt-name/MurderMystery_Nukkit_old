@@ -278,8 +278,11 @@ public class PlayerGame implements Listener {
     @EventHandler
     public void onItemHeld(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
-        Item item = event.getItem();
-        if (player == null || item == null) {
+        if (player == null) {
+            return;
+        }
+        Item item = player.getInventory().getItemInHand();
+        if (item == null) {
             return;
         }
         Level level = player.getLevel();
