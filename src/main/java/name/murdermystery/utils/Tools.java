@@ -68,6 +68,7 @@ public class Tools {
             player.setNameTag(player.getName());
             setPlayerInvisible(player, false);
         }
+        player.removeAllEffects();
         player.setHealth(player.getMaxHealth());
         player.getFoodData().setLevel(player.getFoodData().getMaxLevel());
     }
