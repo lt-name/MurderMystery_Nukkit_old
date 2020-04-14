@@ -25,13 +25,16 @@ public class SavePlayerInventory {
      */
     public static void savePlayerInventory(Player player, boolean restore) {
         File file = new File(MurderMystery.getInstance().getDataFolder() + "/PlayerInventory/" + player.getName() + ".json");
-        Config config = new Config(file, 1);
         if (restore) {
-            if (file.exists() && file.delete()) {
-                player.getInventory().clearAll();
-                PutInventory(player, config.get("Inventory", null));
+            if (file.exists()) {
+                Config config = new Config(file, 1);
+                if (file.delete()) {
+                    player.getInventory().clearAll();
+                    PutInventory(player, config.get("Inventory", null));
+                }
             }
         }else {
+            Config config = new Config(file, 1);
             config.set("Inventory", InventoryToJson(player));
             config.save();
             player.getInventory().clearAll();
