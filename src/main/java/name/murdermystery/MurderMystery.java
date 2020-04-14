@@ -187,27 +187,39 @@ public class MurderMystery extends PluginBase {
                             break;
                         case "设置金锭产出间隔":
                             if (args.length == 2) {
-                                this.roomSetGoldSpawnTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
-                                sender.sendMessage("§a金锭产出间隔已设置为：" + Integer.valueOf(args[1]));
+                                if (args[1].matches("[0-9]*")) {
+                                    this.roomSetGoldSpawnTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
+                                    sender.sendMessage("§a金锭产出间隔已设置为：" + Integer.valueOf(args[1]));
+                                }else {
+                                    sender.sendMessage("§a时间只能设置为正整数！");
+                                }
                             }else {
                                 sender.sendMessage("§a查看帮助：/kadmin help");
                             }
                             break;
                         case "设置等待时间":
                             if (args.length == 2) {
-                                this.roomSetWaitTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
-                                sender.sendMessage("§a等待时间已设置为：" + Integer.valueOf(args[1]));
+                                if (args[1].matches("[0-9]*")) {
+                                    this.roomSetWaitTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
+                                    sender.sendMessage("§a等待时间已设置为：" + Integer.valueOf(args[1]));
+                                }else {
+                                    sender.sendMessage("§a时间只能设置为正整数！");
+                                }
                             }else {
                                 sender.sendMessage("§a查看帮助：/kadmin help");
                             }
                             break;
                         case "设置游戏时间":
                             if (args.length == 2) {
-                                if (Integer.parseInt(args[1]) > 60) {
-                                    this.roomSetGameTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
-                                    sender.sendMessage("§a游戏时间已设置为：" + Integer.valueOf(args[1]));
+                                if (args[1].matches("[0-9]*")) {
+                                    if (Integer.parseInt(args[1]) > 60) {
+                                        this.roomSetGameTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
+                                        sender.sendMessage("§a游戏时间已设置为：" + Integer.valueOf(args[1]));
+                                    } else {
+                                        sender.sendMessage("§a游戏时间最小不能低于1分钟！");
+                                    }
                                 }else {
-                                    sender.sendMessage("§a游戏时间最小不能低于1分钟！");
+                                    sender.sendMessage("§a时间只能设置为正整数！");
                                 }
                             }else {
                                 sender.sendMessage("§a查看帮助：/kadmin help");
