@@ -10,10 +10,12 @@ import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import com.creeperface.nukkit.placeholderapi.api.PlaceholderAPI;
 import main.java.name.murdermystery.api.Api;
+import main.java.name.murdermystery.listener.GuiListener;
 import main.java.name.murdermystery.listener.PlayerGame;
 import main.java.name.murdermystery.listener.PlayerJoinAndQuit;
 import main.java.name.murdermystery.listener.RoomLevelProtection;
 import main.java.name.murdermystery.room.Room;
+import main.java.name.murdermystery.ui.GuiCreate;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -47,6 +49,7 @@ public class MurderMystery extends PluginBase {
         getServer().getPluginManager().registerEvents(new PlayerJoinAndQuit(), this);
         getServer().getPluginManager().registerEvents(new RoomLevelProtection(), this);
         getServer().getPluginManager().registerEvents(new PlayerGame(), this);
+        getServer().getPluginManager().registerEvents(new GuiListener(), this);
         File file1 = new File(this.getDataFolder() + "/Rooms");
         File file2 = new File(this.getDataFolder() + "/PlayerInventory");
         File file3 = new File(this.getDataFolder() + "/Skins");
@@ -100,23 +103,30 @@ public class MurderMystery extends PluginBase {
         if (command.getName().equals("killer")) {
             if (sender instanceof Player) {
                 Player player = ((Player) sender).getPlayer();
-                if (args.length >0) {
+                if (args.length > 0) {
                     switch (args[0]) {
                         case "join": case "加入":
-                            for (Room room : this.rooms.values()) {
-                                if (room.isPlaying(player)) {
-                                    sender.sendMessage("§c你已经在一个房间中了!");
-                                    return true;
+                            if (this.rooms.size() > 0) {
+                                for (Room room : this.rooms.values()) {
+                                    if (room.isPlaying(player)) {
+                                        sender.sendMessage("§c你已经在一个房间中了!");
+                                        return true;
+                                    }
                                 }
-                            }
-                            for(Entity entity : player.getLevel().getEntities()) {
-                                if (entity.isPassenger(player)) {
-                                    sender.sendMessage("§a请勿在骑乘状态下进入房间！");
-                                    return true;
+                                for(Entity entity : player.getLevel().getEntities()) {
+                                    if (entity.isPassenger(player)) {
+                                        sender.sendMessage("§a请勿在骑乘状态下进入房间！");
+                                        return true;
+                                    }
                                 }
-                            }
-                            if (args.length == 2) {
-                                if (args[1] != null && this.rooms.containsKey(args[1])) {
+                                if (args.length < 2) {
+                                    for (Room room : this.rooms.values()) {
+                                        if (room.getMode() == 0 || room.getMode() == 1) {
+                                            room.joinRoom(player);
+                                        }
+                                    }
+                                    sender.sendMessage("§a已为你随机分配房间！");
+                                }else if (this.rooms.containsKey(args[1])) {
                                     Room room = this.rooms.get(args[1]);
                                     if (room.getMode() == 2 || room.getMode() == 3) {
                                         sender.sendMessage("§a该房间正在游戏中，请稍后");
@@ -129,7 +139,7 @@ public class MurderMystery extends PluginBase {
                                     sender.sendMessage("§a该房间不存在！");
                                 }
                             }else {
-                                sender.sendMessage("§a查看帮助：/killer help");
+                                sender.sendMessage("§a暂无房间可用！");
                             }
                             break;
                         case "quit": case "退出":
@@ -149,13 +159,14 @@ public class MurderMystery extends PluginBase {
                             break;
                         default:
                             sender.sendMessage("§e/killer--命令帮助");
+                            sender.sendMessage("§e/killer §e打开ui");
                             sender.sendMessage("§a/killer join 房间名称 §e加入游戏");
                             sender.sendMessage("§a/killer quit §e退出游戏");
                             sender.sendMessage("§a/killer list §e查看房间列表");
                             break;
                     }
                 }else {
-                    sender.sendMessage("§a/killer help §e查看帮助");
+                    GuiCreate.sendUserMenu(player);
                 }
             }else {
                 sender.sendMessage("请在游戏内输入！");
@@ -212,6 +223,7 @@ public class MurderMystery extends PluginBase {
                             break;
                         default:
                             sender.sendMessage("§e killer管理--命令帮助");
+                            sender.sendMessage("§a/kadmin §e打开ui");
                             sender.sendMessage("§a/kadmin 设置出生点 §e设置当前位置为游戏出生点");
                             sender.sendMessage("§a/kadmin 添加金锭生成点 §e将当前位置设置为金锭生成点");
                             sender.sendMessage("§a/kadmin 设置金锭产出间隔 数字 §e设置金锭生成间隔");
@@ -222,7 +234,7 @@ public class MurderMystery extends PluginBase {
                             break;
                     }
                 }else {
-                    sender.sendMessage("§a/kadmin help §e查看帮助");
+                    GuiCreate.sendAdminMenu(player);
                 }
             }else {
                 if(args.length > 0 && args[0].equals("unload")) {
