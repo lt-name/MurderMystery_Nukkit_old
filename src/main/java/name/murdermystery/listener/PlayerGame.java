@@ -2,6 +2,7 @@ package main.java.name.murdermystery.listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
+import cn.nukkit.block.Block;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityDamageByChildEntityEvent;
@@ -9,6 +10,8 @@ import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityShootBowEvent;
 import cn.nukkit.event.inventory.InventoryPickupItemEvent;
 import cn.nukkit.event.player.PlayerChatEvent;
+import cn.nukkit.event.player.PlayerInteractEvent;
+import cn.nukkit.event.player.PlayerItemConsumeEvent;
 import cn.nukkit.event.player.PlayerItemHeldEvent;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
@@ -17,6 +20,7 @@ import cn.nukkit.level.Sound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.potion.Effect;
+import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.scheduler.Task;
 import main.java.name.murdermystery.MurderMystery;
 import main.java.name.murdermystery.entity.PlayerCorpse;
@@ -25,6 +29,8 @@ import main.java.name.murdermystery.event.MurderPlayerDamageEvent;
 import main.java.name.murdermystery.event.MurderPlayerDeathEvent;
 import main.java.name.murdermystery.room.Room;
 import main.java.name.murdermystery.utils.Tools;
+
+import java.util.Random;
 
 /**
  * 游戏监听器
@@ -302,6 +308,84 @@ public class PlayerGame implements Listener {
             }
         }else if (room.getPlayerMode(player) == 3) {
             player.removeAllEffects();
+        }
+    }
+
+    /**
+     * 玩家点击事件
+     * @param event 事件
+     */
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        if (player == null || block == null) {
+            return;
+        }
+        Level level = player.getLevel();
+        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
+                MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
+            return;
+        }
+        Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
+            @Override
+            public void onRun() {
+                if (block.getId() == 118 &&
+                        block.getLevel().getBlock(block.getFloorX(), block.getFloorY() - 1, block.getFloorZ()).getId() == 138) {
+                    int x = 0; //金锭数量
+                    for (Item item : player.getInventory().getContents().values()) {
+                        if (item.getId() == 266) {
+                            x += item.getCount();
+                        }
+                    }
+                    if (x > 0) {
+                        player.getInventory().removeItem(Item.get(266, 0, 1));
+                        Item item = Item.get(373, 0, 1);
+                        item.setCustomName("§a神秘药水");
+                        item.setLore("未知效果的药水", "究竟是会带来好运，还是厄运？");
+                        player.getInventory().addItem(item);
+                        player.sendMessage("§a成功兑换到一瓶神秘药水！");
+                    }else {
+                        player.sendMessage("§a需要使用金锭兑换药水！");
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 玩家使用消耗品事件
+     * @param event 事件
+     */
+    @EventHandler
+    public void onItemConsume(PlayerItemConsumeEvent event) {
+        Player player = event.getPlayer();
+        Item item = event.getItem();
+        if (player == null || item == null) {
+            return;
+        }
+        Level level = player.getLevel();
+        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
+                MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
+            return;
+        }
+        if (item.getCustomName().equals("§a神秘药水")) {
+            int random = new Random().nextInt(100);
+            Effect effect;
+            if (random < 100 && random >= 70) {
+                effect = Effect.getEffect(1); //速度
+            }else if (random < 70 && random >= 60) {
+                effect = Effect.getEffect(16); //夜视
+            }else if (random < 60 && random >= 50) {
+                effect = Effect.getEffect(14); //隐身
+            }else if (random < 50 && random >= 30) {
+                effect = Effect.getEffect(8); //跳跃提升
+                effect.setAmplifier(2);
+            }else {
+                effect = Effect.getEffect(2); //缓慢
+            }
+            effect.setDuration(100);
+            player.addEffect(effect);
         }
     }
 
