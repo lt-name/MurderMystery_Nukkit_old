@@ -77,7 +77,7 @@ public class PlayerGame implements Listener {
         if (player == null || room == null) {
             return;
         }
-        room.clearInventory(player);
+        player.getInventory().clearAll();
         player.setGamemode(3);
         room.addPlaying(player, 0);
         Tools.setPlayerInvisible(player, true);

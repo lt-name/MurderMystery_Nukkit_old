@@ -151,14 +151,6 @@ public class Room {
     }
 
     /**
-     * 清空玩家背包
-     * @param player 玩家
-     */
-    public void clearInventory(Player player) {
-        player.getInventory().clearAll();
-    }
-
-    /**
      * 设置玩家随机皮肤
      * @param player 玩家
      * @param restore 是否为还原

@@ -88,7 +88,6 @@ public class Tools {
             packet.y = player.getFloorY();
             packet.z = player.getFloorZ();
             player.dataPacket(packet);
-            //player.getLevel().addSound(new Vector3(player.x, player.y, player.z), sound);
         }
     }
 
