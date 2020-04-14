@@ -1,16 +1,15 @@
 package main.java.name.murdermystery.listener;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerFormRespondedEvent;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import cn.nukkit.form.window.FormWindowCustom;
+import cn.nukkit.form.window.FormWindowSimple;
 import main.java.name.murdermystery.MurderMystery;
+import main.java.name.murdermystery.room.Room;
 import main.java.name.murdermystery.ui.GuiCreate;
-
-import java.lang.reflect.Type;
-import java.util.Map;
 
 public class GuiListener implements Listener {
 
@@ -22,67 +21,86 @@ public class GuiListener implements Listener {
     @EventHandler
     public void onPlayerFormResponded(PlayerFormRespondedEvent event) {
         Player player = event.getPlayer();
-        if (player == null || event.getWindow() == null) {
+        if (player == null || event.getWindow() == null || event.getResponse() == null) {
             return;
         }
-        Gson gson = new Gson();
-        Type type = new TypeToken<Map<String, Object>>(){}.getType();
-        if (event.getFormID() == GuiCreate.USER_MENU) {
-            Map<String, Object> data = gson.fromJson(event.getWindow().getJSONData(), type);
-            if (data.containsKey("response")) {
-                Map data1 = (Map) data.get("response");
-                if (data1.containsKey("clickedButtonId")) {
-                    switch (data1.get("clickedButtonId").toString()) {
-                        case "0.0":
-                            MurderMystery.getInstance().getServer().dispatchCommand(player, "killer join");
-                            break;
-                        case "1.0":
-                            MurderMystery.getInstance().getServer().dispatchCommand(player, "killer quit");
-                            break;
-                        case "2.0":
-                            MurderMystery.getInstance().getServer().dispatchCommand(player, "killer list");
-                            break;
-                    }
+        if (event.getWindow() instanceof FormWindowSimple) {
+            FormWindowSimple simple = (FormWindowSimple) event.getWindow();
+            if (event.getFormID() == GuiCreate.USER_MENU) {
+                switch (simple.getResponse().getClickedButtonId()) {
+                    case 0:
+                        MurderMystery.getInstance().getServer().dispatchCommand(player, "killer join");
+                        break;
+                    case 1:
+                        MurderMystery.getInstance().getServer().dispatchCommand(player, "killer quit");
+                        break;
+                    case 2:
+                        GuiCreate.sendRoomListMenu(player);
+                        break;
                 }
-            }
-        }else if (event.getFormID() == GuiCreate.ADMIN_MENU) {
-            Map<String, Object> data = gson.fromJson(event.getWindow().getJSONData(), type);
-            if (data.containsKey("response")) {
-                Map data1 = (Map) data.get("response");
-                switch (data1.get("clickedButtonId").toString()) {
-                    case "0.0":
+            }else if (event.getFormID() == GuiCreate.ROOM_LIST_MENU) {
+                if (simple.getResponse().getClickedButton().getText().equals("§c返回")) {
+                    GuiCreate.sendUserMenu(player);
+                }else {
+                    for (Room room : MurderMystery.getInstance().getRooms().values()) {
+                        if (room.isPlaying(player)) {
+                            player.sendMessage("§c你已经在一个房间中了!");
+                            return;
+                        }
+                    }
+                    for(Entity entity : player.getLevel().getEntities()) {
+                        if (entity.isPassenger(player)) {
+                            player.sendMessage("§a请勿在骑乘状态下进入房间！");
+                            return;
+                        }
+                    }
+                    int b = simple.getResponse().getClickedButtonId();
+                    int i = 0;
+                    for (Room room : MurderMystery.getInstance().getRooms().values()) {
+                        if (b == i) {
+                            room.joinRoom(player);
+                            return;
+                        }
+                        i++;
+                    }
+                    player.sendMessage("§a该房间不存在！");
+                }
+            }else if (event.getFormID() == GuiCreate.ADMIN_MENU) {
+                switch (simple.getResponse().getClickedButtonId()) {
+                    case 0:
                         MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin 设置出生点");
                         break;
-                    case "1.0":
+                    case 1:
                         MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin 添加金锭生成点");
                         break;
-                    case "2.0":
+                    case 2:
                         GuiCreate.sendAdminTimeMenu(player);
                         break;
-                    case "3.0":
+                    case 3:
                         MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin reload");
                         break;
-                    case "4.0":
+                    case 4:
                         MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin unload");
                         break;
                 }
             }
-        }else if (event.getFormID() == GuiCreate.ADMIN_TIME_MENU) {
-            Map<String, Object> data = gson.fromJson(event.getWindow().getJSONData(), type);
-            if (data.containsKey("response")) {
-                Map data1 = (Map) data.get("response");
-                if (data1.containsKey("inputResponses")) {
-                    Map data2 = (Map) data1.get("inputResponses");
-                    if (data2.containsKey("0")) {
-                        MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin 设置金锭产出间隔 " + data2.get("0"));
-                    }
-                    if (data2.containsKey("1")) {
-                        MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin 设置等待时间 " + data2.get("1"));
-                    }
-                    if (data2.containsKey("2")) {
-                        MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin 设置游戏时间 " + data2.get("2"));
-                    }
-
+        }else if (event.getWindow() instanceof FormWindowCustom) {
+            FormWindowCustom custom = (FormWindowCustom) event.getWindow();
+            if (event.getFormID() == GuiCreate.ADMIN_TIME_MENU) {
+                if (custom.getResponse().getInputResponse(0).matches("[0-9]*")) {
+                    MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin 设置金锭产出间隔 " + custom.getResponse().getInputResponse(0));
+                }else {
+                    player.sendMessage("§a金锭产出间隔只能设置为正整数！");
+                }
+                if (custom.getResponse().getInputResponse(1).matches("[0-9]*")) {
+                    MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin 设置等待时间 " + custom.getResponse().getInputResponse(1));
+                }else {
+                    player.sendMessage("§a等待时间只能设置为正整数！");
+                }
+                if (custom.getResponse().getInputResponse(2).matches("[0-9]*")) {
+                    MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin 设置游戏时间 " + custom.getResponse().getInputResponse(2));
+                }else {
+                    player.sendMessage("§a游戏时间只能设置为正整数！");
                 }
             }
         }

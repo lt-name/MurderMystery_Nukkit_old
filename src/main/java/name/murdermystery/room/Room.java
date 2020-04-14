@@ -103,6 +103,10 @@ public class Room {
         this.effectCD = 0;
         this.skinNumber.clear();
         this.skinCache.clear();
+        if (this.getWorld().getPlayers().size() > 0) {
+            this.getWorld().getPlayers().values().forEach(
+                    player -> player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn()));
+        }
         Tools.cleanEntity(this.getWorld(), true);
         this.mode = 0;
     }
@@ -119,6 +123,7 @@ public class Room {
             SavePlayerInventory.savePlayerInventory(player, false);
             player.teleport(this.getSpawn());
             this.setRandomSkin(player, false);
+            player.sendMessage("§a你已加入房间: " + this.world);
         }
     }
 

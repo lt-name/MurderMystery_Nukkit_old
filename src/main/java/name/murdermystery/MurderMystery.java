@@ -123,9 +123,10 @@ public class MurderMystery extends PluginBase {
                                     for (Room room : this.rooms.values()) {
                                         if (room.getMode() == 0 || room.getMode() == 1) {
                                             room.joinRoom(player);
+                                            sender.sendMessage("§a已为你随机分配房间！");
+                                            return true;
                                         }
                                     }
-                                    sender.sendMessage("§a已为你随机分配房间！");
                                 }else if (this.rooms.containsKey(args[1])) {
                                     Room room = this.rooms.get(args[1]);
                                     if (room.getMode() == 2 || room.getMode() == 3) {
@@ -143,12 +144,14 @@ public class MurderMystery extends PluginBase {
                             }
                             break;
                         case "quit": case "退出":
-                            for (Room gameRoom : this.rooms.values()) {
-                                if (gameRoom.getPlayers().containsKey(player)) {
-                                    gameRoom.quitRoom(player, true);
+                            for (Room room : this.rooms.values()) {
+                                if (room.isPlaying(player)) {
+                                    room.quitRoom(player, true);
+                                    sender.sendMessage("§a你已退出房间");
+                                    return true;
                                 }
                             }
-                            sender.sendMessage("§a你已退出房间");
+                            sender.sendMessage("§a你本来就不在游戏房间！");
                             break;
                         case "list": case "列表":
                             StringBuilder list = new StringBuilder().append("§e房间列表： §a");

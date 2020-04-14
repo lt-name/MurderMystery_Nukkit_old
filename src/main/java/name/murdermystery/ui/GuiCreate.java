@@ -6,6 +6,10 @@ import cn.nukkit.form.element.ElementButtonImageData;
 import cn.nukkit.form.element.ElementInput;
 import cn.nukkit.form.window.FormWindowCustom;
 import cn.nukkit.form.window.FormWindowSimple;
+import main.java.name.murdermystery.MurderMystery;
+import main.java.name.murdermystery.room.Room;
+
+import java.util.Map;
 
 
 public class GuiCreate {
@@ -14,12 +18,13 @@ public class GuiCreate {
     public static final int USER_MENU = 58894311;
     public static final int ADMIN_MENU = 58894312;
     public static final int ADMIN_TIME_MENU = 58894313;
+    public static final int ROOM_LIST_MENU = 58894314;
 
     public static void sendUserMenu(Player player) {
         FormWindowSimple simple = new FormWindowSimple(PLUGIN_NAME, "");
-        simple.addButton(new ElementButton("§e加入房间", new ElementButtonImageData("path", "textures/ui/switch_start_button")));
-        simple.addButton(new ElementButton("§e退出房间", new ElementButtonImageData("path", "textures/ui/switch_select_button")));
-        simple.addButton(new ElementButton("§e房间列表", new ElementButtonImageData("path", "textures/ui/servers")));
+        simple.addButton(new ElementButton("§e随机加入房间", new ElementButtonImageData("path", "textures/ui/switch_start_button")));
+        simple.addButton(new ElementButton("§e退出当前房间", new ElementButtonImageData("path", "textures/ui/switch_select_button")));
+        simple.addButton(new ElementButton("§e查看房间列表", new ElementButtonImageData("path", "textures/ui/servers")));
         player.showFormWindow(simple, USER_MENU);
     }
 
@@ -39,6 +44,15 @@ public class GuiCreate {
         custom.addElement(new ElementInput("等待时间（秒）", "", "60"));
         custom.addElement(new ElementInput("游戏时间（秒）", "", "300"));
         player.showFormWindow(custom, ADMIN_TIME_MENU);
+    }
+
+    public static void sendRoomListMenu(Player player) {
+        FormWindowSimple simple = new FormWindowSimple(PLUGIN_NAME, "");
+        for (Map.Entry<String, Room> entry : MurderMystery.getInstance().getRooms().entrySet()) {
+            simple.addButton(new ElementButton("§e" + entry.getKey(), new ElementButtonImageData("path", "textures/ui/switch_start_button")));
+        }
+        simple.addButton(new ElementButton("§c返回", new ElementButtonImageData("path", "textures/ui/cancel")));
+        player.showFormWindow(simple, ROOM_LIST_MENU);
     }
 
 }
