@@ -13,8 +13,9 @@
   - [X] 给玩家设置随机皮肤  
 - [X] 进退游戏保存背包  
 - [X] 聊天限制  
+- [X] GUI操作  
 #### 需要添加的内容：   
-
+- [ ] 一些道具  
 #### 安装PlaceholderAPI后可用：  
 - 房间状态: %MurderRoomMode%  
 - 当前身份: %MurderPlayerMode%  
