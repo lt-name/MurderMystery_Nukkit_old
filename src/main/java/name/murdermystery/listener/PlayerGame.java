@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.event.EventHandler;
+import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityDamageByChildEntityEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
@@ -79,13 +80,13 @@ public class PlayerGame implements Listener {
         }
         player.getInventory().clearAll();
         player.setGamemode(3);
-        room.addPlaying(player, 0);
-        Tools.setPlayerInvisible(player, true);
         if (room.getPlayerMode(player) == 2) {
             Item item = Item.get(261, 0, 1);
             item.setCustomName("§e侦探之弓");
-            room.getWorld().dropItem(player, item);
+            room.getWorld().dropItem(new Vector3(player.x, player.y, player.z), item);
         }
+        room.addPlaying(player, 0);
+        Tools.setPlayerInvisible(player, true);
         Tools.addSound(room, Sound.GAME_PLAYER_HURT);
         Server.getInstance().getPluginManager().callEvent(new MurderPlayerCorpseSpawnEvent(room, player));
     }
@@ -255,10 +256,10 @@ public class PlayerGame implements Listener {
      * 发送消息事件
      * @param event 事件
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChat(PlayerChatEvent event) {
         Player player = event.getPlayer();
-        String string = event.getFormat();
+        String string = event.getMessage();
         if (player == null || string == null || string.startsWith("/")) {
             return;
         }
@@ -369,7 +370,12 @@ public class PlayerGame implements Listener {
                 MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
             return;
         }
-        if (item.getCustomName().equals("§a神秘药水")) {
+        Room room = MurderMystery.getInstance().getRooms().get(player.getLevel().getName());
+        if (room.getPlayerMode(player) == 3 && item.getCustomName().equals("§a神秘药水")) {
+            Effect effect = Effect.getEffect(2);
+            effect.setDuration(100);
+            player.addEffect(effect);
+        }else if (item.getCustomName().equals("§a神秘药水")) {
             int random = new Random().nextInt(100);
             Effect effect;
             if (random < 100 && random >= 70) {
