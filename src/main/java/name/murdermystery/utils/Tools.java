@@ -66,6 +66,7 @@ public class Tools {
             player.setNameTagAlwaysVisible(true);
             player.setNameTag(player.getName());
             setPlayerInvisible(player, false);
+            player.setAllowModifyWorld(true);
         }
         player.removeAllEffects();
         player.setHealth(player.getMaxHealth());

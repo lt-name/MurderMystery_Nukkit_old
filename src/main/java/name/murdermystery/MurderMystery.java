@@ -45,6 +45,7 @@ public class MurderMystery extends PluginBase {
         if (murderMystery == null) {
             murderMystery = this;
         }
+        saveDefaultConfig();
         this.config = new Config(getDataFolder() + "/config.yml", 2);
         getServer().getPluginManager().registerEvents(new PlayerJoinAndQuit(), this);
         getServer().getPluginManager().registerEvents(new RoomLevelProtection(), this);
@@ -230,11 +231,11 @@ public class MurderMystery extends PluginBase {
                             break;
                         case "reload": case "重载":
                             this.reLoadRooms();
-                            sender.sendMessage("§a配置重载完成！");
+                            sender.sendMessage("§a配置重载完成！请在后台查看信息！");
                             break;
                         case "unload":
                             this.unloadRooms();
-                            sender.sendMessage("§a已卸载所有房间！");
+                            sender.sendMessage("§a已卸载所有房间！请在后台查看信息！");
                             break;
                         default:
                             sender.sendMessage("§e killer管理--命令帮助");
@@ -252,7 +253,10 @@ public class MurderMystery extends PluginBase {
                     GuiCreate.sendAdminMenu(player);
                 }
             }else {
-                if(args.length > 0 && args[0].equals("unload")) {
+                if(args.length > 0 && args[0].equals("reload")) {
+                    this.reLoadRooms();
+                    sender.sendMessage("§a配置重载完成！");
+                }else if(args.length > 0 && args[0].equals("unload")) {
                     this.unloadRooms();
                     sender.sendMessage("§a已卸载所有房间！");
                 }else {
@@ -305,7 +309,17 @@ public class MurderMystery extends PluginBase {
             for (File file1 : s) {
                 String[] fileName = file1.getName().split("\\.");
                 if (fileName.length > 0) {
-                    Room room = new Room(getRoomConfig(fileName[0]));
+                    Config config = getRoomConfig(fileName[0]);
+                    if (config.getInt("等待时间", 0) == 0 ||
+                            config.getInt("游戏时间", 0) == 0 ||
+                            config.getString("出生点", null) == null ||
+                            config.getStringList("goldSpawn").size() < 1 ||
+                            config.getInt("goldSpawnTime", 0) == 0 ||
+                            config.getString("World", null) == null) {
+                        getLogger().warning("§c房间：" + fileName[0] + " 配置不完整，加载失败！");
+                        continue;
+                    }
+                    Room room = new Room(config);
                     this.rooms.put(fileName[0], room);
                     getLogger().info("§a房间：" + fileName[0] + " 已加载！");
                 }

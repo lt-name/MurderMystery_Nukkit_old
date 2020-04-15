@@ -42,7 +42,7 @@ public class PlayerCorpse extends EntityHuman {
             pk.item = Item.get(0);
             pk.metadata = this.dataProperties;
             player.dataPacket(pk);
-            setSkin(player.getSkin());
+            setSkin(this.skin);
             this.inventory.setItemInHand(Item.get(0));
             super.spawnTo(player);
         }
