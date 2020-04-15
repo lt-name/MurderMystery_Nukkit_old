@@ -59,12 +59,13 @@ public class RoomLevelProtection implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        if (player != null && player.isOp()) {
+        if (player == null || player.isOp()) {
             return;
         }
         Level level = event.getPlayer().getLevel();
         if (level != null && MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
+            player.setAllowModifyWorld(false);
         }
     }
 
@@ -75,12 +76,13 @@ public class RoomLevelProtection implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        if (player != null && player.isOp()) {
+        if (player == null || player.isOp()) {
             return;
         }
         Level level = event.getPlayer().getLevel();
         if (level != null && MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
+            player.setAllowModifyWorld(false);
         }
     }
 
@@ -103,7 +105,7 @@ public class RoomLevelProtection implements Listener {
     @EventHandler
     public void onFrameDropItem(ItemFrameDropItemEvent event) {
         Player player = event.getPlayer();
-        if (player != null && player.isOp()) {
+        if (player == null || player.isOp()) {
             return;
         }
         Level level = event.getItemFrame().getLevel();

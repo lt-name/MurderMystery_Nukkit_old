@@ -55,13 +55,12 @@ public class Tools {
      * @param joinRoom 是否为加入房间
      */
     public static void rePlayerState(Player player, boolean joinRoom) {
-        if (player.getGamemode() != 0) {
-            player.setGamemode(0);
-        }
+        player.setGamemode(0);
         if (joinRoom) {
             player.setNameTagVisible(false);
             player.setNameTagAlwaysVisible(false);
             player.setNameTag(" ");
+            player.setAllowModifyWorld(false);
         }else {
             player.setNameTagVisible(true);
             player.setNameTagAlwaysVisible(true);
