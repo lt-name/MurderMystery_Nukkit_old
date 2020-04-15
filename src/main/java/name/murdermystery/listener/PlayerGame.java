@@ -30,6 +30,7 @@ import main.java.name.murdermystery.event.MurderPlayerDamageEvent;
 import main.java.name.murdermystery.event.MurderPlayerDeathEvent;
 import main.java.name.murdermystery.room.Room;
 import main.java.name.murdermystery.utils.Tools;
+import me.onebone.economyapi.EconomyAPI;
 
 import java.util.Random;
 
@@ -56,7 +57,12 @@ public class PlayerGame implements Listener {
             player2.sendTitle("§c死亡", "§c你被杀手杀死了", 20, 60, 20);
         }else { //攻击者是平民或侦探
             if (room.getPlayerMode(player2) == 3) {
-                player1.sendMessage("你成功击杀了杀手！");
+                player1.sendMessage("§a你成功击杀了杀手！");
+                int money = MurderMystery.getInstance().getConfig().getInt("击杀杀手额外奖励", 0);
+                if (money > 0) {
+                    EconomyAPI.getInstance().addMoney(player1, money);
+                    player1.sendMessage("§a你获得了额外奖励: " + money + " 元！");
+                }
                 player2.sendTitle("§c死亡", "§c你被击杀了", 10, 20, 20);
             } else {
                 player1.sendTitle("§c死亡", "§c你击中了队友", 20, 60, 20);
