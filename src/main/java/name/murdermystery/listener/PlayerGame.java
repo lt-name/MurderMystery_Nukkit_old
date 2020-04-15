@@ -85,6 +85,7 @@ public class PlayerGame implements Listener {
             return;
         }
         player.getInventory().clearAll();
+        player.setAllowModifyWorld(true);
         player.setGamemode(3);
         if (room.getPlayerMode(player) == 2) {
             Item item = Item.get(261, 0, 1);
@@ -158,7 +159,11 @@ public class PlayerGame implements Listener {
                 return;
             }
             Room room = MurderMystery.getInstance().getRooms().get(player1.getLevel().getName());
-            if (room.getPlayerMode(player1) == 3 && player1.getInventory().getItemInHand().getId() == 267) {
+            if (room.isPlaying(player1) &&
+                    room.getPlayerMode(player1) == 3 &&
+                    player1.getInventory().getItemInHand().getCustomName().equals("§c杀手之剑") &&
+                    room.isPlaying(player2) &&
+                    room.getPlayerMode(player2) != 0) {
                 Server.getInstance().getPluginManager().callEvent(new MurderPlayerDamageEvent(room, player1, player2));
             }
         }
@@ -210,12 +215,16 @@ public class PlayerGame implements Listener {
                     MurderMystery.getInstance().getRooms().get(levelName).getMode() != 2) {
                 return;
             }
-            if (player.getInventory().getItemInHand().getCustomName().equals("§e侦探之弓")) {
+/*            if (player.getInventory().getItemInHand().getCustomName().equals("§e侦探之弓")) {
+                player.getInventory().addItem(Item.get(262, 0, 1));
+                return;
+            }*/
+            if (MurderMystery.getInstance().getRooms().get(levelName).getPlayerMode(player) == 2) {
                 player.getInventory().addItem(Item.get(262, 0, 1));
                 return;
             }
             //回收平民的弓
-            MurderMystery.getInstance().getServer().getScheduler().scheduleDelayedTask(new Task() {
+            Server.getInstance().getScheduler().scheduleDelayedTask(new Task() {
                 @Override
                 public void onRun(int i) {
                     int j = 0; //箭的数量
@@ -250,10 +259,27 @@ public class PlayerGame implements Listener {
         }
         if (event.getInventory() != null && event.getInventory() instanceof PlayerInventory) {
             Player player = (Player) event.getInventory().getHolder();
-            Room room = MurderMystery.getInstance().getRooms().get(player.getLevel().getName());
-            if (room.getPlayerMode(player) == 0 || (event.getItem().getItem().getCustomName().equals("§e侦探之弓") &&
-                    room.getPlayerMode(player) != 1)) {
-                event.setCancelled();
+            Room room = MurderMystery.getInstance().getRooms().get(level.getName());
+            if (event.getItem().getItem().getCustomName().equals("§e侦探之弓")) {
+                if (room.getPlayerMode(player) != 1) {
+                    event.setCancelled();
+                    return;
+                }
+                room.addPlaying(player, 2);
+                Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
+                    @Override
+                    public void onRun() {
+                        int j = 0; //箭的数量
+                        for (Item item : player.getInventory().getContents().values()) {
+                            if (item.getId() == 262) {
+                                j += item.getCount();
+                            }
+                        }
+                        if (j < 1) {
+                            player.getInventory().addItem(Item.get(262, 0, 1));
+                        }
+                    }
+                });
             }
         }
     }
@@ -290,12 +316,12 @@ public class PlayerGame implements Listener {
      */
     @EventHandler
     public void onItemHeld(PlayerItemHeldEvent event) {
-        Player player = event.getPlayer();
-        if (player == null) {
+        if (event == null) {
             return;
         }
-        Item item = player.getInventory().getItemInHand();
-        if (item == null) {
+        Player player = event.getPlayer();
+        Item item = event.getItem();
+        if (player == null || item == null) {
             return;
         }
         Level level = player.getLevel();
@@ -303,8 +329,8 @@ public class PlayerGame implements Listener {
                 MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
             return;
         }
-        Room room = MurderMystery.getInstance().getRooms().get(player.getLevel().getName());
-        if (room.getPlayerMode(player) == 3 && item.getCustomName().equals("§c杀手之剑")) {
+        Room room = MurderMystery.getInstance().getRooms().get(level.getName());
+        if (room.isPlaying(player) && room.getPlayerMode(player) == 3 && item.getCustomName().equals("§c杀手之剑")) {
             if (room.effectCD < 1) {
                 Effect effect = Effect.getEffect(1);
                 effect.setAmplifier(1);

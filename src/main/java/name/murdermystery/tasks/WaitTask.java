@@ -48,14 +48,17 @@ public class WaitTask extends PluginTask<MurderMystery> {
                     //侦探
                     if (j == random1) {
                         this.room.addPlaying(player, 2);
+                        player.sendTitle("§e侦探", "找出杀手，并用弓箭击杀他", 10, 40, 10);
                         continue;
                     }
                     //杀手
                     if (j == random2) {
                         this.room.addPlaying(player, 3);
+                        player.sendTitle("§c杀手", "杀掉所有人", 10, 40, 10);
                         continue;
                     }
                     this.room.addPlaying(player, 1);
+                    player.sendTitle("§a平民", "活下去，就是胜利", 10, 40, 10);
                 }
                 this.room.setMode(2);
                 owner.getServer().getScheduler().scheduleRepeatingTask(

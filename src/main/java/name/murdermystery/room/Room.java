@@ -6,6 +6,7 @@ import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
 import main.java.name.murdermystery.MurderMystery;
+import main.java.name.murdermystery.tasks.CheckTask;
 import main.java.name.murdermystery.tasks.WaitTask;
 import main.java.name.murdermystery.utils.SavePlayerInventory;
 import main.java.name.murdermystery.utils.Tools;
@@ -53,11 +54,11 @@ public class Room {
      * 初始化Task
      */
     public void initTask() {
-        if (this.getMode() == 0) {
-            this.setMode(1);
-            MurderMystery.getInstance().getServer().getScheduler().scheduleRepeatingTask(
-                    MurderMystery.getInstance(), new WaitTask(MurderMystery.getInstance(), this), 20,true);
-        }
+        this.setMode(1);
+        MurderMystery.getInstance().getServer().getScheduler().scheduleRepeatingTask(
+                MurderMystery.getInstance(), new WaitTask(MurderMystery.getInstance(), this), 20,true);
+        MurderMystery.getInstance().getServer().getScheduler().scheduleRepeatingTask(
+                MurderMystery.getInstance(), new CheckTask(MurderMystery.getInstance(), this), 100);
     }
 
     /**
@@ -117,7 +118,9 @@ public class Room {
      */
     public void joinRoom(Player player) {
         if (this.players.values().size() < 16) {
-            this.initTask();
+            if (this.mode == 0) {
+                this.initTask();
+            }
             this.addPlaying(player);
             Tools.rePlayerState(player, true);
             SavePlayerInventory.savePlayerInventory(player, false);
@@ -195,13 +198,6 @@ public class Room {
      * @param mode 身份
      */
     public void addPlaying(Player player, Integer mode) {
-        if (mode == 1) {
-            player.sendTitle("§a平民", "活下去，就是胜利", 10, 40, 10);
-        }else if (mode == 2) {
-            player.sendTitle("§e侦探", "找出杀手，并用弓箭击杀他", 10, 40, 10);
-        }else if (mode == 3) {
-            player.sendTitle("§c杀手", "杀掉所有人", 10, 40, 10);
-        }
         this.players.put(player, mode);
     }
 

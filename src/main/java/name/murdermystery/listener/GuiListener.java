@@ -58,7 +58,13 @@ public class GuiListener implements Listener {
                     int i = 0;
                     for (Room room : MurderMystery.getInstance().getRooms().values()) {
                         if (b == i) {
-                            room.joinRoom(player);
+                            if (room.getMode() == 2 || room.getMode() == 3) {
+                                player.sendMessage("§a该房间正在游戏中，请稍后");
+                            }else if (room.getPlayers().values().size() > 15) {
+                                player.sendMessage("§a该房间已满人，请稍后");
+                            } else {
+                                room.joinRoom(player);
+                            }
                             return;
                         }
                         i++;
