@@ -36,6 +36,18 @@ public class Api {
     }
 
     /**
+     * @param level 世界
+     * @return 是否为游戏房间
+     */
+    public static boolean isRoomLevel(Level level) {
+        return isRoomLevel(level.getName());
+    }
+
+    public static boolean isRoomLevel(String level) {
+        return getRooms().containsKey(level);
+    }
+
+    /**
      * @deprecated
      * @param player 玩家
      * @return 玩家身份
