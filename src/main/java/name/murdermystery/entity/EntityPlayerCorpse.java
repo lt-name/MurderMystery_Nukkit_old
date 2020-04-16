@@ -9,11 +9,12 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.AddPlayerPacket;
 
 /**
+ * 玩家尸体
  * @author 若水
  */
-public class PlayerCorpse extends EntityHuman {
+public class EntityPlayerCorpse extends EntityHuman {
 
-    public PlayerCorpse(FullChunk chunk, CompoundTag nbt) {
+    public EntityPlayerCorpse(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
         this.setNameTagVisible(false);
         this.setNameTagAlwaysVisible(false);

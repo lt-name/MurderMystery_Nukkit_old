@@ -4,7 +4,6 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.event.EventHandler;
-import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityDamageByChildEntityEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
@@ -24,7 +23,7 @@ import cn.nukkit.potion.Effect;
 import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.scheduler.Task;
 import main.java.name.murdermystery.MurderMystery;
-import main.java.name.murdermystery.entity.PlayerCorpse;
+import main.java.name.murdermystery.entity.EntityPlayerCorpse;
 import main.java.name.murdermystery.event.MurderPlayerCorpseSpawnEvent;
 import main.java.name.murdermystery.event.MurderPlayerDamageEvent;
 import main.java.name.murdermystery.event.MurderPlayerDeathEvent;
@@ -109,12 +108,12 @@ public class PlayerGame implements Listener {
         if (player == null || room == null) {
             return;
         }
-        CompoundTag nbt = PlayerCorpse.getDefaultNBT(player);
+        CompoundTag nbt = EntityPlayerCorpse.getDefaultNBT(player);
         nbt.putCompound("Skin",new CompoundTag()
                 .putByteArray("Data", room.getPlayerSkin(player).getSkinData().data)
                 .putString("ModelId", room.getPlayerSkin(player).getSkinId()));
-        nbt.putFloat("scale", -1.0F);
-        PlayerCorpse ent = new PlayerCorpse(player.getChunk(), nbt);
+        nbt.putFloat("Scale", -1.0F);
+        EntityPlayerCorpse ent = new EntityPlayerCorpse(player.getChunk(), nbt);
         ent.setSkin(room.getPlayerSkin(player));
         ent.setPosition(new Vector3(player.getFloorX(), this.getCorpseY(player), player.getFloorZ()));
         ent.setGliding(true);
@@ -288,7 +287,7 @@ public class PlayerGame implements Listener {
      * 发送消息事件
      * @param event 事件
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onPlayerChat(PlayerChatEvent event) {
         Player player = event.getPlayer();
         String string = event.getMessage();

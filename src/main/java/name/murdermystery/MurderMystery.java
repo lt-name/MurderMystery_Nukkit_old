@@ -41,6 +41,7 @@ public class MurderMystery extends PluginBase {
 
     @Override
     public void onEnable() {
+        getLogger().info("§e插件开始加载！本插件是免费哒~如果你花钱了，那一定是被骗了~");
         if (murderMystery == null) {
             murderMystery = this;
         }
@@ -60,11 +61,11 @@ public class MurderMystery extends PluginBase {
             getLogger().error("PlayerInventory 文件夹初始化失败");
         }
         if (!file3.exists() && !file3.mkdirs()) {
-            getLogger().error("Skins 文件夹初始化失败");
+            getLogger().warning("Skins 文件夹初始化失败");
         }
-        getLogger().info("§a开始加载房间");
+        getLogger().info("§e开始加载房间");
         this.loadRooms();
-        getLogger().info("§a开始加载皮肤");
+        getLogger().info("§e开始加载皮肤");
         this.loadSkins();
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             PlaceholderAPI api = PlaceholderAPI.getInstance();
@@ -73,7 +74,7 @@ public class MurderMystery extends PluginBase {
             api.visitorSensitivePlaceholder("MurderSurvivorNumber", (player, placeholderParameters) -> Api.getSurvivor(player), 20, true);
             api.visitorSensitivePlaceholder("MurderRoomMode", (player, placeholderParameters) -> Api.getRoomMode(player), 20, true);
         }
-        getLogger().info("§a插件加载完成！");
+        getLogger().info("§e插件加载完成！欢迎使用！");
     }
 
     @Override
@@ -322,6 +323,7 @@ public class MurderMystery extends PluginBase {
                 }
             }
         }
+        getLogger().info("§e房间加载完成！当前已加载 " + this.rooms.size() + " 个房间！");
     }
 
     /**
@@ -372,7 +374,7 @@ public class MurderMystery extends PluginBase {
                     if (skinData != null) {
                         skin.setSkinData(skinData);
                         skin.setSkinId(skinName);
-                        getLogger().info("编号： " + x + " 皮肤： " + skinName + " 已加载");
+                        getLogger().info("§a编号: " + x + " 皮肤: " + skinName + " 已加载");
                         this.skins.put(x, skin);
                         x++;
                     }else {
@@ -384,7 +386,7 @@ public class MurderMystery extends PluginBase {
             }
         }
         if (this.skins.size() > 15) {
-            getLogger().info("§a皮肤加载完成！");
+            getLogger().info("§e皮肤加载完成！当前已加载 " + this.skins.size() + " 个皮肤！");
         }else {
             getLogger().warning("§c当前皮肤数量小于16，部分玩家仍可使用自己的皮肤");
         }

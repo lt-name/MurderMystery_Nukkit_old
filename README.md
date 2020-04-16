@@ -1,4 +1,5 @@
 # MurderMystery  
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 ![Java CI](https://github.com/lt-name/MurderMystery_Nukkit/workflows/Java%20CI/badge.svg)
 #### 本插件仍在开发中！  
 密室杀人游戏  
