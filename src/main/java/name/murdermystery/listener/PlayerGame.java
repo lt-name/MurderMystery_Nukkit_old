@@ -355,10 +355,10 @@ public class PlayerGame implements Listener {
             return;
         }
         Level level = player.getLevel();
-/*        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
+        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
                 MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
             return;
-        }*/
+        }
         if (block.getId() == 118 &&
                 block.getLevel().getBlock(block.getFloorX(), block.getFloorY() - 1, block.getFloorZ()).getId() == 138) {
             Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
