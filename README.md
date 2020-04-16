@@ -27,6 +27,7 @@ API请参考：
 main/java/name/murdermystery/api/Api.java  
   
 插件提供事件： 
+ - MurderPlayerDistribution 玩家分配身份事件
  - MurderPlayerDamageEvent 玩家被攻击事件  
    杀手用剑打人，平民或侦探用弓打人时调用
  - MurderPlayerDeathEvent 玩家死亡事件   

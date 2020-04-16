@@ -1,6 +1,5 @@
 package main.java.name.murdermystery.listener;
 
-import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
@@ -17,130 +16,20 @@ import cn.nukkit.event.player.PlayerItemHeldEvent;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
-import cn.nukkit.level.Sound;
-import cn.nukkit.math.Vector3;
-import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.scheduler.Task;
 import main.java.name.murdermystery.MurderMystery;
-import main.java.name.murdermystery.entity.EntityPlayerCorpse;
-import main.java.name.murdermystery.event.MurderPlayerCorpseSpawnEvent;
 import main.java.name.murdermystery.event.MurderPlayerDamageEvent;
-import main.java.name.murdermystery.event.MurderPlayerDeathEvent;
 import main.java.name.murdermystery.room.Room;
-import main.java.name.murdermystery.utils.Tools;
-import me.onebone.economyapi.EconomyAPI;
 
 import java.util.Random;
 
 /**
- * 游戏监听器
+ * 游戏监听器（nk事件）
+ * @author lt_name
  */
 public class PlayerGame implements Listener {
-
-    /**
-     * 玩家被攻击事件(符合游戏条件的攻击)
-     * @param event 事件
-     */
-    @EventHandler
-    public void onPlayerDamage(MurderPlayerDamageEvent event) {
-        Player player1 = event.getDamage();
-        Player player2 = event.getPlayer();
-        Room room = event.getRoom();
-        if (player1 == null || player2 == null || room == null) {
-            return;
-        }
-        //攻击者是杀手
-        if (room.getPlayerMode(player1) == 3) {
-            player1.sendMessage("§a你成功击杀了一位玩家！");
-            player2.sendTitle("§c死亡", "§c你被杀手杀死了", 20, 60, 20);
-        }else { //攻击者是平民或侦探
-            if (room.getPlayerMode(player2) == 3) {
-                player1.sendMessage("§a你成功击杀了杀手！");
-                int money = MurderMystery.getInstance().getConfig().getInt("击杀杀手额外奖励", 0);
-                if (money > 0) {
-                    EconomyAPI.getInstance().addMoney(player1, money);
-                    player1.sendMessage("§a你获得了额外奖励: " + money + " 元！");
-                }
-                player2.sendTitle("§c死亡", "§c你被击杀了", 10, 20, 20);
-            } else {
-                player1.sendTitle("§c死亡", "§c你击中了队友", 20, 60, 20);
-                player2.sendTitle("§c死亡", "§c你被队友打死了", 20, 60, 20);
-                Server.getInstance().getPluginManager().callEvent(new MurderPlayerDeathEvent(room, player1));
-            }
-        }
-        Server.getInstance().getPluginManager().callEvent(new MurderPlayerDeathEvent(room, player2));
-    }
-
-    /**
-     * 玩家死亡事件（游戏中死亡）
-     * @param event 事件
-     */
-    @EventHandler
-    public void onPlayerDeath(MurderPlayerDeathEvent event) {
-        Player player = event.getPlayer();
-        Room room = event.getRoom();
-        if (player == null || room == null) {
-            return;
-        }
-        player.getInventory().clearAll();
-        player.setAllowModifyWorld(true);
-        player.setAdventureSettings((new AdventureSettings(player)).set(AdventureSettings.Type.ALLOW_FLIGHT, true));
-        player.setGamemode(3);
-        if (room.getPlayerMode(player) == 2) {
-            Item item = Item.get(261, 0, 1);
-            item.setCustomName("§e侦探之弓");
-            room.getWorld().dropItem(new Vector3(player.x, player.y, player.z), item);
-        }
-        room.addPlaying(player, 0);
-        Tools.setPlayerInvisible(player, true);
-        Tools.addSound(room, Sound.GAME_PLAYER_HURT);
-        Server.getInstance().getPluginManager().callEvent(new MurderPlayerCorpseSpawnEvent(room, player));
-    }
-
-    /**
-     * 尸体生成事件
-     * @param event 事件
-     */
-    @EventHandler
-    public void onCorpseSpawn(MurderPlayerCorpseSpawnEvent event) {
-        Player player = event.getPlayer();
-        Room room = event.getRoom();
-        if (player == null || room == null) {
-            return;
-        }
-        CompoundTag nbt = EntityPlayerCorpse.getDefaultNBT(player);
-        nbt.putCompound("Skin",new CompoundTag()
-                .putByteArray("Data", room.getPlayerSkin(player).getSkinData().data)
-                .putString("ModelId", room.getPlayerSkin(player).getSkinId()));
-        nbt.putFloat("Scale", -1.0F);
-        EntityPlayerCorpse ent = new EntityPlayerCorpse(player.getChunk(), nbt);
-        ent.setSkin(room.getPlayerSkin(player));
-        ent.setPosition(new Vector3(player.getFloorX(), this.getCorpseY(player), player.getFloorZ()));
-        ent.setGliding(true);
-        ent.setRotation(player.getYaw(), 0);
-        ent.setImmobile(true);
-        ent.spawnToAll();
-    }
-
-    /**
-     * 获取尸体 Y
-     * @param player 玩家
-     * @return Y
-     */
-    private double getCorpseY(Player player) {
-        for (int y = 0; y < 10; y++) {
-            Level level = player.getLevel();
-            if (level.getBlock(player.getFloorX(), player.getFloorY() - y, player.getFloorZ()).getId() != 0) {
-                if (level.getBlock(player.getFloorX(), player.getFloorY() - y, player.getFloorZ()).getBoundingBox() != null) {
-                    return player.getLevel().getBlock(player.getFloorX(), player.getFloorY() - y, player.getFloorZ()).getBoundingBox().getMaxY() + 0.2;
-                }
-                return player.getLevel().getBlock(player.getFloorX(), player.getFloorY() - y, player.getFloorZ()).getMinY() + 0.2;
-            }
-        }
-        return player.getFloorY();
-    }
 
     /**
      * 实体受到另一实体伤害事件
