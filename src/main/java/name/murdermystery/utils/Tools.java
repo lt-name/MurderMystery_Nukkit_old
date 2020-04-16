@@ -1,9 +1,7 @@
 package main.java.name.murdermystery.utils;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
-import cn.nukkit.entity.EntityHuman;
 import cn.nukkit.entity.data.Skin;
 import cn.nukkit.entity.item.EntityFirework;
 import cn.nukkit.item.ItemFirework;
@@ -16,8 +14,8 @@ import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.network.protocol.PlaySoundPacket;
 import cn.nukkit.network.protocol.PlayerSkinPacket;
-import cn.nukkit.network.protocol.RemoveEntityPacket;
 import cn.nukkit.utils.DyeColor;
+import main.java.name.murdermystery.entity.EntityPlayerCorpse;
 import main.java.name.murdermystery.room.Room;
 
 import java.util.Random;
@@ -96,17 +94,22 @@ public class Tools {
      * @param level 世界
      */
     public static void cleanEntity(Level level, boolean clearAll) {
-        if (clearAll) {
-            for (Entity entity : level.getEntities()) {
-                if (entity instanceof EntityHuman) {
-                    RemoveEntityPacket packet = new RemoveEntityPacket();
-                    packet.eid = entity.getId();
-                    Server.broadcastPacket(Server.getInstance().getOnlinePlayers().values(), packet);
+        for (Entity entity : level.getEntities()) {
+            if (!(entity instanceof Player)) {
+/*                    if (entity instanceof EntityPlayerCorpse) {
+                    entity.kill();
+                RemoveEntityPacket packet = new RemoveEntityPacket();
+                packet.eid = entity.getId();
+                Server.broadcastPacket(Server.getInstance().getOnlinePlayers().values(), packet);
+                }*/
+                if (entity instanceof EntityPlayerCorpse) {
+                    if (clearAll) {
+                        entity.kill();
+                    }
+                } else {
+                    entity.close();
                 }
-                entity.close();
             }
-        }else {
-            cleanEntity(level);
         }
     }
 
@@ -115,13 +118,14 @@ public class Tools {
      * @param level 世界
      */
     public static void cleanEntity(Level level) {
-        for (Entity entity : level.getEntities()) {
+        cleanEntity(level, false);
+/*        for (Entity entity : level.getEntities()) {
             if (!(entity instanceof EntityHuman)) {
                 if (!entity.getNameTag().equals("§e侦探之弓")) {
                     entity.close();
                 }
             }
-        }
+        }*/
     }
 
     /**
