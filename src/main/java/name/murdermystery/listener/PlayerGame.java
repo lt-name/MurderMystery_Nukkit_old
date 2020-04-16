@@ -355,15 +355,15 @@ public class PlayerGame implements Listener {
             return;
         }
         Level level = player.getLevel();
-        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
+/*        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
                 MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
             return;
-        }
-        Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
-            @Override
-            public void onRun() {
-                if (block.getId() == 118 &&
-                        block.getLevel().getBlock(block.getFloorX(), block.getFloorY() - 1, block.getFloorZ()).getId() == 138) {
+        }*/
+        if (block.getId() == 118 &&
+                block.getLevel().getBlock(block.getFloorX(), block.getFloorY() - 1, block.getFloorZ()).getId() == 138) {
+            Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
+                @Override
+                public void onRun() {
                     int x = 0; //金锭数量
                     for (Item item : player.getInventory().getContents().values()) {
                         if (item.getId() == 266) {
@@ -374,15 +374,49 @@ public class PlayerGame implements Listener {
                         player.getInventory().removeItem(Item.get(266, 0, 1));
                         Item item = Item.get(373, 0, 1);
                         item.setCustomName("§a神秘药水");
-                        item.setLore("未知效果的药水", "究竟是会带来好运，还是厄运？");
+                        item.setLore("未知效果的药水", "究竟是会带来好运，还是厄运？", "使用方法：直接饮用即可");
                         player.getInventory().addItem(item);
                         player.sendMessage("§a成功兑换到一瓶神秘药水！");
                     }else {
                         player.sendMessage("§a需要使用金锭兑换药水！");
                     }
                 }
-            }
-        });
+            });
+            event.setCancelled(true);
+        }else if (block.getId() == 116 &&
+                block.getLevel().getBlock(block.getFloorX(), block.getFloorY() - 1, block.getFloorZ()).getId() == 169) {
+            Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
+                @Override
+                public void onRun() {
+                    int x = 0; //金锭数量
+                    boolean notHave = true;
+                    for (Item item : player.getInventory().getContents().values()) {
+                        if (item.getId() == 266) {
+                            x += item.getCount();
+                            continue;
+                        }
+                        if (item.getCustomName().equals("§a护盾生成器")) {
+                            notHave = false;
+                        }
+                    }
+                    if (x > 0) {
+                        if (notHave) {
+                            player.getInventory().removeItem(Item.get(266, 0, 1));
+                            Item item = Item.get(241, 3, 1);
+                            item.setCustomName("§a护盾生成器");
+                            item.setLore("可以生成一面短时间存在的墙", "它的功能很差，但却能在关键时间救你一命", "使用方法：放在地面即可");
+                            player.getInventory().addItem(item);
+                            player.sendMessage("§a成功兑换到一个护盾！");
+                        }else {
+                            player.sendMessage("§a你只能携带一个护盾！");
+                        }
+                    }else {
+                        player.sendMessage("§a需要使用金锭兑换护盾！");
+                    }
+                }
+            });
+            event.setCancelled(true);
+        }
     }
 
     /**
