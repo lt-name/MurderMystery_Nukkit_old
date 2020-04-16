@@ -1,14 +1,13 @@
 package main.java.name.murdermystery.listener;
 
 import cn.nukkit.Player;
-import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerFormRespondedEvent;
 import cn.nukkit.form.window.FormWindowCustom;
+import cn.nukkit.form.window.FormWindowModal;
 import cn.nukkit.form.window.FormWindowSimple;
 import main.java.name.murdermystery.MurderMystery;
-import main.java.name.murdermystery.room.Room;
 import main.java.name.murdermystery.ui.GuiCreate;
 
 public class GuiListener implements Listener {
@@ -42,34 +41,7 @@ public class GuiListener implements Listener {
                 if (simple.getResponse().getClickedButton().getText().equals("§c返回")) {
                     GuiCreate.sendUserMenu(player);
                 }else {
-                    for (Room room : MurderMystery.getInstance().getRooms().values()) {
-                        if (room.isPlaying(player)) {
-                            player.sendMessage("§c你已经在一个房间中了!");
-                            return;
-                        }
-                    }
-                    for(Entity entity : player.getLevel().getEntities()) {
-                        if (entity.isPassenger(player)) {
-                            player.sendMessage("§a请勿在骑乘状态下进入房间！");
-                            return;
-                        }
-                    }
-                    int b = simple.getResponse().getClickedButtonId();
-                    int i = 0;
-                    for (Room room : MurderMystery.getInstance().getRooms().values()) {
-                        if (b == i) {
-                            if (room.getMode() == 2 || room.getMode() == 3) {
-                                player.sendMessage("§a该房间正在游戏中，请稍后");
-                            }else if (room.getPlayers().values().size() > 15) {
-                                player.sendMessage("§a该房间已满人，请稍后");
-                            } else {
-                                room.joinRoom(player);
-                            }
-                            return;
-                        }
-                        i++;
-                    }
-                    player.sendMessage("§a该房间不存在！");
+                    GuiCreate.sendRoomJoinOkMenu(player, simple.getResponse().getClickedButton().getText());
                 }
             }else if (event.getFormID() == GuiCreate.ADMIN_MENU) {
                 switch (simple.getResponse().getClickedButtonId()) {
@@ -107,6 +79,17 @@ public class GuiListener implements Listener {
                     MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin 设置游戏时间 " + custom.getResponse().getInputResponse(2));
                 }else {
                     player.sendMessage("§a游戏时间只能设置为正整数！");
+                }
+            }
+        }else if (event.getWindow() instanceof FormWindowModal) {
+            FormWindowModal modal = (FormWindowModal) event.getWindow();
+            if (event.getFormID() == GuiCreate.ROOM_JOIN_OK) {
+                if (modal.getResponse().getClickedButtonId() == 0 && !modal.getButton1().equals("§c返回")) {
+                    String[] s = modal.getContent().split("\"");
+                    MurderMystery.getInstance().getServer().dispatchCommand(
+                            player, "killer join " + s[1].replace("§e", "").trim());
+                }else {
+                    GuiCreate.sendRoomListMenu(player);
                 }
             }
         }
