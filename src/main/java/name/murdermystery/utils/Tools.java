@@ -1,5 +1,6 @@
 package main.java.name.murdermystery.utils;
 
+import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.data.Skin;
@@ -66,6 +67,7 @@ public class Tools {
             setPlayerInvisible(player, false);
             player.setAllowModifyWorld(true);
         }
+        player.setAdventureSettings((new AdventureSettings(player)).set(AdventureSettings.Type.ALLOW_FLIGHT, false));
         player.removeAllEffects();
         player.setHealth(player.getMaxHealth());
         player.getFoodData().setLevel(player.getFoodData().getMaxLevel());

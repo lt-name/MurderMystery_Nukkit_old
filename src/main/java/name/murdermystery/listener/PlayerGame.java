@@ -1,5 +1,6 @@
 package main.java.name.murdermystery.listener;
 
+import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
@@ -85,6 +86,7 @@ public class PlayerGame implements Listener {
         }
         player.getInventory().clearAll();
         player.setAllowModifyWorld(true);
+        player.setAdventureSettings((new AdventureSettings(player)).set(AdventureSettings.Type.ALLOW_FLIGHT, true));
         player.setGamemode(3);
         if (room.getPlayerMode(player) == 2) {
             Item item = Item.get(261, 0, 1);
