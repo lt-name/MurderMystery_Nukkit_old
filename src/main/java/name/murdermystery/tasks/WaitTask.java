@@ -5,11 +5,8 @@ import cn.nukkit.Server;
 import cn.nukkit.level.Sound;
 import cn.nukkit.scheduler.PluginTask;
 import name.murdermystery.MurderMystery;
-import name.murdermystery.event.MurderPlayerDistributionEvent;
+import name.murdermystery.event.MurderRoomStartEvent;
 import name.murdermystery.room.Room;
-import name.murdermystery.tasks.game.GoldTask;
-import name.murdermystery.tasks.game.TimeTask;
-import name.murdermystery.tasks.game.TipsTask;
 import name.murdermystery.utils.Tools;
 
 public class WaitTask extends PluginTask<MurderMystery> {
@@ -35,16 +32,7 @@ public class WaitTask extends PluginTask<MurderMystery> {
                     Tools.addSound(this.room, Sound.RANDOM_CLICK);
                 }
             }else {
-                Server.getInstance().getPluginManager().callEvent(new MurderPlayerDistributionEvent(this.room));
-                this.room.setMode(2);
-                owner.getServer().getScheduler().scheduleRepeatingTask(
-                        MurderMystery.getInstance(), new TimeTask(MurderMystery.getInstance(), this.room), 20,true);
-                owner.getServer().getScheduler().scheduleRepeatingTask(
-                        MurderMystery.getInstance(), new GoldTask(MurderMystery.getInstance(), this.room), 20, true);
-                if (owner.getActionBar()) {
-                    owner.getServer().getScheduler().scheduleRepeatingTask(
-                            MurderMystery.getInstance(), new TipsTask(MurderMystery.getInstance(), this.room), 10, true);
-                }
+                Server.getInstance().getPluginManager().callEvent(new MurderRoomStartEvent(this.room));
                 this.cancel();
             }
         }else if (this.room.getPlayers().size() > 0) {

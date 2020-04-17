@@ -21,7 +21,7 @@ import name.murdermystery.MurderMystery;
 /**
  * 游戏世界保护 禁止除游戏规则外的其他事件
  * 仅判断是否在游戏世界，并撤回操作
- * 其他判断请移步至 PlayerGame
+ * 其他判断请移步至 PlayerGameListener
  * 为方便op操作，部分事件不应限制op
  * @author lt_name
  */

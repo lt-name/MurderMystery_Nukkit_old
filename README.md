@@ -15,19 +15,16 @@
 - [X] 进退游戏保存背包  
 - [X] 聊天限制  
 - [X] GUI操作  
-#### 需要添加的内容：   
-- [ ] 一些道具  
-#### 安装PlaceholderAPI后可用：  
-- 房间状态: %MurderRoomMode%  
-- 当前身份: %MurderPlayerMode%  
-- 剩余时间: %MurderTime%  
-- 存活人数: %MurderSurvivorNumber%  
+- [X] 一些道具  
+  - [X] 随机药水  
+  - [X] 护盾生成器  
+    
 #### 对于开发者：
 API请参考：  
 main/java/name/murdermystery/api/Api.java  
   
 插件提供事件： 
- - MurderPlayerDistribution 玩家分配身份事件
+ - MurderRoomStartEvent 房间开始事件
  - MurderPlayerDamageEvent 玩家被攻击事件  
    杀手用剑打人，平民或侦探用弓打人时调用
  - MurderPlayerDeathEvent 玩家死亡事件   

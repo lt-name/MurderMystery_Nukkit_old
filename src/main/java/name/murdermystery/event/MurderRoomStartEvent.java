@@ -1,9 +1,10 @@
 package name.murdermystery.event;
 
+import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
 import name.murdermystery.room.Room;
 
-public class MurderPlayerDistributionEvent extends MurderEvent {
+public class MurderRoomStartEvent extends MurderEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -11,7 +12,7 @@ public class MurderPlayerDistributionEvent extends MurderEvent {
         return handlers;
     }
 
-    public MurderPlayerDistributionEvent(Room room) {
+    public MurderRoomStartEvent(Room room) {
         this.room = room;
     }
 

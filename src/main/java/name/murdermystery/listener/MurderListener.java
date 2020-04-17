@@ -15,8 +15,11 @@ import name.murdermystery.entity.EntityPlayerCorpse;
 import name.murdermystery.event.MurderPlayerCorpseSpawnEvent;
 import name.murdermystery.event.MurderPlayerDamageEvent;
 import name.murdermystery.event.MurderPlayerDeathEvent;
-import name.murdermystery.event.MurderPlayerDistributionEvent;
+import name.murdermystery.event.MurderRoomStartEvent;
 import name.murdermystery.room.Room;
+import name.murdermystery.tasks.game.GoldTask;
+import name.murdermystery.tasks.game.TimeTask;
+import name.murdermystery.tasks.game.TipsTask;
 import name.murdermystery.utils.Tools;
 
 import java.util.LinkedHashMap;
@@ -29,11 +32,11 @@ import java.util.Random;
 public class MurderListener implements Listener {
 
     /**
-     * 玩家分配身份事件
+     * 房间开始事件
      * @param event 事件
      */
     @EventHandler
-    public void onPlayerDistribution(MurderPlayerDistributionEvent event) {
+    public void onRoomStart(MurderRoomStartEvent event) {
         Room room = event.getRoom();
         if (room == null) {
             return;
@@ -61,6 +64,15 @@ public class MurderListener implements Listener {
             }
             room.addPlaying(player, 1);
             player.sendTitle("§a平民", "活下去，就是胜利", 10, 40, 10);
+        }
+        room.setMode(2);
+        Server.getInstance().getScheduler().scheduleRepeatingTask(
+                MurderMystery.getInstance(), new TimeTask(MurderMystery.getInstance(), room), 20,true);
+        Server.getInstance().getScheduler().scheduleRepeatingTask(
+                MurderMystery.getInstance(), new GoldTask(MurderMystery.getInstance(), room), 20, true);
+        if (MurderMystery.getInstance().getActionBar()) {
+            Server.getInstance().getScheduler().scheduleRepeatingTask(
+                    MurderMystery.getInstance(), new TipsTask(MurderMystery.getInstance(), room), 10, true);
         }
     }
 

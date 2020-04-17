@@ -7,12 +7,13 @@ import cn.nukkit.entity.data.Skin;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
-import name.murdermystery.listener.GuiListener;
-import name.murdermystery.listener.PlayerGame;
+import name.murdermystery.listener.MurderListener;
+import name.murdermystery.listener.PlayerGameListener;
 import name.murdermystery.listener.PlayerJoinAndQuit;
 import name.murdermystery.listener.RoomLevelProtection;
 import name.murdermystery.room.Room;
 import name.murdermystery.ui.GuiCreate;
+import name.murdermystery.ui.GuiListener;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -47,7 +48,8 @@ public class MurderMystery extends PluginBase {
         this.config = new Config(getDataFolder() + "/config.yml", 2);
         getServer().getPluginManager().registerEvents(new PlayerJoinAndQuit(), this);
         getServer().getPluginManager().registerEvents(new RoomLevelProtection(), this);
-        getServer().getPluginManager().registerEvents(new PlayerGame(), this);
+        getServer().getPluginManager().registerEvents(new PlayerGameListener(), this);
+        getServer().getPluginManager().registerEvents(new MurderListener(), this);
         getServer().getPluginManager().registerEvents(new GuiListener(), this);
         File file1 = new File(this.getDataFolder() + "/Rooms");
         File file2 = new File(this.getDataFolder() + "/PlayerInventory");
