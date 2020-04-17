@@ -3,6 +3,7 @@ package main.java.name.murdermystery.tasks.game;
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
+import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.scheduler.PluginTask;
 import main.java.name.murdermystery.MurderMystery;
 import main.java.name.murdermystery.room.Room;
@@ -63,12 +64,18 @@ public class TimeTask extends PluginTask<MurderMystery> {
                 for (Map.Entry<Player, Integer> entry : this.room.getPlayers().entrySet()) {
                     if (entry.getValue() == 2) {
                         Item item = Item.get(261, 0, 1);
+                        item.setNamedTag(new CompoundTag()
+                                .putBoolean("isMurderItem", true)
+                                .putInt("MurderType", 1));
                         item.setCustomName("§e侦探之弓");
                         item.setLore("会自动补充消耗的箭", "提示:", "攻击队友,您也会死");
                         entry.getKey().getInventory().setItem(1, item);
                         entry.getKey().getInventory().setItem(2, Item.get(262, 0, 1));
                     }else if (entry.getValue() == 3) {
                         Item item = Item.get(267, 0, 1);
+                        item.setNamedTag(new CompoundTag()
+                                .putBoolean("isMurderItem", true)
+                                .putInt("MurderType", 2));
                         item.setCustomName("§c杀手之剑");
                         item.setLore("杀手之剑", "提示:", "切换到杀手之剑时会获得短暂加速");
                         entry.getKey().getInventory().setItem(1, item);

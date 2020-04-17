@@ -34,3 +34,11 @@ main/java/name/murdermystery/api/Api.java
    杀手被平民或侦探击杀，平民或侦探被杀手击杀时调用   
  - MurderPlayerCorpseSpawnEvent 尸体生成事件  
    玩家死亡时调用
+   
+物品CompoundTag：
+isMurderItem - boolean类型 是否为插件物品  
+MurderType - int类型 物品功能 
+   - 1: 侦探之弓  
+   - 2: 杀手之剑  
+   - 21: 神秘药水  
+   - 22: 护盾生成器  

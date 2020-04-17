@@ -4,7 +4,6 @@ import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
-import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.block.ItemFrameDropItemEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityExplodeEvent;
@@ -49,23 +48,6 @@ public class RoomLevelProtection implements Listener {
         Level level = event.getBrewingStand().getLevel();
         if (level != null && MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
-        }
-    }
-
-    /**
-     * 方块放置事件
-     * @param event 事件
-     */
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
-        Player player = event.getPlayer();
-        if (player == null || player.isOp()) {
-            return;
-        }
-        Level level = event.getPlayer().getLevel();
-        if (level != null && MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
-            event.setCancelled();
-            player.setAllowModifyWorld(false);
         }
     }
 

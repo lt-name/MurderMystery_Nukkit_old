@@ -6,7 +6,6 @@ import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
 import main.java.name.murdermystery.MurderMystery;
-import main.java.name.murdermystery.tasks.CheckTask;
 import main.java.name.murdermystery.tasks.WaitTask;
 import main.java.name.murdermystery.utils.SavePlayerInventory;
 import main.java.name.murdermystery.utils.Tools;
@@ -57,8 +56,6 @@ public class Room {
         this.setMode(1);
         MurderMystery.getInstance().getServer().getScheduler().scheduleRepeatingTask(
                 MurderMystery.getInstance(), new WaitTask(MurderMystery.getInstance(), this), 20,true);
-        MurderMystery.getInstance().getServer().getScheduler().scheduleRepeatingTask(
-                MurderMystery.getInstance(), new CheckTask(MurderMystery.getInstance(), this), 100);
     }
 
     /**
