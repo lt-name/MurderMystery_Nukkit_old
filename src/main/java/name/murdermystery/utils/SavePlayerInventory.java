@@ -1,11 +1,11 @@
-package main.java.name.murdermystery.utils;
+package name.murdermystery.utils;
 
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.Config;
 import com.sun.istack.internal.NotNull;
-import main.java.name.murdermystery.MurderMystery;
+import name.murdermystery.MurderMystery;
 
 import java.io.File;
 import java.util.LinkedHashMap;

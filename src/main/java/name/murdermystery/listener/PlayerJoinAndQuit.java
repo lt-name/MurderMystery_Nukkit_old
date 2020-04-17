@@ -1,4 +1,4 @@
-package main.java.name.murdermystery.listener;
+package name.murdermystery.listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
@@ -7,10 +7,10 @@ import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.event.player.PlayerTeleportEvent;
 import cn.nukkit.scheduler.Task;
-import main.java.name.murdermystery.MurderMystery;
-import main.java.name.murdermystery.room.Room;
-import main.java.name.murdermystery.utils.SavePlayerInventory;
-import main.java.name.murdermystery.utils.Tools;
+import name.murdermystery.MurderMystery;
+import name.murdermystery.room.Room;
+import name.murdermystery.utils.SavePlayerInventory;
+import name.murdermystery.utils.Tools;
 
 import java.util.LinkedHashMap;
 

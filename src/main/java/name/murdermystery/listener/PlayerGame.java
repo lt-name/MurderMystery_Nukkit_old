@@ -1,4 +1,4 @@
-package main.java.name.murdermystery.listener;
+package name.murdermystery.listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
@@ -23,9 +23,9 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.scheduler.Task;
-import main.java.name.murdermystery.MurderMystery;
-import main.java.name.murdermystery.event.MurderPlayerDamageEvent;
-import main.java.name.murdermystery.room.Room;
+import name.murdermystery.MurderMystery;
+import name.murdermystery.event.MurderPlayerDamageEvent;
+import name.murdermystery.room.Room;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -451,7 +451,7 @@ public class PlayerGame implements Listener {
                     }, 100);
                 }
             });
-        }else if (!player.isOp()){
+        }else if (!player.isOp()) {
             event.setCancelled(true);
         }
     }

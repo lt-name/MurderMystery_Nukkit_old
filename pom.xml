@@ -16,13 +16,6 @@
     </properties>
 
     <build>
-        <sourceDirectory>src</sourceDirectory>
-        <outputDirectory>${project.build.directory}/classes</outputDirectory>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -33,11 +26,11 @@
                         <arg>-Xlint:deprecation</arg>
                     </compilerArgs>
                     <compilerArguments>
-                        <verbose/>
                         <bootclasspath>${java.home}/lib/rt.jar${path.separator}${java.home}/lib/jce.jar</bootclasspath>
                     </compilerArguments>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
             <plugin>

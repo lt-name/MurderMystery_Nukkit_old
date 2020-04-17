@@ -1,16 +1,16 @@
-package main.java.name.murdermystery.tasks;
+package name.murdermystery.tasks;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.level.Sound;
 import cn.nukkit.scheduler.PluginTask;
-import main.java.name.murdermystery.MurderMystery;
-import main.java.name.murdermystery.event.MurderPlayerDistributionEvent;
-import main.java.name.murdermystery.room.Room;
-import main.java.name.murdermystery.tasks.game.GoldTask;
-import main.java.name.murdermystery.tasks.game.TimeTask;
-import main.java.name.murdermystery.tasks.game.TipsTask;
-import main.java.name.murdermystery.utils.Tools;
+import name.murdermystery.MurderMystery;
+import name.murdermystery.event.MurderPlayerDistributionEvent;
+import name.murdermystery.room.Room;
+import name.murdermystery.tasks.game.GoldTask;
+import name.murdermystery.tasks.game.TimeTask;
+import name.murdermystery.tasks.game.TipsTask;
+import name.murdermystery.utils.Tools;
 
 public class WaitTask extends PluginTask<MurderMystery> {
 

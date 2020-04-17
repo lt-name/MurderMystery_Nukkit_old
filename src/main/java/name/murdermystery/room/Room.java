@@ -1,14 +1,14 @@
-package main.java.name.murdermystery.room;
+package name.murdermystery.room;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.data.Skin;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
-import main.java.name.murdermystery.MurderMystery;
-import main.java.name.murdermystery.tasks.WaitTask;
-import main.java.name.murdermystery.utils.SavePlayerInventory;
-import main.java.name.murdermystery.utils.Tools;
+import name.murdermystery.MurderMystery;
+import name.murdermystery.tasks.WaitTask;
+import name.murdermystery.utils.SavePlayerInventory;
+import name.murdermystery.utils.Tools;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;

@@ -1,4 +1,4 @@
-package main.java.name.murdermystery.entity;
+package name.murdermystery.entity;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.EntityHuman;

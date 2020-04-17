@@ -1,9 +1,9 @@
-package main.java.name.murdermystery.event;
+package name.murdermystery.event;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
-import main.java.name.murdermystery.room.Room;
+import name.murdermystery.room.Room;
 
 public class MurderPlayerDamageEvent extends MurderEvent implements Cancellable {
 

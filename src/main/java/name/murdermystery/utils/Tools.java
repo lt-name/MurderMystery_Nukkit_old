@@ -1,4 +1,4 @@
-package main.java.name.murdermystery.utils;
+package name.murdermystery.utils;
 
 import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
@@ -19,8 +19,8 @@ import cn.nukkit.network.protocol.PlaySoundPacket;
 import cn.nukkit.network.protocol.PlayerSkinPacket;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
 import cn.nukkit.utils.DyeColor;
-import main.java.name.murdermystery.entity.EntityPlayerCorpse;
-import main.java.name.murdermystery.room.Room;
+import name.murdermystery.entity.EntityPlayerCorpse;
+import name.murdermystery.room.Room;
 
 import java.util.Random;
 

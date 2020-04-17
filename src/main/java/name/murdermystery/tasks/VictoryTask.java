@@ -1,10 +1,10 @@
-package main.java.name.murdermystery.tasks;
+package name.murdermystery.tasks;
 
 import cn.nukkit.Player;
 import cn.nukkit.scheduler.PluginTask;
-import main.java.name.murdermystery.MurderMystery;
-import main.java.name.murdermystery.room.Room;
-import main.java.name.murdermystery.utils.Tools;
+import name.murdermystery.MurderMystery;
+import name.murdermystery.room.Room;
+import name.murdermystery.utils.Tools;
 
 
 public class VictoryTask extends PluginTask<MurderMystery> {

@@ -1,5 +1,5 @@
 name: MurderMystery
-main: main.java.name.murdermystery.MurderMystery
+main: name.murdermystery.MurderMystery
 version: "0.0.1"
 api:
   - 1.0.0

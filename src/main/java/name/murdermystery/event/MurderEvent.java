@@ -1,7 +1,8 @@
-package main.java.name.murdermystery.event;
+package name.murdermystery.event;
 
 import cn.nukkit.event.player.PlayerEvent;
-import main.java.name.murdermystery.room.Room;
+import name.murdermystery.room.Room;
+
 
 public class MurderEvent extends PlayerEvent {
 

@@ -1,9 +1,9 @@
-package main.java.name.murdermystery.api;
+package name.murdermystery.api;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Level;
-import main.java.name.murdermystery.MurderMystery;
-import main.java.name.murdermystery.room.Room;
+import name.murdermystery.MurderMystery;
+import name.murdermystery.room.Room;
 
 import java.util.LinkedHashMap;
 

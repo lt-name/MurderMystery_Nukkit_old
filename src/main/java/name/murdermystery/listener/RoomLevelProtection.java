@@ -1,4 +1,4 @@
-package main.java.name.murdermystery.listener;
+package name.murdermystery.listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
@@ -15,7 +15,7 @@ import cn.nukkit.event.player.PlayerDeathEvent;
 import cn.nukkit.event.player.PlayerDropItemEvent;
 import cn.nukkit.event.player.PlayerFoodLevelChangeEvent;
 import cn.nukkit.level.Level;
-import main.java.name.murdermystery.MurderMystery;
+import name.murdermystery.MurderMystery;
 
 
 /**

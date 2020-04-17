@@ -1,4 +1,4 @@
-package main.java.name.murdermystery.listener;
+package name.murdermystery.listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
@@ -7,8 +7,8 @@ import cn.nukkit.event.player.PlayerFormRespondedEvent;
 import cn.nukkit.form.window.FormWindowCustom;
 import cn.nukkit.form.window.FormWindowModal;
 import cn.nukkit.form.window.FormWindowSimple;
-import main.java.name.murdermystery.MurderMystery;
-import main.java.name.murdermystery.ui.GuiCreate;
+import name.murdermystery.MurderMystery;
+import name.murdermystery.ui.GuiCreate;
 
 public class GuiListener implements Listener {
 

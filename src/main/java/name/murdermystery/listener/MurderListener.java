@@ -1,4 +1,4 @@
-package main.java.name.murdermystery.listener;
+package name.murdermystery.listener;
 
 import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
@@ -9,15 +9,15 @@ import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
-import main.java.name.murdermystery.MurderMystery;
-import main.java.name.murdermystery.entity.EntityPlayerCorpse;
-import main.java.name.murdermystery.event.MurderPlayerCorpseSpawnEvent;
-import main.java.name.murdermystery.event.MurderPlayerDamageEvent;
-import main.java.name.murdermystery.event.MurderPlayerDeathEvent;
-import main.java.name.murdermystery.event.MurderPlayerDistributionEvent;
-import main.java.name.murdermystery.room.Room;
-import main.java.name.murdermystery.utils.Tools;
 import me.onebone.economyapi.EconomyAPI;
+import name.murdermystery.MurderMystery;
+import name.murdermystery.entity.EntityPlayerCorpse;
+import name.murdermystery.event.MurderPlayerCorpseSpawnEvent;
+import name.murdermystery.event.MurderPlayerDamageEvent;
+import name.murdermystery.event.MurderPlayerDeathEvent;
+import name.murdermystery.event.MurderPlayerDistributionEvent;
+import name.murdermystery.room.Room;
+import name.murdermystery.utils.Tools;
 
 import java.util.LinkedHashMap;
 import java.util.Random;

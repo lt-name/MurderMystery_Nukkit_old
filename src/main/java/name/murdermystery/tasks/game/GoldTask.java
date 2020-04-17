@@ -1,12 +1,12 @@
-package main.java.name.murdermystery.tasks.game;
+package name.murdermystery.tasks.game;
 
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.PluginTask;
-import main.java.name.murdermystery.MurderMystery;
-import main.java.name.murdermystery.room.Room;
-import main.java.name.murdermystery.utils.Tools;
+import name.murdermystery.MurderMystery;
+import name.murdermystery.room.Room;
+import name.murdermystery.utils.Tools;
 
 /**
  * 金锭生成 金锭自动兑换

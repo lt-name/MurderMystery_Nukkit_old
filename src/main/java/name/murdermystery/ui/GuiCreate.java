@@ -1,4 +1,4 @@
-package main.java.name.murdermystery.ui;
+package name.murdermystery.ui;
 
 import cn.nukkit.Player;
 import cn.nukkit.form.element.ElementButton;
@@ -7,8 +7,8 @@ import cn.nukkit.form.element.ElementInput;
 import cn.nukkit.form.window.FormWindowCustom;
 import cn.nukkit.form.window.FormWindowModal;
 import cn.nukkit.form.window.FormWindowSimple;
-import main.java.name.murdermystery.MurderMystery;
-import main.java.name.murdermystery.room.Room;
+import name.murdermystery.MurderMystery;
+import name.murdermystery.room.Room;
 
 import java.util.Map;
 

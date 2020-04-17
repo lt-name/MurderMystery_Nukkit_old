@@ -1,7 +1,7 @@
-package main.java.name.murdermystery.event;
+package name.murdermystery.event;
 
 import cn.nukkit.event.HandlerList;
-import main.java.name.murdermystery.room.Room;
+import name.murdermystery.room.Room;
 
 public class MurderPlayerDistributionEvent extends MurderEvent {
 

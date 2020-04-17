@@ -1,4 +1,4 @@
-package main.java.name.murdermystery;
+package name.murdermystery;
 
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
@@ -8,13 +8,13 @@ import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import com.creeperface.nukkit.placeholderapi.api.PlaceholderAPI;
-import main.java.name.murdermystery.api.Api;
-import main.java.name.murdermystery.listener.GuiListener;
-import main.java.name.murdermystery.listener.PlayerGame;
-import main.java.name.murdermystery.listener.PlayerJoinAndQuit;
-import main.java.name.murdermystery.listener.RoomLevelProtection;
-import main.java.name.murdermystery.room.Room;
-import main.java.name.murdermystery.ui.GuiCreate;
+import name.murdermystery.api.Api;
+import name.murdermystery.listener.GuiListener;
+import name.murdermystery.listener.PlayerGame;
+import name.murdermystery.listener.PlayerJoinAndQuit;
+import name.murdermystery.listener.RoomLevelProtection;
+import name.murdermystery.room.Room;
+import name.murdermystery.ui.GuiCreate;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
