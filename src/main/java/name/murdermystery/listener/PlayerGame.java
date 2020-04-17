@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.event.EventHandler;
+import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityDamageByChildEntityEvent;
@@ -184,7 +185,7 @@ public class PlayerGame implements Listener {
      * 发送消息事件
      * @param event 事件
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChat(PlayerChatEvent event) {
         Player player = event.getPlayer();
         String string = event.getMessage();
@@ -197,12 +198,13 @@ public class PlayerGame implements Listener {
         }
         Room room = MurderMystery.getInstance().getRooms().get(player.getLevel().getName());
         if (room.getMode() == 2 && room.getPlayerMode(player) == 0) {
-            event.setCancelled(true);
             for (Player p : room.getPlayers().keySet()) {
                 if (room.getPlayerMode(p) == 0) {
                     p.sendMessage("§c[死亡] " + player.getName() + "§b >>> " + string);
                 }
             }
+            event.setCancelled(true);
+            event.setMessage(" ");
         }
     }
 

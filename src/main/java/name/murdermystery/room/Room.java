@@ -93,6 +93,9 @@ public class Room {
                     quitRoom(entry.getKey());
                 }
             }
+        }else {
+            this.getWorld().getPlayers().values().forEach(
+                    player -> player.kick("\n§c房间非正常关闭!\n为了您的背包安全，请稍后重进服务器！"));
         }
         this.waitTime = this.setWaitTime;
         this.gameTime = this.setGameTime;
@@ -101,10 +104,6 @@ public class Room {
         this.effectCD = 0;
         this.skinNumber.clear();
         this.skinCache.clear();
-        if (this.getWorld().getPlayers().size() > 0) {
-            this.getWorld().getPlayers().values().forEach(
-                    player -> player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn()));
-        }
         Tools.cleanEntity(this.getWorld(), true);
         this.mode = 0;
     }
