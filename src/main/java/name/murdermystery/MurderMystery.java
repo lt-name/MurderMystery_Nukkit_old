@@ -7,8 +7,6 @@ import cn.nukkit.entity.data.Skin;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
-import com.creeperface.nukkit.placeholderapi.api.PlaceholderAPI;
-import name.murdermystery.api.Api;
 import name.murdermystery.listener.GuiListener;
 import name.murdermystery.listener.PlayerGame;
 import name.murdermystery.listener.PlayerJoinAndQuit;
@@ -67,13 +65,13 @@ public class MurderMystery extends PluginBase {
         this.loadRooms();
         getLogger().info("§e开始加载皮肤");
         this.loadSkins();
-        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+/*        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             PlaceholderAPI api = PlaceholderAPI.getInstance();
             api.visitorSensitivePlaceholder("MurderPlayerMode", (player, placeholderParameters) -> Api.getPlayerMode(player), 20, true);
             api.visitorSensitivePlaceholder("MurderTime", (player, placeholderParameters) -> Api.getTime(player), 20, true);
             api.visitorSensitivePlaceholder("MurderSurvivorNumber", (player, placeholderParameters) -> Api.getSurvivor(player), 20, true);
             api.visitorSensitivePlaceholder("MurderRoomMode", (player, placeholderParameters) -> Api.getRoomMode(player), 20, true);
-        }
+        }*/
         getLogger().info("§e插件加载完成！欢迎使用！");
     }
 
