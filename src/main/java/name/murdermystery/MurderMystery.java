@@ -67,13 +67,6 @@ public class MurderMystery extends PluginBase {
         this.loadRooms();
         getLogger().info("§e开始加载皮肤");
         this.loadSkins();
-/*        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            PlaceholderAPI api = PlaceholderAPI.getInstance();
-            api.visitorSensitivePlaceholder("MurderPlayerMode", (player, placeholderParameters) -> Api.getPlayerMode(player), 20, true);
-            api.visitorSensitivePlaceholder("MurderTime", (player, placeholderParameters) -> Api.getTime(player), 20, true);
-            api.visitorSensitivePlaceholder("MurderSurvivorNumber", (player, placeholderParameters) -> Api.getSurvivor(player), 20, true);
-            api.visitorSensitivePlaceholder("MurderRoomMode", (player, placeholderParameters) -> Api.getRoomMode(player), 20, true);
-        }*/
         getLogger().info("§e插件加载完成！欢迎使用！");
     }
 
