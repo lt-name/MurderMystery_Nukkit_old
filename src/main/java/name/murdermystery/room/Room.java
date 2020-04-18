@@ -2,19 +2,18 @@ package name.murdermystery.room;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
+import cn.nukkit.block.Block;
 import cn.nukkit.entity.data.Skin;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.Config;
 import name.murdermystery.MurderMystery;
 import name.murdermystery.tasks.WaitTask;
 import name.murdermystery.utils.SavePlayerInventory;
 import name.murdermystery.utils.Tools;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -30,6 +29,7 @@ public class Room {
     private LinkedHashMap<Player, Skin> skinCache = new LinkedHashMap<>(); //缓存玩家皮肤，用于退出房间时还原
     private List<String> goldSpawn;
     private String spawn, world;
+    public ArrayList<ArrayList<Vector3>> placeBlocks = new ArrayList<>();
 
     /**
      * 初始化
@@ -98,6 +98,8 @@ public class Room {
             this.getWorld().getPlayers().values().forEach(
                     player -> player.kick("\n§c房间非正常关闭!\n为了您的背包安全，请稍后重进服务器！"));
         }
+        this.placeBlocks.forEach(list -> list.forEach(vector3 -> getWorld().setBlock(vector3, Block.get(0))));
+        this.placeBlocks.clear();
         this.waitTime = this.setWaitTime;
         this.gameTime = this.setGameTime;
         this.victoryTime = 10;

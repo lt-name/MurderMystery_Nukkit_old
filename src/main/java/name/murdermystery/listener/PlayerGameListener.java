@@ -389,15 +389,16 @@ public class PlayerGameListener implements Listener {
         Player player = event.getPlayer();
         Item item = event.getItem();
         Block block = event.getBlockReplace();
-        if (player == null || item == null || block == null) {
+        if (player == null || item == null || block == null || item.getNamedTag() == null) {
             return;
         }
         Level level = player.getLevel();
         if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             return;
         }
+        Room room = MurderMystery.getInstance().getRooms().get(level.getName());
         CompoundTag tag = item.getNamedTag();
-        if (MurderMystery.getInstance().getRooms().get(level.getName()).getMode() == 2 &&
+        if (room.getMode() == 2 &&
                 tag.getBoolean("isMurderItem") &&
                 tag.getInt("MurderType") == 22) {
             level.addSound(block, Sound.RANDOM_ANVIL_USE);
@@ -442,14 +443,17 @@ public class PlayerGameListener implements Listener {
                             }
                         }
                     }
+                    room.placeBlocks.add(blockList);
                     Server.getInstance().getScheduler().scheduleDelayedTask(new Task() {
                         @Override
                         public void onRun(int i) {
+                            room.placeBlocks.remove(blockList);
                             Iterator<Vector3> it = blockList.iterator();
                             while (it.hasNext()) {
                                 level.setBlock(it.next(), Block.get(0));
                                 it.remove();
                             }
+
                         }
                     }, 100);
                 }
