@@ -2,6 +2,10 @@ package name.murdermystery.tasks.game;
 
 import cn.nukkit.Player;
 import cn.nukkit.scheduler.PluginTask;
+import de.theamychan.scoreboard.api.ScoreboardAPI;
+import de.theamychan.scoreboard.network.DisplaySlot;
+import de.theamychan.scoreboard.network.Scoreboard;
+import de.theamychan.scoreboard.network.ScoreboardDisplay;
 import name.murdermystery.MurderMystery;
 import name.murdermystery.room.Room;
 
@@ -30,31 +34,37 @@ public class TipsTask extends PluginTask<MurderMystery> {
                     playerNumber++;
                 }
             }
-            this.sendActionBar("§a距游戏结束还有 "+ this.room.gameTime + " 秒\n当前还有： §e" + playerNumber + " §a人存活");
-        }
-    }
-
-    private void sendActionBar(String string) {
-        String mode;
-        for (Player player : this.room.getPlayers().keySet()) {
-            switch (this.room.getPlayerMode(player)) {
-                case 1:
-                    mode = "平民";
-                    break;
-                case 2:
-                    mode = "侦探";
-                    break;
-                case 3:
-                    mode = "杀手";
-                    if (room.effectCD > 0 ) {
+            String mode;
+            for (Player player : this.room.getPlayers().keySet()) {
+                switch (this.room.getPlayerMode(player)) {
+                    case 1:
+                        mode = "平民";
+                        break;
+                    case 2:
+                        mode = "侦探";
+                        break;
+                    case 3:
+                        mode = "杀手";
+/*                    if (room.effectCD > 0 ) {
                         mode += " 加速冷却剩余：" + room.effectCD + "秒";
-                    }
-                    break;
-                default:
-                    mode = "死亡";
-                    break;
+                    }*/
+                        break;
+                    default:
+                        mode = "死亡";
+                        break;
+                }
+                Scoreboard scoreboard = ScoreboardAPI.createScoreboard();
+                ScoreboardDisplay scoreboardDisplay = scoreboard.addDisplay(
+                        DisplaySlot.SIDEBAR, "MurderMystery", "§eMurderMystery");
+                scoreboardDisplay.addLine("§a当前身份： §l§e" + mode + " ", 0);
+                scoreboardDisplay.addLine("§a剩余时间： §l§e" + this.room.gameTime + " ", 1);
+                scoreboardDisplay.addLine("§a存活人数： §l§e" + playerNumber + " ", 2);
+                if (this.room.getPlayerMode(player) == 3) {
+                    scoreboardDisplay.addLine("§a加速冷却： §l§e" + this.room.effectCD + " ", 3);
+                }
+                scoreboard.showFor(player);
+                player.sendTip("§a身份：" + mode + "\n§a距游戏结束还有 "+ this.room.gameTime + " 秒\n当前还有： §e" + playerNumber + " §a人存活");
             }
-            player.sendActionBar("§a身份：" + mode + "\n" + string);
         }
     }
 
