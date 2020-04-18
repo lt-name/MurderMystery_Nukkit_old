@@ -70,10 +70,8 @@ public class MurderListener implements Listener {
                 MurderMystery.getInstance(), new TimeTask(MurderMystery.getInstance(), room), 20,true);
         Server.getInstance().getScheduler().scheduleRepeatingTask(
                 MurderMystery.getInstance(), new GoldTask(MurderMystery.getInstance(), room), 20, true);
-        if (MurderMystery.getInstance().getActionBar()) {
-            Server.getInstance().getScheduler().scheduleRepeatingTask(
-                    MurderMystery.getInstance(), new TipsTask(MurderMystery.getInstance(), room), 10, true);
-        }
+        Server.getInstance().getScheduler().scheduleRepeatingTask(
+                MurderMystery.getInstance(), new TipsTask(MurderMystery.getInstance(), room), 20);
     }
 
     /**

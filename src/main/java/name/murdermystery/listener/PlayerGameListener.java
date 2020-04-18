@@ -219,7 +219,7 @@ public class PlayerGameListener implements Listener {
         }
         Player player = event.getPlayer();
         Item item = event.getItem();
-        if (player == null || item == null) {
+        if (player == null || item == null || item.getNamedTag() == null) {
             return;
         }
         Level level = player.getLevel();
@@ -228,9 +228,9 @@ public class PlayerGameListener implements Listener {
             return;
         }
         Room room = MurderMystery.getInstance().getRooms().get(level.getName());
+        CompoundTag tag = item.getNamedTag();
         if (room.isPlaying(player) && room.getPlayerMode(player) == 3) {
-            if (item.getNamedTag().getBoolean("isMurderItem")
-                    && item.getNamedTag().getInt("MurderType") == 1) {
+            if (tag.getBoolean("isMurderItem") && tag.getInt("MurderType") == 1) {
                 if (room.effectCD < 1) {
                     Effect effect = Effect.getEffect(1);
                     effect.setAmplifier(2);

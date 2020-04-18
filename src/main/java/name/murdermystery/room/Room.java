@@ -1,6 +1,7 @@
 package name.murdermystery.room;
 
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.entity.data.Skin;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
@@ -54,7 +55,7 @@ public class Room {
      */
     public void initTask() {
         this.setMode(1);
-        MurderMystery.getInstance().getServer().getScheduler().scheduleRepeatingTask(
+        Server.getInstance().getScheduler().scheduleRepeatingTask(
                 MurderMystery.getInstance(), new WaitTask(MurderMystery.getInstance(), this), 20,true);
     }
 
