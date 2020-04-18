@@ -39,10 +39,10 @@ public class VictoryTask extends PluginTask<MurderMystery> {
                     Tools.spawnFirework(player);
                 }
             }
-            if (owner.getActionBar()) {
+            if (MurderMystery.getInstance().getConfig().getBoolean("底部显示信息", true)) {
                 if (victory == 3) {
                     this.sendActionBar("§e恭喜杀手获得胜利！");
-                }else {
+                } else {
                     this.sendActionBar("§e恭喜平民和侦探获得胜利！");
                 }
             }

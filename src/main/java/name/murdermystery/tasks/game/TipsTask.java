@@ -53,17 +53,21 @@ public class TipsTask extends PluginTask<MurderMystery> {
                         mode = "死亡";
                         break;
                 }
-                Scoreboard scoreboard = ScoreboardAPI.createScoreboard();
-                ScoreboardDisplay scoreboardDisplay = scoreboard.addDisplay(
-                        DisplaySlot.SIDEBAR, "MurderMystery", "§eMurderMystery");
-                scoreboardDisplay.addLine("§a当前身份： §l§e" + mode + " ", 0);
-                scoreboardDisplay.addLine("§a剩余时间： §l§e" + this.room.gameTime + " ", 1);
-                scoreboardDisplay.addLine("§a存活人数： §l§e" + playerNumber + " ", 2);
-                if (this.room.getPlayerMode(player) == 3) {
-                    scoreboardDisplay.addLine("§a加速冷却： §l§e" + this.room.effectCD + " ", 3);
+                if (MurderMystery.getInstance().getConfig().getBoolean("计分板显示信息", true)) {
+                    Scoreboard scoreboard = ScoreboardAPI.createScoreboard();
+                    ScoreboardDisplay scoreboardDisplay = scoreboard.addDisplay(
+                            DisplaySlot.SIDEBAR, "MurderMystery", "§eMurderMystery");
+                    scoreboardDisplay.addLine("§a当前身份： §l§e" + mode + " ", 0);
+                    scoreboardDisplay.addLine("§a剩余时间： §l§e" + this.room.gameTime + " ", 1);
+                    scoreboardDisplay.addLine("§a存活人数： §l§e" + playerNumber + " ", 2);
+                    if (this.room.getPlayerMode(player) == 3) {
+                        scoreboardDisplay.addLine("§a加速冷却： §l§e" + this.room.effectCD + " ", 3);
+                    }
+                    scoreboard.showFor(player);
                 }
-                scoreboard.showFor(player);
-                player.sendTip("§a身份：" + mode + "\n§a距游戏结束还有 "+ this.room.gameTime + " 秒\n当前还有： §e" + playerNumber + " §a人存活");
+                if (MurderMystery.getInstance().getConfig().getBoolean("底部显示信息", true)) {
+                    player.sendTip("§a身份：" + mode + "\n§a距游戏结束还有 "+ this.room.gameTime + " 秒\n当前还有： §e" + playerNumber + " §a人存活");
+                }
             }
         }
     }

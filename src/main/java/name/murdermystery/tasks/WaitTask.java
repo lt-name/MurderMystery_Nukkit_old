@@ -26,8 +26,10 @@ public class WaitTask extends PluginTask<MurderMystery> {
             }
             if (this.room.waitTime > 0) {
                 this.room.waitTime--;
-                this.sendActionBar("§a当前已有: " + this.room.getPlayers().size() + " 位玩家" +
-                        "\n§a游戏还有: " + this.room.waitTime + " 秒开始！");
+                if (MurderMystery.getInstance().getConfig().getBoolean("底部显示信息", true)) {
+                    this.sendActionBar("§a当前已有: " + this.room.getPlayers().size() + " 位玩家" +
+                            "\n§a游戏还有: " + this.room.waitTime + " 秒开始！");
+                }
                 if (this.room.waitTime <= 5) {
                     Tools.addSound(this.room, Sound.RANDOM_CLICK);
                 }
@@ -39,7 +41,7 @@ public class WaitTask extends PluginTask<MurderMystery> {
             if (this.room.waitTime != this.room.getWaitTime()) {
                 this.room.waitTime = this.room.getWaitTime();
             }
-            if (owner.getActionBar()) {
+            if (MurderMystery.getInstance().getConfig().getBoolean("底部显示信息", true)) {
                 this.sendActionBar("§c等待玩家加入中,当前已有: " + this.room.getPlayers().size() + " 位玩家");
             }
         }

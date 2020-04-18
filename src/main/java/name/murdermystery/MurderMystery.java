@@ -263,10 +263,6 @@ public class MurderMystery extends PluginBase {
         return this.config;
     }
 
-    public boolean getActionBar() {
-        return this.config.getBoolean("底部显示信息", true);
-    }
-
     public LinkedHashMap<String, Room> getRooms() {
         return this.rooms;
     }
