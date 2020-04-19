@@ -49,7 +49,7 @@ public class WaitTask extends PluginTask<MurderMystery> {
 
     private void sendActionBar(String string) {
         for (Player player : this.room.getPlayers().keySet()) {
-            player.sendTip(string);
+            player.sendActionBar(string);
         }
     }
 

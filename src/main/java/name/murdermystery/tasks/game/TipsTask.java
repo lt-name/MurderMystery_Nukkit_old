@@ -45,9 +45,6 @@ public class TipsTask extends PluginTask<MurderMystery> {
                         break;
                     case 3:
                         mode = "杀手";
-/*                    if (room.effectCD > 0 ) {
-                        mode += " 加速冷却剩余：" + room.effectCD + "秒";
-                    }*/
                         break;
                     default:
                         mode = "死亡";
@@ -66,7 +63,10 @@ public class TipsTask extends PluginTask<MurderMystery> {
                     scoreboard.showFor(player);
                 }
                 if (MurderMystery.getInstance().getConfig().getBoolean("底部显示信息", true)) {
-                    player.sendTip("§a身份：" + mode + "\n§a距游戏结束还有 "+ this.room.gameTime + " 秒\n当前还有： §e" + playerNumber + " §a人存活");
+                    if (this.room.getPlayerMode(player) == 3 && this.room.effectCD > 0) {
+                        mode += " 加速冷却剩余：" + room.effectCD + "秒";
+                    }
+                    player.sendActionBar("§a身份：" + mode + "\n§a距游戏结束还有 "+ this.room.gameTime + " 秒\n当前还有： §e" + playerNumber + " §a人存活");
                 }
             }
         }
