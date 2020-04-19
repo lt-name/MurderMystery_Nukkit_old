@@ -50,6 +50,7 @@ public class MurderListener implements Listener {
         int j = 0;
         for (Player player : players.keySet()) {
             j++;
+            player.getInventory().clearAll();
             //侦探
             if (j == random1) {
                 room.addPlaying(player, 2);

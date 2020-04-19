@@ -4,9 +4,11 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.entity.data.Skin;
+import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
+import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.Config;
 import name.murdermystery.MurderMystery;
 import name.murdermystery.tasks.WaitTask;
@@ -127,6 +129,13 @@ public class Room {
             SavePlayerInventory.savePlayerInventory(player, false);
             player.teleport(this.getSpawn());
             this.setRandomSkin(player, false);
+            Item item = Item.get(241, 14, 1);
+            item.setNamedTag(new CompoundTag()
+                    .putBoolean("isMurderItem", true)
+                    .putInt("MurderType", 10));
+            item.setCustomName("§c退出房间");
+            item.setLore("手持点击,即可退出房间");
+            player.getInventory().setItem(8, item);
             player.sendMessage("§a你已加入房间: " + this.world);
         }
     }

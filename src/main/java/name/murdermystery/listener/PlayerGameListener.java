@@ -264,7 +264,8 @@ public class PlayerGameListener implements Listener {
             event.setCancelled(true);
             player.setAllowModifyWorld(false);
         }
-        if (MurderMystery.getInstance().getRooms().get(level.getName()).getMode() == 2) {
+        Room room = MurderMystery.getInstance().getRooms().get(level.getName());
+        if (room.getMode() == 2) {
             if (block.getId() == 118 &&
                     block.getLevel().getBlock(block.getFloorX(), block.getFloorY() - 1, block.getFloorZ()).getId() == 138) {
                 Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
@@ -328,6 +329,13 @@ public class PlayerGameListener implements Listener {
                     }
                 });
                 event.setCancelled(true);
+            }
+        }else if (event.getItem() != null && event.getItem().getNamedTag() != null) {
+            CompoundTag tag = event.getItem().getNamedTag();
+            if (tag.getBoolean("isMurderItem") && tag.getInt("MurderType") == 10) {
+                event.setCancelled(true);
+                room.quitRoom(player);
+                player.sendMessage("§a你已退出房间");
             }
         }
     }
