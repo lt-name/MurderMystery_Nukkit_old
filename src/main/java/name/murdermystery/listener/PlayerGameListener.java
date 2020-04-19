@@ -101,8 +101,8 @@ public class PlayerGameListener implements Listener {
                     player2.addEffect(effect);
                 }
             }
+            event.setCancelled();
         }
-        event.setCancelled();
     }
 
     /**
