@@ -47,24 +47,21 @@ public class PlayerGameListener implements Listener {
      */
     @EventHandler
     public void onDamageByEntity(EntityDamageByEntityEvent event) {
-        Level level = event.getDamager().getLevel();
-        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
-                MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
-            return;
-        }
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
             Player player1 = (Player) event.getDamager();
             Player player2 = (Player) event.getEntity();
             if (player1 == null || player2 == null) {
                 return;
             }
-            Room room = MurderMystery.getInstance().getRooms().get(player1.getLevel().getName());
-            if (room.isPlaying(player1) &&
-                    room.getPlayerMode(player1) == 3 &&
-                    player1.getInventory().getItemInHand().getCustomName().equals("§c杀手之剑") &&
-                    room.isPlaying(player2) &&
-                    room.getPlayerMode(player2) != 0) {
-                Server.getInstance().getPluginManager().callEvent(new MurderPlayerDamageEvent(room, player1, player2));
+            Room room = MurderMystery.getInstance().getRooms().getOrDefault(player1.getLevel().getName(), null);
+            if (room != null && room.isPlaying(player1) && room.getPlayerMode(player1) == 3 &&
+                    room.isPlaying(player2) && room.getPlayerMode(player2) != 0) {
+                if (player1.getInventory().getItemInHand() != null) {
+                    CompoundTag tag = player1.getInventory().getItemInHand().getNamedTag();
+                    if (tag != null && tag.getBoolean("isMurderItem") && tag.getInt("MurderType") == 2) {
+                        Server.getInstance().getPluginManager().callEvent(new MurderPlayerDamageEvent(room, player1, player2));
+                    }
+                }
             }
         }
         event.setCancelled();
@@ -83,11 +80,10 @@ public class PlayerGameListener implements Listener {
                 return;
             }
             Level level = player1.getLevel();
-            if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
-                    MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
+            Room room = MurderMystery.getInstance().getRooms().getOrDefault(level.getName(), null);
+            if (room == null || room.getMode() != 2) {
                 return;
             }
-            Room room = MurderMystery.getInstance().getRooms().get(player1.getLevel().getName());
             Entity child = event.getChild();
             if (child.namedTag.getBoolean("isMurderItem")) {
                 if (child.namedTag.getInt("MurderType") == 20) {
@@ -116,13 +112,9 @@ public class PlayerGameListener implements Listener {
             if (player == null || event.getProjectile() == null) {
                 return;
             }
-            String levelName = player.getLevel().getName();
-            if (!MurderMystery.getInstance().getRooms().containsKey(levelName) ||
-                    MurderMystery.getInstance().getRooms().get(levelName).getMode() != 2) {
-                return;
-            }
-            Room room = MurderMystery.getInstance().getRooms().get(levelName);
-            if (room.getPlayerMode(player) == 0 || room.getPlayerMode(player) == 3) {
+            Room room = MurderMystery.getInstance().getRooms().getOrDefault(player.getLevel().getName(), null);
+            if (room == null || room.getMode() != 2 ||
+                    room.getPlayerMode(player) == 0 || room.getPlayerMode(player) == 3) {
                 return;
             }
             event.getProjectile().namedTag = new CompoundTag()
@@ -151,7 +143,7 @@ public class PlayerGameListener implements Listener {
                         player.getInventory().removeItem(Item.get(261, 0, 1));
                     }
                 }
-            }, 20, true);
+            }, 20);
         }
     }
 
@@ -162,10 +154,7 @@ public class PlayerGameListener implements Listener {
     @EventHandler
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
         Entity entity = event.getEntity();
-        if (entity == null) {
-            return;
-        }
-        if (!MurderMystery.getInstance().getRooms().containsKey(entity.getLevel().getName()) ||
+        if (entity == null || !MurderMystery.getInstance().getRooms().containsKey(entity.getLevel().getName()) ||
                 MurderMystery.getInstance().getRooms().get(entity.getLevel().getName()).getMode() != 2) {
             return;
         }
@@ -183,34 +172,23 @@ public class PlayerGameListener implements Listener {
      */
     @EventHandler
     public void onPickupItem(InventoryPickupItemEvent event) {
-        Level level = event.getItem().getLevel();
+        Level level = event.getItem() == null ? null : event.getItem().getLevel();
         if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
                 MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
             return;
         }
         if (event.getInventory() != null && event.getInventory() instanceof PlayerInventory) {
             Player player = (Player) event.getInventory().getHolder();
-            Room room = MurderMystery.getInstance().getRooms().get(level.getName());
-            if (event.getItem().getItem().getCustomName().equals("§e侦探之弓")) {
+            Room room = MurderMystery.getInstance().getRooms().getOrDefault(level.getName(), null);
+            CompoundTag tag = event.getItem().getItem() == null ? null : event.getItem().getItem().getNamedTag();
+            if (room != null && tag != null &&
+                    tag.getBoolean("isMurderItem") && tag.getInt("MurderType") == 1) {
                 if (room.getPlayerMode(player) != 1) {
-                    event.setCancelled();
+                    event.setCancelled(true);
                     return;
                 }
                 room.addPlaying(player, 2);
-                Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
-                    @Override
-                    public void onRun() {
-                        int j = 0; //箭的数量
-                        for (Item item : player.getInventory().getContents().values()) {
-                            if (item.getId() == 262) {
-                                j += item.getCount();
-                            }
-                        }
-                        if (j < 1) {
-                            player.getInventory().addItem(Item.get(262, 0, 1));
-                        }
-                    }
-                });
+                player.getInventory().addItem(Item.get(262, 0, 1));
             }
         }
     }
@@ -226,12 +204,8 @@ public class PlayerGameListener implements Listener {
         if (player == null || string == null || string.startsWith("/")) {
             return;
         }
-        Level level = player.getLevel();
-        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
-            return;
-        }
-        Room room = MurderMystery.getInstance().getRooms().get(player.getLevel().getName());
-        if (room.getMode() == 2 && room.getPlayerMode(player) == 0) {
+        Room room = MurderMystery.getInstance().getRooms().getOrDefault(player.getLevel().getName(), null);
+        if (room != null && room.getMode() == 2 && room.getPlayerMode(player) == 0) {
             for (Player p : room.getPlayers().keySet()) {
                 if (room.getPlayerMode(p) == 0) {
                     p.sendMessage("§c[死亡] " + player.getName() + "§b >>> " + string);
@@ -248,22 +222,14 @@ public class PlayerGameListener implements Listener {
      */
     @EventHandler
     public void onItemHeld(PlayerItemHeldEvent event) {
-        if (event == null) {
-            return;
-        }
         Player player = event.getPlayer();
         Item item = event.getItem();
         if (player == null || item == null || item.getNamedTag() == null) {
             return;
         }
-        Level level = player.getLevel();
-        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
-                MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
-            return;
-        }
-        Room room = MurderMystery.getInstance().getRooms().get(level.getName());
+        Room room = MurderMystery.getInstance().getRooms().getOrDefault(player.getLevel().getName(), null);
         CompoundTag tag = item.getNamedTag();
-        if (room.isPlaying(player) && room.getPlayerMode(player) == 3) {
+        if (room != null && room.getMode() == 2 && room.isPlaying(player) && room.getPlayerMode(player) == 3) {
             if (tag.getBoolean("isMurderItem") && tag.getInt("MurderType") == 1) {
                 if (room.effectCD < 1) {
                     Effect effect = Effect.getEffect(1);
@@ -290,15 +256,14 @@ public class PlayerGameListener implements Listener {
         if (player == null || block == null) {
             return;
         }
-        Level level = player.getLevel();
-        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
+        Room room = MurderMystery.getInstance().getRooms().getOrDefault(player.getLevel().getName(), null);
+        if (room == null) {
             return;
         }
         if (event.getAction() == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK && !player.isOp()) {
             event.setCancelled(true);
             player.setAllowModifyWorld(false);
         }
-        Room room = MurderMystery.getInstance().getRooms().get(level.getName());
         if (room.getMode() == 2) {
             if (block.getId() == 118 &&
                     block.getLevel().getBlock(block.getFloorX(), block.getFloorY() - 1, block.getFloorZ()).getId() == 138) {
@@ -394,13 +359,11 @@ public class PlayerGameListener implements Listener {
         if (player == null || item == null || item.getNamedTag() == null) {
             return;
         }
-        Level level = player.getLevel();
-        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
-                MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
+        Room room = MurderMystery.getInstance().getRooms().getOrDefault(player.getLevel().getName(), null);
+        if (room == null || room.getMode() != 2) {
             return;
         }
         CompoundTag tag = item.getNamedTag();
-        Room room = MurderMystery.getInstance().getRooms().get(player.getLevel().getName());
         if (room.isPlaying(player) &&
                 tag.getBoolean("isMurderItem") &&
                 tag.getInt("MurderType") == 21) {
@@ -450,8 +413,7 @@ public class PlayerGameListener implements Listener {
         Room room = MurderMystery.getInstance().getRooms().get(level.getName());
         CompoundTag tag = item.getNamedTag();
         if (room.getMode() == 2 &&
-                tag.getBoolean("isMurderItem") &&
-                tag.getInt("MurderType") == 22) {
+                tag.getBoolean("isMurderItem") && tag.getInt("MurderType") == 22) {
             level.addSound(block, Sound.RANDOM_ANVIL_USE);
             //>315 <45  X
             //>135 <225 X

@@ -5,7 +5,6 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
-import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -138,9 +137,7 @@ public class MurderListener implements Listener {
         player.setAdventureSettings((new AdventureSettings(player)).set(AdventureSettings.Type.ALLOW_FLIGHT, true));
         player.setGamemode(3);
         if (room.getPlayerMode(player) == 2) {
-            Item item = Item.get(261, 0, 1);
-            item.setCustomName("§e侦探之弓");
-            room.getLevel().dropItem(new Vector3(player.x, player.y, player.z), item);
+            room.getLevel().dropItem(player, Tools.getMurderItem(1));
         }
         room.addPlaying(player, 0);
         Tools.setPlayerInvisible(player, true);

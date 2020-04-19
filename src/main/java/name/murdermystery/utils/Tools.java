@@ -34,6 +34,26 @@ public class Tools {
      * @param tagNumber 物品编号
      */
     public static void giveItem(Player player, int tagNumber) {
+        switch (tagNumber) {
+            case 1:
+                player.getInventory().setItem(1, getMurderItem(tagNumber));
+                player.getInventory().setItem(2, Item.get(262, 0, 1));
+                break;
+            case 2:
+                player.getInventory().setItem(1, getMurderItem(tagNumber));
+                break;
+            case 10:
+                player.getInventory().setItem(8, getMurderItem(tagNumber));
+                break;
+            case 21:
+            case 22:
+            case 23:
+                player.getInventory().addItem(getMurderItem(tagNumber));
+                break;
+        }
+    }
+
+    public static Item getMurderItem(int tagNumber) {
         Item item;
         switch (tagNumber) {
             case 1:
@@ -43,9 +63,7 @@ public class Tools {
                         .putInt("MurderType", 1));
                 item.setCustomName("§e侦探之弓");
                 item.setLore("会自动补充消耗的箭", "提示:", "攻击队友,您也会死");
-                player.getInventory().setItem(1, item);
-                player.getInventory().setItem(2, Item.get(262, 0, 1));
-                break;
+                return item;
             case 2:
                 item = Item.get(267, 0, 1);
                 item.setNamedTag(new CompoundTag()
@@ -53,8 +71,7 @@ public class Tools {
                         .putInt("MurderType", 2));
                 item.setCustomName("§c杀手之剑");
                 item.setLore("杀手之剑", "提示:", "切换到杀手之剑时会获得短暂加速");
-                player.getInventory().setItem(1, item);
-                break;
+                return item;
             case 10:
                 item = Item.get(241, 14, 1);
                 item.setNamedTag(new CompoundTag()
@@ -62,8 +79,7 @@ public class Tools {
                         .putInt("MurderType", 10));
                 item.setCustomName("§c退出房间");
                 item.setLore("手持点击,即可退出房间");
-                player.getInventory().setItem(8, item);
-                break;
+                return item;
             case 21:
                 item = Item.get(373, 0, 1);
                 item.setNamedTag(new CompoundTag()
@@ -71,8 +87,7 @@ public class Tools {
                         .putInt("MurderType", 21));
                 item.setCustomName("§a神秘药水");
                 item.setLore("未知效果的药水", "究竟是会带来好运，还是厄运？", "使用方法：直接饮用即可");
-                player.getInventory().addItem(item);
-                break;
+                return item;
             case 22:
                 item = Item.get(241, 3, 1);
                 item.setNamedTag(new CompoundTag()
@@ -80,8 +95,7 @@ public class Tools {
                         .putInt("MurderType", 22));
                 item.setCustomName("§a护盾生成器");
                 item.setLore("可以生成一面短时间存在的墙", "它的功能很差，但却能在关键时间救你一命", "使用方法：放在地面即可");
-                player.getInventory().addItem(item);
-                break;
+                return item;
             case 23:
                 item = Item.get(241, 3, 1);
                 item.setNamedTag(new CompoundTag()
@@ -89,9 +103,9 @@ public class Tools {
                         .putInt("MurderType", 23));
                 item.setCustomName("§a减速雪球");
                 item.setLore("命中后使目标减速2秒");
-                player.getInventory().addItem(item);
-                break;
+                return item;
         }
+        return null;
     }
 
     /**
