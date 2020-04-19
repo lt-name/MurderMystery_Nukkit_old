@@ -27,6 +27,7 @@ import cn.nukkit.scheduler.Task;
 import name.murdermystery.MurderMystery;
 import name.murdermystery.event.MurderPlayerDamageEvent;
 import name.murdermystery.room.Room;
+import name.murdermystery.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -279,13 +280,7 @@ public class PlayerGameListener implements Listener {
                         }
                         if (x > 0) {
                             player.getInventory().removeItem(Item.get(266, 0, 1));
-                            Item item = Item.get(373, 0, 1);
-                            item.setNamedTag(new CompoundTag()
-                                    .putBoolean("isMurderItem", true)
-                                    .putInt("MurderType", 21));
-                            item.setCustomName("§a神秘药水");
-                            item.setLore("未知效果的药水", "究竟是会带来好运，还是厄运？", "使用方法：直接饮用即可");
-                            player.getInventory().addItem(item);
+                            Tools.giveItem(player, 21);
                             player.sendMessage("§a成功兑换到一瓶神秘药水！");
                         }else {
                             player.sendMessage("§a需要使用金锭兑换药水！");
@@ -312,13 +307,7 @@ public class PlayerGameListener implements Listener {
                         if (x > 0) {
                             if (notHave) {
                                 player.getInventory().removeItem(Item.get(266, 0, 1));
-                                Item item = Item.get(241, 3, 1);
-                                item.setNamedTag(new CompoundTag()
-                                        .putBoolean("isMurderItem", true)
-                                        .putInt("MurderType", 22));
-                                item.setCustomName("§a护盾生成器");
-                                item.setLore("可以生成一面短时间存在的墙", "它的功能很差，但却能在关键时间救你一命", "使用方法：放在地面即可");
-                                player.getInventory().addItem(item);
+                                Tools.giveItem(player, 22);
                                 player.sendMessage("§a成功兑换到一个护盾！");
                             }else {
                                 player.sendMessage("§a你只能携带一个护盾！");
