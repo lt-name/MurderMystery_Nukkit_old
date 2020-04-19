@@ -65,6 +65,19 @@ public class MurderListener implements Listener {
             room.addPlaying(player, 1);
             player.sendTitle("§a平民", "活下去，就是胜利", 10, 40, 10);
         }
+        if (room.getRandomSpawn().size() > 0) {
+            int x=0;
+            for (Player player : room.getPlayers().keySet()) {
+                if (room.getRandomSpawn().get(x) != null) {
+                    String[] s = room.getRandomSpawn().get(x).split(":");
+                    player.teleport(new Vector3(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])));
+                }else {
+                    x=0;
+                    player.teleport(room.getSpawn());
+                }
+                x++;
+            }
+        }
         room.setMode(2);
         Server.getInstance().getScheduler().scheduleRepeatingTask(
                 MurderMystery.getInstance(), new TimeTask(MurderMystery.getInstance(), room), 20,true);
@@ -126,7 +139,7 @@ public class MurderListener implements Listener {
         if (room.getPlayerMode(player) == 2) {
             Item item = Item.get(261, 0, 1);
             item.setCustomName("§e侦探之弓");
-            room.getWorld().dropItem(new Vector3(player.x, player.y, player.z), item);
+            room.getLevel().dropItem(new Vector3(player.x, player.y, player.z), item);
         }
         room.addPlaying(player, 0);
         Tools.setPlayerInvisible(player, true);

@@ -40,7 +40,8 @@ public class GuiCreate {
      */
     public static void sendAdminMenu(Player player) {
         FormWindowSimple simple = new FormWindowSimple(PLUGIN_NAME, "当前设置地图：" + player.getLevel().getName());
-        simple.addButton(new ElementButton("§e设置出生点", new ElementButtonImageData("path", "textures/ui/World")));
+        simple.addButton(new ElementButton("§e设置默认出生点", new ElementButtonImageData("path", "textures/ui/World")));
+        simple.addButton(new ElementButton("§e添加随机出生点", new ElementButtonImageData("path", "textures/ui/World")));
         simple.addButton(new ElementButton("§e添加金锭生成点", new ElementButtonImageData("path", "textures/ui/World")));
         simple.addButton(new ElementButton("§e设置时间参数", new ElementButtonImageData("path", "textures/ui/timer")));
         simple.addButton(new ElementButton("§e重载所有房间",  new ElementButtonImageData("path", "textures/ui/refresh_light")));

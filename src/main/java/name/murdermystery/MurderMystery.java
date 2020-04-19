@@ -174,7 +174,11 @@ public class MurderMystery extends PluginBase {
                     switch (args[0]) {
                         case "设置出生点": case "setspawn": case "SetSpawn":
                             this.roomSetSpawn(player, getRoomConfig(player.getLevel()));
-                            sender.sendMessage("§a出生点设置成功！");
+                            sender.sendMessage("§a默认出生点设置成功！");
+                            break;
+                        case "添加随机出生点": case "addrandomspawn":
+                            this.roomAddRandomSpawn(player, getRoomConfig(player.getLevel()));
+                            sender.sendMessage("§a随机出生点添加成功！");
                             break;
                         case "添加金锭生成点": case "addGoldSpawn":
                             this.roomAddGoldSpawn(player, getRoomConfig(player.getLevel()));
@@ -386,6 +390,18 @@ public class MurderMystery extends PluginBase {
         String world = player.getLevel().getName();
         config.set("World", world);
         config.set("出生点", spawn);
+        config.save();
+    }
+
+    private void roomAddRandomSpawn(Player player, Config config) {
+        this.roomAddRandomSpawn(player.getFloorX(), player.getFloorY(), player.getFloorZ(), config);
+    }
+
+    private void roomAddRandomSpawn(int x, int y, int z, Config config) {
+        String s = x + ":" + y + ":" + z;
+        List<String> list = config.getStringList("randomSpawn");
+        list.add(s);
+        config.set("randomSpawn", list);
         config.save();
     }
 

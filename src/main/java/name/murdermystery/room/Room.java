@@ -29,6 +29,7 @@ public class Room {
     private LinkedHashMap<Player, Skin> skinCache = new LinkedHashMap<>(); //缓存玩家皮肤，用于退出房间时还原
     private List<String> goldSpawn;
     private String spawn, world;
+    private List<String> randomSpawn;
     public ArrayList<ArrayList<Vector3>> placeBlocks = new ArrayList<>();
 
     /**
@@ -41,6 +42,7 @@ public class Room {
         this.setGameTime = config.getInt("游戏时间", 600);
         this.gameTime = this.setGameTime;
         this.spawn = config.getString("出生点", null);
+        this.randomSpawn = config.getStringList("randomSpawn");
         this.goldSpawn = config.getStringList("goldSpawn");
         this.setGoldSpawnTime = config.getInt("goldSpawnTime", 15);
         this.goldSpawnTime = this.setGoldSpawnTime;
@@ -95,10 +97,10 @@ public class Room {
                 }
             }
         }else {
-            this.getWorld().getPlayers().values().forEach(
+            this.getLevel().getPlayers().values().forEach(
                     player -> player.kick("\n§c房间非正常关闭!\n为了您的背包安全，请稍后重进服务器！"));
         }
-        this.placeBlocks.forEach(list -> list.forEach(vector3 -> getWorld().setBlock(vector3, Block.get(0))));
+        this.placeBlocks.forEach(list -> list.forEach(vector3 -> getLevel().setBlock(vector3, Block.get(0))));
         this.placeBlocks.clear();
         this.waitTime = this.setWaitTime;
         this.gameTime = this.setGameTime;
@@ -107,7 +109,7 @@ public class Room {
         this.effectCD = 0;
         this.skinNumber.clear();
         this.skinCache.clear();
-        Tools.cleanEntity(this.getWorld(), true);
+        Tools.cleanEntity(this.getLevel(), true);
         this.mode = 0;
     }
 
@@ -246,6 +248,13 @@ public class Room {
     }
 
     /**
+     * @return 随机出生点列表
+     */
+    public List<String> getRandomSpawn() {
+        return this.randomSpawn;
+    }
+
+    /**
      * @return 金锭刷新时间
      */
     public int getGoldSpawnTime() {
@@ -276,7 +285,7 @@ public class Room {
     /**
      * @return 游戏世界
      */
-    public Level getWorld() {
+    public Level getLevel() {
         return MurderMystery.getInstance().getServer().getLevelByName(this.world);
     }
 

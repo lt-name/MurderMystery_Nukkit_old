@@ -23,15 +23,15 @@ public class GoldTask extends PluginTask<MurderMystery> {
     @Override
     public void onRun(int i) {
         if (this.room.getMode() != 2) {
-            Tools.cleanEntity(this.room.getWorld());
+            Tools.cleanEntity(this.room.getLevel());
             this.cancel();
         }
         //金锭生成
         if (this.room.goldSpawnTime < 1) {
-            Tools.cleanEntity(this.room.getWorld());
+            Tools.cleanEntity(this.room.getLevel());
             for (String spawn : this.room.getGoldSpawn()) {
                 String[] s = spawn.split(":");
-                this.room.getWorld().dropItem(new Vector3(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])),
+                this.room.getLevel().dropItem(new Vector3(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])),
                         Item.get(266, 0));
             }
             this.room.goldSpawnTime = this.room.getGoldSpawnTime();

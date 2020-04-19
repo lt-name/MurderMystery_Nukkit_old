@@ -48,15 +48,18 @@ public class GuiListener implements Listener {
                         MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin 设置出生点");
                         break;
                     case 1:
-                        MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin 添加金锭生成点");
+                        MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin 添加随机出生点");
                         break;
                     case 2:
-                        GuiCreate.sendAdminTimeMenu(player);
+                        MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin 添加金锭生成点");
                         break;
                     case 3:
-                        MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin reload");
+                        GuiCreate.sendAdminTimeMenu(player);
                         break;
                     case 4:
+                        MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin reload");
+                        break;
+                    case 5:
                         MurderMystery.getInstance().getServer().dispatchCommand(player, "kadmin unload");
                         break;
                 }
