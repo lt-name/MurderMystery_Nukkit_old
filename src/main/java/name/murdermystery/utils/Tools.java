@@ -82,6 +82,15 @@ public class Tools {
                 item.setLore("可以生成一面短时间存在的墙", "它的功能很差，但却能在关键时间救你一命", "使用方法：放在地面即可");
                 player.getInventory().addItem(item);
                 break;
+            case 23:
+                item = Item.get(241, 3, 1);
+                item.setNamedTag(new CompoundTag()
+                        .putBoolean("isMurderItem", true)
+                        .putInt("MurderType", 23));
+                item.setCustomName("§a减速雪球");
+                item.setLore("命中后使目标减速2秒");
+                player.getInventory().addItem(item);
+                break;
         }
     }
 
@@ -141,15 +150,19 @@ public class Tools {
      */
     public static void addSound(Room room, Sound sound) {
         for (Player player : room.getPlayers().keySet()) {
-            PlaySoundPacket packet = new PlaySoundPacket();
-            packet.name = sound.getSound();
-            packet.volume = 1.0F;
-            packet.pitch = 1.0F;
-            packet.x = player.getFloorX();
-            packet.y = player.getFloorY();
-            packet.z = player.getFloorZ();
-            player.dataPacket(packet);
+            addSound(player, sound);
         }
+    }
+
+    public static void addSound(Player player, Sound sound) {
+        PlaySoundPacket packet = new PlaySoundPacket();
+        packet.name = sound.getSound();
+        packet.volume = 1.0F;
+        packet.pitch = 1.0F;
+        packet.x = player.getFloorX();
+        packet.y = player.getFloorY();
+        packet.z = player.getFloorZ();
+        player.dataPacket(packet);
     }
 
     /**

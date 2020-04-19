@@ -3,6 +3,7 @@ package name.murdermystery.listener;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
@@ -10,6 +11,7 @@ import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityDamageByChildEntityEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityShootBowEvent;
+import cn.nukkit.event.entity.ProjectileLaunchEvent;
 import cn.nukkit.event.inventory.InventoryPickupItemEvent;
 import cn.nukkit.event.player.PlayerChatEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
@@ -74,24 +76,30 @@ public class PlayerGameListener implements Listener {
      */
     @EventHandler
     public void onDamageByChild(EntityDamageByChildEntityEvent event) {
-        if (event.getDamager() == null || event.getEntity() == null ||
-                event.getChild() == null) {
-            return;
-        }
-        Level level = event.getDamager().getLevel();
-        if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
-                MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
-            return;
-        }
         if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
             Player player1 = ((Player) event.getDamager()).getPlayer();
             Player player2 = ((Player) event.getEntity()).getPlayer();
-            if (player1 == player2) {
+            if (player1 == player2 || event.getChild() == null || event.getChild().namedTag == null) {
+                return;
+            }
+            Level level = player1.getLevel();
+            if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
+                    MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
                 return;
             }
             Room room = MurderMystery.getInstance().getRooms().get(player1.getLevel().getName());
-            if (room.getPlayerMode(player1) != 3 && room.getPlayerMode(player1) != 0) {
-                Server.getInstance().getPluginManager().callEvent(new MurderPlayerDamageEvent(room, player1, player2));
+            Entity child = event.getChild();
+            if (child.namedTag.getBoolean("isMurderItem")) {
+                if (child.namedTag.getInt("MurderType") == 20) {
+                    Server.getInstance().getPluginManager().callEvent(new MurderPlayerDamageEvent(room, player1, player2));
+                }else if (child.namedTag.getInt("MurderType") == 23) {
+                    Tools.addSound(player2, Sound.RANDOM_ANVIL_LAND);
+                    player2.sendMessage("§a你被减速雪球打中了！");
+                    Effect effect = Effect.getEffect(2);
+                    effect.setAmplifier(2);
+                    effect.setDuration(40);
+                    player2.addEffect(effect);
+                }
             }
         }
         event.setCancelled();
@@ -105,7 +113,7 @@ public class PlayerGameListener implements Listener {
     public void onShootBow(EntityShootBowEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = ((Player) event.getEntity()).getPlayer();
-            if (player == null) {
+            if (player == null || event.getProjectile() == null) {
                 return;
             }
             String levelName = player.getLevel().getName();
@@ -113,11 +121,14 @@ public class PlayerGameListener implements Listener {
                     MurderMystery.getInstance().getRooms().get(levelName).getMode() != 2) {
                 return;
             }
-/*            if (player.getInventory().getItemInHand().getCustomName().equals("§e侦探之弓")) {
-                player.getInventory().addItem(Item.get(262, 0, 1));
+            Room room = MurderMystery.getInstance().getRooms().get(levelName);
+            if (room.getPlayerMode(player) == 0 || room.getPlayerMode(player) == 3) {
                 return;
-            }*/
-            if (MurderMystery.getInstance().getRooms().get(levelName).getPlayerMode(player) == 2) {
+            }
+            event.getProjectile().namedTag = new CompoundTag()
+                    .putBoolean("isMurderItem", true)
+                    .putInt("MurderType", 20);
+            if (room.getPlayerMode(player) == 2) {
                 player.getInventory().addItem(Item.get(262, 0, 1));
                 return;
             }
@@ -142,6 +153,28 @@ public class PlayerGameListener implements Listener {
                 }
             }, 20, true);
         }
+    }
+
+    /**
+     * 抛掷物被发射事件
+     * @param event 事件
+     */
+    @EventHandler
+    public void onProjectileLaunch(ProjectileLaunchEvent event) {
+        Entity entity = event.getEntity();
+        if (entity == null) {
+            return;
+        }
+        if (!MurderMystery.getInstance().getRooms().containsKey(entity.getLevel().getName()) ||
+                MurderMystery.getInstance().getRooms().get(entity.getLevel().getName()).getMode() != 2) {
+            return;
+        }
+        if (entity.getNetworkId() == 81) {
+            event.getEntity().namedTag = new CompoundTag()
+                    .putBoolean("isMurderItem", true)
+                    .putInt("MurderType", 23);
+        }
+
     }
 
     /**
@@ -314,6 +347,27 @@ public class PlayerGameListener implements Listener {
                             }
                         }else {
                             player.sendMessage("§a需要使用金锭兑换护盾！");
+                        }
+                    }
+                });
+                event.setCancelled(true);
+            }else if (block.getId() == 80 &&
+                    block.getLevel().getBlock(block.getFloorX(), block.getFloorY() - 1, block.getFloorZ()).getId() == 79) {
+                Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
+                    @Override
+                    public void onRun() {
+                        int x = 0; //金锭数量
+                        for (Item item : player.getInventory().getContents().values()) {
+                            if (item.getId() == 266) {
+                                x += item.getCount();
+                            }
+                        }
+                        if (x > 0) {
+                            player.getInventory().removeItem(Item.get(266, 0, 1));
+                            Tools.giveItem(player, 23);
+                            player.sendMessage("§a成功兑换到一个减速雪球！");
+                        }else {
+                            player.sendMessage("§a需要使用金锭兑换减速雪球！");
                         }
                     }
                 });
