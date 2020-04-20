@@ -4,11 +4,11 @@ import cn.nukkit.event.player.PlayerEvent;
 import name.murdermystery.room.Room;
 
 
-public class MurderEvent extends PlayerEvent {
+public abstract class MurderRoomPlayerEvent extends PlayerEvent {
 
     protected Room room;
 
-    public MurderEvent() {
+    public MurderRoomPlayerEvent() {
 
     }
 

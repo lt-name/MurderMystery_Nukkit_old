@@ -4,7 +4,7 @@ import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
 import name.murdermystery.room.Room;
 
-public class MurderRoomStartEvent extends MurderEvent implements Cancellable {
+public class MurderRoomStartEvent extends MurderRoomEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
