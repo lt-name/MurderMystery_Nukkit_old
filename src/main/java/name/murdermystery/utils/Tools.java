@@ -97,7 +97,7 @@ public class Tools {
                 item.setLore("可以生成一面短时间存在的墙", "它的功能很差，但却能在关键时间救你一命", "使用方法：放在地面即可");
                 return item;
             case 23:
-                item = Item.get(241, 3, 1);
+                item = Item.get(332, 0, 1);
                 item.setNamedTag(new CompoundTag()
                         .putBoolean("isMurderItem", true)
                         .putInt("MurderType", 23));

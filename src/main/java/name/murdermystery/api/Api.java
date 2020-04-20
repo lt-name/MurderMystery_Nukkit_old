@@ -29,10 +29,7 @@ public class Api {
      * @return 房间
      */
     public static Room getRoomByLevel(String level) {
-        if (getRooms().containsKey(level)) {
-            return getRooms().get(level);
-        }
-        return null;
+        return getRooms().getOrDefault(level, null);
     }
 
     /**

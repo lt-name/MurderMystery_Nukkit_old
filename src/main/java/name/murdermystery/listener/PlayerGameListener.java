@@ -265,8 +265,9 @@ public class PlayerGameListener implements Listener {
             player.setAllowModifyWorld(false);
         }
         if (room.getMode() == 2) {
-            if (block.getId() == 118 &&
-                    block.getLevel().getBlock(block.getFloorX(), block.getFloorY() - 1, block.getFloorZ()).getId() == 138) {
+            int id1 = block.getId();
+            int id2 = block.getLevel().getBlock(block.getFloorX(), block.getFloorY() - 1, block.getFloorZ()).getId();
+            if (id1 == 118 && id2 == 138) {
                 Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
                     @Override
                     public void onRun() {
@@ -286,8 +287,7 @@ public class PlayerGameListener implements Listener {
                     }
                 });
                 event.setCancelled(true);
-            }else if (block.getId() == 116 &&
-                    block.getLevel().getBlock(block.getFloorX(), block.getFloorY() - 1, block.getFloorZ()).getId() == 169) {
+            }else if (id1 == 116 && id2 == 169) {
                 Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
                     @Override
                     public void onRun() {
@@ -316,8 +316,7 @@ public class PlayerGameListener implements Listener {
                     }
                 });
                 event.setCancelled(true);
-            }else if (block.getId() == 80 &&
-                    block.getLevel().getBlock(block.getFloorX(), block.getFloorY() - 1, block.getFloorZ()).getId() == 79) {
+            }else if (id1 == 80 && id2 == 79) {
                 Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
                     @Override
                     public void onRun() {
