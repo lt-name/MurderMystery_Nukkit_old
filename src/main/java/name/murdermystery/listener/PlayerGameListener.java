@@ -29,6 +29,7 @@ import cn.nukkit.scheduler.Task;
 import name.murdermystery.MurderMystery;
 import name.murdermystery.event.MurderPlayerDamageEvent;
 import name.murdermystery.room.Room;
+import name.murdermystery.tasks.game.SwordMoveTask;
 import name.murdermystery.utils.Tools;
 
 import java.util.ArrayList;
@@ -212,7 +213,7 @@ public class PlayerGameListener implements Listener {
                 }
             }
             event.setCancelled(true);
-            event.setMessage(" ");
+            event.setMessage("");
         }
     }
 
@@ -260,11 +261,18 @@ public class PlayerGameListener implements Listener {
         if (room == null) {
             return;
         }
-        if (event.getAction() == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK && !player.isOp()) {
+        if (event.getAction() == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK ||
+                event.getAction() == PlayerInteractEvent.Action.LEFT_CLICK_AIR) {
             event.setCancelled(true);
             player.setAllowModifyWorld(false);
         }
         if (room.getMode() == 2) {
+            if (event.getAction() == PlayerInteractEvent.Action.RIGHT_CLICK_AIR) {
+                if (room.getPlayerMode(player) == 3) {
+                    Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new SwordMoveTask(room, player));
+                }
+                return;
+            }
             int id1 = block.getId();
             int id2 = block.getLevel().getBlock(block.getFloorX(), block.getFloorY() - 1, block.getFloorZ()).getId();
             if (id1 == 118 && id2 == 138) {

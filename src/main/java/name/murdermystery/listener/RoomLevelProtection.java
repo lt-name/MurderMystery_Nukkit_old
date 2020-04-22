@@ -22,7 +22,6 @@ import name.murdermystery.MurderMystery;
  * 游戏世界保护 禁止除游戏规则外的其他事件
  * 仅判断是否在游戏世界，并撤回操作
  * 其他判断请移步至 PlayerGameListener
- * 为方便op操作，部分事件不应限制op
  * @author lt_name
  */
 public class RoomLevelProtection implements Listener {
@@ -33,7 +32,7 @@ public class RoomLevelProtection implements Listener {
      */
     @EventHandler
     public void onCraft(CraftItemEvent event) {
-        Level level = event.getPlayer().getLevel();
+        Level level = event.getPlayer() == null ? null : event.getPlayer().getLevel();
         if (level != null && MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
@@ -45,7 +44,7 @@ public class RoomLevelProtection implements Listener {
      */
     @EventHandler
     public void onStartBrew(StartBrewEvent event) {
-        Level level = event.getBrewingStand().getLevel();
+        Level level = event.getBrewingStand() == null ? null : event.getBrewingStand().getLevel();
         if (level != null && MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
@@ -58,7 +57,7 @@ public class RoomLevelProtection implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        if (player == null || player.isOp()) {
+        if (player == null) {
             return;
         }
         Level level = event.getPlayer().getLevel();
@@ -74,7 +73,7 @@ public class RoomLevelProtection implements Listener {
      */
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent event) {
-        Level level = event.getEntity().getLevel();
+        Level level = event.getEntity() == null ? null : event.getEntity().getLevel();
         if (level != null && MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
@@ -86,11 +85,7 @@ public class RoomLevelProtection implements Listener {
      */
     @EventHandler
     public void onFrameDropItem(ItemFrameDropItemEvent event) {
-        Player player = event.getPlayer();
-        if (player == null || player.isOp()) {
-            return;
-        }
-        Level level = event.getItemFrame().getLevel();
+        Level level = event.getItemFrame() == null ? null : event.getItemFrame().getLevel();
         if (level != null && MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
@@ -102,7 +97,7 @@ public class RoomLevelProtection implements Listener {
      */
     @EventHandler
     public void onFoodLevelChange(PlayerFoodLevelChangeEvent event) {
-        Level level = event.getPlayer().getLevel();
+        Level level = event.getPlayer() == null ? null : event.getPlayer().getLevel();
         if (level != null && MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
@@ -114,7 +109,7 @@ public class RoomLevelProtection implements Listener {
      */
     @EventHandler
     public void onDropItem(PlayerDropItemEvent event) {
-        Level level = event.getPlayer().getLevel();
+        Level level = event.getPlayer() == null ? null : event.getPlayer().getLevel();
         if (level != null && MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
@@ -126,7 +121,7 @@ public class RoomLevelProtection implements Listener {
      */
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-        Level level = event.getEntity().getLevel();
+        Level level = event.getEntity() == null ? null : event.getEntity().getLevel();
         if (level != null && MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
@@ -138,7 +133,7 @@ public class RoomLevelProtection implements Listener {
      */
     @EventHandler
     public void onPickupArrow(InventoryPickupArrowEvent event) {
-        Level level = event.getArrow().getLevel();
+        Level level = event.getArrow() == null ? null : event.getArrow().getLevel();
         if (level != null && MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             event.setCancelled();
         }
@@ -150,7 +145,7 @@ public class RoomLevelProtection implements Listener {
      */
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent event) {
-        Level level = event.getEntity().getLevel();
+        Level level = event.getEntity() == null ? null : event.getEntity().getLevel();
         if (level != null && MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             event.getEntity().close();
         }
@@ -162,7 +157,7 @@ public class RoomLevelProtection implements Listener {
      */
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Level level = event.getEntity().getLevel();
+        Level level = event.getEntity() == null ? null : event.getEntity().getLevel();
         if (level != null && MurderMystery.getInstance().getRooms().containsKey(level.getName())) {
             event.setKeepInventory(true);
             event.setKeepExperience(true);

@@ -33,7 +33,7 @@ main/java/name/murdermystery/api/Api.java
  - MurderPlayerCorpseSpawnEvent 尸体生成事件  
    玩家死亡时调用
    
-物品CompoundTag：
+物品CompoundTag：  
 isMurderItem - boolean类型 是否为插件物品  
 MurderType - int类型 物品功能 
    - 1: 侦探之弓  

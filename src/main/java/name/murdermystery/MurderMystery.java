@@ -7,6 +7,7 @@ import cn.nukkit.entity.data.Skin;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
+import cn.nukkit.utils.Utils;
 import name.murdermystery.listener.MurderListener;
 import name.murdermystery.listener.PlayerGameListener;
 import name.murdermystery.listener.PlayerJoinAndQuit;
@@ -35,6 +36,7 @@ public class MurderMystery extends PluginBase {
     private LinkedHashMap<String, Config> roomConfigs = new LinkedHashMap<>();
     private LinkedHashMap<String, Room> rooms = new LinkedHashMap<>();
     private LinkedHashMap<Integer, Skin> skins = new LinkedHashMap<>();
+    private Skin sword;
 
     public static MurderMystery getInstance() { return murderMystery; }
 
@@ -51,6 +53,7 @@ public class MurderMystery extends PluginBase {
         getServer().getPluginManager().registerEvents(new PlayerGameListener(), this);
         getServer().getPluginManager().registerEvents(new MurderListener(), this);
         getServer().getPluginManager().registerEvents(new GuiListener(), this);
+        this.loadResources();
         File file1 = new File(this.getDataFolder() + "/Rooms");
         File file2 = new File(this.getDataFolder() + "/PlayerInventory");
         File file3 = new File(this.getDataFolder() + "/Skins");
@@ -267,6 +270,10 @@ public class MurderMystery extends PluginBase {
         return this.config;
     }
 
+    public Skin getSword() {
+        return this.sword;
+    }
+
     public LinkedHashMap<String, Room> getRooms() {
         return this.rooms;
     }
@@ -361,8 +368,8 @@ public class MurderMystery extends PluginBase {
                     BufferedImage skinData = null;
                     try {
                         skinData = ImageIO.read(skinFile);
-                    } catch (IOException e) {
-                        System.out.println(skinName + "加载失败");
+                    } catch (IOException ignored) {
+                        getLogger().warning(skinName + "加载失败，这可能不是一个正确的图片");
                     }
                     if (skinData != null) {
                         skin.setSkinData(skinData);
@@ -382,6 +389,36 @@ public class MurderMystery extends PluginBase {
             getLogger().info("§e皮肤加载完成！当前已加载 " + this.skins.size() + " 个皮肤！");
         }else {
             getLogger().warning("§c当前皮肤数量小于16，部分玩家仍可使用自己的皮肤");
+        }
+    }
+
+    private void loadResources() {
+        saveResource( "Resources/Sword/skin.png", "/Resources/Sword/skin.png", false);
+        saveResource("Resources/Sword/skin.json", "/Resources/Sword/skin.json", false);
+        File fileImg = new File(getDataFolder() + "/Resources/Sword/skin.png");
+        File fileJson = new File(getDataFolder() + "/Resources/Sword/skin.json");
+        Skin skin = new Skin();
+        BufferedImage skinData;
+        try {
+            skinData = ImageIO.read(fileImg);
+            if (skinData != null) {
+                skin.setSkinData(skinData);
+                skin.setSkinId("sword");
+                Map<String, Object> skinJson = new Config(fileJson, 1).getAll();
+                String name = null;
+                for (Map.Entry<String, Object> entry1 : skinJson.entrySet()) {
+                    if (name == null)
+                        name = entry1.getKey();
+                }
+                skin.setGeometryName(name);
+                skin.setGeometryData(Utils.readFile(fileJson));
+                this.sword = skin;
+                getLogger().info("§a资源加载完成");
+            }else {
+                getLogger().warning("§c资源加载失败");
+            }
+        } catch (IOException ignored) {
+            getLogger().warning("§c资源加载失败");
         }
     }
 

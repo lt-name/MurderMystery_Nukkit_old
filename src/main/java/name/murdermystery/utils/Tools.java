@@ -139,6 +139,9 @@ public class Tools {
      */
     public static void rePlayerState(Player player, boolean joinRoom) {
         player.setGamemode(0);
+        player.removeAllEffects();
+        player.setHealth(player.getMaxHealth());
+        player.getFoodData().setLevel(player.getFoodData().getMaxLevel());
         if (joinRoom) {
             player.setNameTagVisible(false);
             player.setNameTagAlwaysVisible(false);
@@ -152,9 +155,6 @@ public class Tools {
             player.setAllowModifyWorld(true);
         }
         player.setAdventureSettings((new AdventureSettings(player)).set(AdventureSettings.Type.ALLOW_FLIGHT, false));
-        player.removeAllEffects();
-        player.setHealth(player.getMaxHealth());
-        player.getFoodData().setLevel(player.getFoodData().getMaxLevel());
     }
 
     /**
