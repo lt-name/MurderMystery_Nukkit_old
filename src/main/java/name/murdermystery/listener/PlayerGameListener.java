@@ -231,7 +231,7 @@ public class PlayerGameListener implements Listener {
         Room room = MurderMystery.getInstance().getRooms().getOrDefault(player.getLevel().getName(), null);
         CompoundTag tag = item.getNamedTag();
         if (room != null && room.getMode() == 2 && room.isPlaying(player) && room.getPlayerMode(player) == 3) {
-            if (tag.getBoolean("isMurderItem") && tag.getInt("MurderType") == 1) {
+            if (tag.getBoolean("isMurderItem") && tag.getInt("MurderType") == 2) {
                 if (room.effectCD < 1) {
                     Effect effect = Effect.getEffect(1);
                     effect.setAmplifier(2);
@@ -269,7 +269,10 @@ public class PlayerGameListener implements Listener {
         if (room.getMode() == 2) {
             if (event.getAction() == PlayerInteractEvent.Action.RIGHT_CLICK_AIR) {
                 if (room.getPlayerMode(player) == 3) {
-                    Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new SwordMoveTask(room, player));
+                    CompoundTag tag = player.getInventory().getItemInHand() == null ? null : player.getInventory().getItemInHand().getNamedTag();
+                    if (tag != null && tag.getBoolean("isMurderItem") && tag.getInt("MurderType") == 2) {
+                        Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new SwordMoveTask(room, player));
+                    }
                 }
                 return;
             }
