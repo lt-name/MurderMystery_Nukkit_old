@@ -15,6 +15,7 @@ import name.murdermystery.listener.RoomLevelProtection;
 import name.murdermystery.room.Room;
 import name.murdermystery.ui.GuiCreate;
 import name.murdermystery.ui.GuiListener;
+import name.murdermystery.utils.MetricsLite;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -70,6 +71,7 @@ public class MurderMystery extends PluginBase {
         this.loadRooms();
         getLogger().info("§e开始加载皮肤");
         this.loadSkins();
+        new MetricsLite(this, 7290);
         getLogger().info("§e插件加载完成！欢迎使用！");
     }
 
