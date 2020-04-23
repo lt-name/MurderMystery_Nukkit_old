@@ -106,8 +106,9 @@ public class PlayerGameListener implements Listener {
      * 生命实体射出箭 事件
      * @param event 事件
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onShootBow(EntityShootBowEvent event) {
+        if (event.isCancelled()) return;
         if (event.getEntity() instanceof Player) {
             Player player = ((Player) event.getEntity()).getPlayer();
             if (player == null || event.getProjectile() == null) {
@@ -152,8 +153,9 @@ public class PlayerGameListener implements Listener {
      * 抛掷物被发射事件
      * @param event 事件
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
+        if (event.isCancelled()) return;
         Entity entity = event.getEntity();
         if (entity == null || !MurderMystery.getInstance().getRooms().containsKey(entity.getLevel().getName()) ||
                 MurderMystery.getInstance().getRooms().get(entity.getLevel().getName()).getMode() != 2) {
@@ -171,8 +173,9 @@ public class PlayerGameListener implements Listener {
      * 收起掉落的物品时
      * @param event 事件
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPickupItem(InventoryPickupItemEvent event) {
+        if (event.isCancelled()) return;
         Level level = event.getItem() == null ? null : event.getItem().getLevel();
         if (level == null || !MurderMystery.getInstance().getRooms().containsKey(level.getName()) ||
                 MurderMystery.getInstance().getRooms().get(level.getName()).getMode() != 2) {
@@ -221,8 +224,9 @@ public class PlayerGameListener implements Listener {
      * 玩家手持物品事件
      * @param event 事件
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onItemHeld(PlayerItemHeldEvent event) {
+        if (event.isCancelled()) return;
         Player player = event.getPlayer();
         Item item = event.getItem();
         if (player == null || item == null || item.getNamedTag() == null) {
@@ -250,8 +254,9 @@ public class PlayerGameListener implements Listener {
      * 玩家点击事件
      * @param event 事件
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.isCancelled()) return;
         Player player = event.getPlayer();
         Block block = event.getBlock();
         if (player == null || block == null) {
@@ -362,8 +367,9 @@ public class PlayerGameListener implements Listener {
      * 玩家使用消耗品事件
      * @param event 事件
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onItemConsume(PlayerItemConsumeEvent event) {
+        if (event.isCancelled()) return;
         Player player = event.getPlayer();
         Item item = event.getItem();
         if (player == null || item == null || item.getNamedTag() == null) {
@@ -408,12 +414,13 @@ public class PlayerGameListener implements Listener {
      * 方块放置事件
      * @param event 事件
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockPlace(BlockPlaceEvent event) {
+        if (event.isCancelled()) return;
         Player player = event.getPlayer();
         Item item = event.getItem();
         Block block = event.getBlockReplace();
-        if (player == null || item == null || block == null || item.getNamedTag() == null) {
+        if (player == null || item == null || block == null) {
             return;
         }
         Level level = player.getLevel();
@@ -422,7 +429,7 @@ public class PlayerGameListener implements Listener {
         }
         Room room = MurderMystery.getInstance().getRooms().get(level.getName());
         CompoundTag tag = item.getNamedTag();
-        if (room.getMode() == 2 &&
+        if (room.getMode() == 2 && tag != null &&
                 tag.getBoolean("isMurderItem") && tag.getInt("MurderType") == 22) {
             level.addSound(block, Sound.RANDOM_ANVIL_USE);
             //>315 <45  X
@@ -481,7 +488,7 @@ public class PlayerGameListener implements Listener {
                     }, 100);
                 }
             });
-        }else if (!player.isOp()) {
+        }else {
             event.setCancelled(true);
         }
     }

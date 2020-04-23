@@ -52,20 +52,17 @@ public class PlayerJoinAndQuit implements Listener {
     @EventHandler
     public void onPlayerTp(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
-        if (player == null || event.getFrom() == null || event.getTo() == null) {
-            return;
-        }
-        String fromLevel = event.getFrom().getLevel().getName();
-        String toLevel = event.getTo().getLevel().getName();
+        String fromLevel = event.getFrom().getLevel() == null ? null : event.getFrom().getLevel().getName();
+        String toLevel = event.getTo().getLevel()== null ? null : event.getTo().getLevel().getName();
+        if (player == null || fromLevel == null || toLevel == null) return;
         if (!fromLevel.equals(toLevel)) {
             LinkedHashMap<String, Room> room =  MurderMystery.getInstance().getRooms();
             if (room.containsKey(fromLevel) && room.get(fromLevel).isPlaying(player)) {
-                event.setCancelled();
+                event.setCancelled(true);
                 player.sendMessage("§e >> §c退出房间请使用：/killer quit");
-            }
-            if (!player.isOp() && room.containsKey(toLevel) &&
+            }else if (!player.isOp() && room.containsKey(toLevel) &&
                     !room.get(toLevel).isPlaying(player)) {
-                event.setCancelled();
+                event.setCancelled(true);
                 player.sendMessage("§e >> §c要进入游戏地图，请先加入游戏！");
             }
         }
