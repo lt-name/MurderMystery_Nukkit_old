@@ -159,7 +159,7 @@ public class MurderMystery extends PluginBase {
                             break;
                         default:
                             sender.sendMessage("§e/killer--命令帮助");
-                            sender.sendMessage("§e/killer §e打开ui");
+                            sender.sendMessage("§a/killer §e打开ui");
                             sender.sendMessage("§a/killer join 房间名称 §e加入游戏");
                             sender.sendMessage("§a/killer quit §e退出游戏");
                             sender.sendMessage("§a/killer list §e查看房间列表");

@@ -55,17 +55,19 @@ public class PlayerGameListener implements Listener {
                 return;
             }
             Room room = MurderMystery.getInstance().getRooms().getOrDefault(player1.getLevel().getName(), null);
-            if (room != null && room.isPlaying(player1) && room.getPlayerMode(player1) == 3 &&
-                    room.isPlaying(player2) && room.getPlayerMode(player2) != 0) {
-                if (player1.getInventory().getItemInHand() != null) {
-                    CompoundTag tag = player1.getInventory().getItemInHand().getNamedTag();
-                    if (tag != null && tag.getBoolean("isMurderItem") && tag.getInt("MurderType") == 2) {
-                        Server.getInstance().getPluginManager().callEvent(new MurderPlayerDamageEvent(room, player1, player2));
+            if (room != null) {
+                if (room.isPlaying(player1) && room.getPlayerMode(player1) == 3 &&
+                        room.isPlaying(player2) && room.getPlayerMode(player2) != 0) {
+                    if (player1.getInventory().getItemInHand() != null) {
+                        CompoundTag tag = player1.getInventory().getItemInHand().getNamedTag();
+                        if (tag != null && tag.getBoolean("isMurderItem") && tag.getInt("MurderType") == 2) {
+                            Server.getInstance().getPluginManager().callEvent(new MurderPlayerDamageEvent(room, player1, player2));
+                        }
                     }
                 }
+                event.setCancelled(true);
             }
         }
-        event.setCancelled();
     }
 
     /**
@@ -254,9 +256,8 @@ public class PlayerGameListener implements Listener {
      * 玩家点击事件
      * @param event 事件
      */
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.isCancelled()) return;
         Player player = event.getPlayer();
         Block block = event.getBlock();
         if (player == null || block == null) {
