@@ -1,19 +1,18 @@
 package name.murdermystery;
 
 import cn.nukkit.Player;
-import cn.nukkit.command.Command;
-import cn.nukkit.command.CommandSender;
 import cn.nukkit.entity.data.Skin;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.Utils;
+import name.murdermystery.command.AdminCommand;
+import name.murdermystery.command.UserCommand;
 import name.murdermystery.listener.MurderListener;
 import name.murdermystery.listener.PlayerGameListener;
 import name.murdermystery.listener.PlayerJoinAndQuit;
 import name.murdermystery.listener.RoomLevelProtection;
 import name.murdermystery.room.Room;
-import name.murdermystery.ui.GuiCreate;
 import name.murdermystery.ui.GuiListener;
 import name.murdermystery.utils.MetricsLite;
 
@@ -49,11 +48,6 @@ public class MurderMystery extends PluginBase {
         }
         saveDefaultConfig();
         this.config = new Config(getDataFolder() + "/config.yml", 2);
-        getServer().getPluginManager().registerEvents(new PlayerJoinAndQuit(), this);
-        getServer().getPluginManager().registerEvents(new RoomLevelProtection(), this);
-        getServer().getPluginManager().registerEvents(new PlayerGameListener(), this);
-        getServer().getPluginManager().registerEvents(new MurderListener(), this);
-        getServer().getPluginManager().registerEvents(new GuiListener(), this);
         this.loadResources();
         File file1 = new File(this.getDataFolder() + "/Rooms");
         File file2 = new File(this.getDataFolder() + "/PlayerInventory");
@@ -71,6 +65,13 @@ public class MurderMystery extends PluginBase {
         this.loadRooms();
         getLogger().info("§e开始加载皮肤");
         this.loadSkins();
+        getServer().getCommandMap().register("", new UserCommand(this.config.getString("插件命令", "killer")));
+        getServer().getCommandMap().register("", new AdminCommand(this.config.getString("管理命令", "kadmin")));
+        getServer().getPluginManager().registerEvents(new PlayerJoinAndQuit(), this);
+        getServer().getPluginManager().registerEvents(new RoomLevelProtection(), this);
+        getServer().getPluginManager().registerEvents(new PlayerGameListener(), this);
+        getServer().getPluginManager().registerEvents(new MurderListener(), this);
+        getServer().getPluginManager().registerEvents(new GuiListener(), this);
         new MetricsLite(this, 7290);
         getLogger().info("§e插件加载完成！欢迎使用！");
     }
@@ -97,177 +98,6 @@ public class MurderMystery extends PluginBase {
         getLogger().info("§c插件卸载完成！");
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equals("killer")) {
-            if (sender instanceof Player) {
-                Player player = ((Player) sender).getPlayer();
-                if (args.length > 0) {
-                    switch (args[0]) {
-                        case "join": case "加入":
-                            if (this.rooms.size() > 0) {
-                                for (Room room : this.rooms.values()) {
-                                    if (room.isPlaying(player)) {
-                                        sender.sendMessage("§c你已经在一个房间中了!");
-                                        return true;
-                                    }
-                                }
-                                if (player.riding != null) {
-                                    sender.sendMessage("§a请勿在骑乘状态下进入房间！");
-                                    return true;
-                                }
-                                if (args.length < 2) {
-                                    for (Room room : this.rooms.values()) {
-                                        if (room.getMode() == 0 || room.getMode() == 1) {
-                                            room.joinRoom(player);
-                                            sender.sendMessage("§a已为你随机分配房间！");
-                                            return true;
-                                        }
-                                    }
-                                }else if (this.rooms.containsKey(args[1])) {
-                                    Room room = this.rooms.get(args[1]);
-                                    if (room.getMode() == 2 || room.getMode() == 3) {
-                                        sender.sendMessage("§a该房间正在游戏中，请稍后");
-                                    }else if (room.getPlayers().values().size() > 15) {
-                                        sender.sendMessage("§a该房间已满人，请稍后");
-                                    } else {
-                                        room.joinRoom(player);
-                                    }
-                                }else {
-                                    sender.sendMessage("§a该房间不存在！");
-                                }
-                            }else {
-                                sender.sendMessage("§a暂无房间可用！");
-                            }
-                            break;
-                        case "quit": case "退出":
-                            for (Room room : this.rooms.values()) {
-                                if (room.isPlaying(player)) {
-                                    room.quitRoom(player, true);
-                                    sender.sendMessage("§a你已退出房间");
-                                    return true;
-                                }
-                            }
-                            sender.sendMessage("§a你本来就不在游戏房间！");
-                            break;
-                        case "list": case "列表":
-                            StringBuilder list = new StringBuilder().append("§e房间列表： §a");
-                            for (String string : this.rooms.keySet()) {
-                                list.append(string).append(" ");
-                            }
-                            sender.sendMessage(String.valueOf(list));
-                            break;
-                        default:
-                            sender.sendMessage("§e/killer--命令帮助");
-                            sender.sendMessage("§a/killer §e打开ui");
-                            sender.sendMessage("§a/killer join 房间名称 §e加入游戏");
-                            sender.sendMessage("§a/killer quit §e退出游戏");
-                            sender.sendMessage("§a/killer list §e查看房间列表");
-                            break;
-                    }
-                }else {
-                    GuiCreate.sendUserMenu(player);
-                }
-            }else {
-                sender.sendMessage("请在游戏内输入！");
-            }
-            return true;
-        }else if (command.getName().equals("kadmin")) {
-            if (sender instanceof Player) {
-                Player player = ((Player) sender).getPlayer();
-                if (args.length > 0) {
-                    switch (args[0]) {
-                        case "设置出生点": case "setspawn": case "SetSpawn":
-                            this.roomSetSpawn(player, getRoomConfig(player.getLevel()));
-                            sender.sendMessage("§a默认出生点设置成功！");
-                            break;
-                        case "添加随机出生点": case "addrandomspawn":
-                            this.roomAddRandomSpawn(player, getRoomConfig(player.getLevel()));
-                            sender.sendMessage("§a随机出生点添加成功！");
-                            break;
-                        case "添加金锭生成点": case "addGoldSpawn":
-                            this.roomAddGoldSpawn(player, getRoomConfig(player.getLevel()));
-                            sender.sendMessage("§a金锭生成点添加成功！");
-                            break;
-                        case "设置金锭产出间隔":
-                            if (args.length == 2) {
-                                if (args[1].matches("[0-9]*")) {
-                                    this.roomSetGoldSpawnTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
-                                    sender.sendMessage("§a金锭产出间隔已设置为：" + Integer.valueOf(args[1]));
-                                }else {
-                                    sender.sendMessage("§a时间只能设置为正整数！");
-                                }
-                            }else {
-                                sender.sendMessage("§a查看帮助：/kadmin help");
-                            }
-                            break;
-                        case "设置等待时间":
-                            if (args.length == 2) {
-                                if (args[1].matches("[0-9]*")) {
-                                    this.roomSetWaitTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
-                                    sender.sendMessage("§a等待时间已设置为：" + Integer.valueOf(args[1]));
-                                }else {
-                                    sender.sendMessage("§a时间只能设置为正整数！");
-                                }
-                            }else {
-                                sender.sendMessage("§a查看帮助：/kadmin help");
-                            }
-                            break;
-                        case "设置游戏时间":
-                            if (args.length == 2) {
-                                if (args[1].matches("[0-9]*")) {
-                                    if (Integer.parseInt(args[1]) > 60) {
-                                        this.roomSetGameTime(Integer.valueOf(args[1]), getRoomConfig(player.getLevel()));
-                                        sender.sendMessage("§a游戏时间已设置为：" + Integer.valueOf(args[1]));
-                                    } else {
-                                        sender.sendMessage("§a游戏时间最小不能低于1分钟！");
-                                    }
-                                }else {
-                                    sender.sendMessage("§a时间只能设置为正整数！");
-                                }
-                            }else {
-                                sender.sendMessage("§a查看帮助：/kadmin help");
-                            }
-                            break;
-                        case "reload": case "重载":
-                            this.reLoadRooms();
-                            sender.sendMessage("§a配置重载完成！请在后台查看信息！");
-                            break;
-                        case "unload":
-                            this.unloadRooms();
-                            sender.sendMessage("§a已卸载所有房间！请在后台查看信息！");
-                            break;
-                        default:
-                            sender.sendMessage("§e killer管理--命令帮助");
-                            sender.sendMessage("§a/kadmin §e打开ui");
-                            sender.sendMessage("§a/kadmin 设置出生点 §e设置当前位置为游戏出生点");
-                            sender.sendMessage("§a/kadmin 添加金锭生成点 §e将当前位置设置为金锭生成点");
-                            sender.sendMessage("§a/kadmin 设置金锭产出间隔 数字 §e设置金锭生成间隔");
-                            sender.sendMessage("§a/kadmin 设置等待时间 数字 §e设置游戏人数足够后的等待时间");
-                            sender.sendMessage("§a/kadmin 设置游戏时间 数字 §e设置每轮游戏最长时间");
-                            sender.sendMessage("§a/kadmin reload §e重载所有房间");
-                            sender.sendMessage("§a/kadmin unload §e关闭所有房间,并卸载配置");
-                            break;
-                    }
-                }else {
-                    GuiCreate.sendAdminMenu(player);
-                }
-            }else {
-                if(args.length > 0 && args[0].equals("reload")) {
-                    this.reLoadRooms();
-                    sender.sendMessage("§a配置重载完成！");
-                }else if(args.length > 0 && args[0].equals("unload")) {
-                    this.unloadRooms();
-                    sender.sendMessage("§a已卸载所有房间！");
-                }else {
-                    sender.sendMessage("§a请在游戏内输入！");
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
     public Config getConfig() {
         return this.config;
     }
@@ -280,7 +110,7 @@ public class MurderMystery extends PluginBase {
         return this.rooms;
     }
 
-    private Config getRoomConfig(Level level) {
+    public Config getRoomConfig(Level level) {
         return getRoomConfig(level.getName());
     }
 
@@ -331,7 +161,7 @@ public class MurderMystery extends PluginBase {
     /**
      * 卸载所有房间
      */
-    private void unloadRooms() {
+    public void unloadRooms() {
         if (this.rooms.values().size() > 0) {
             Iterator<Map.Entry<String, Room>> it = this.rooms.entrySet().iterator();
             while(it.hasNext()){
@@ -350,7 +180,7 @@ public class MurderMystery extends PluginBase {
     /**
      * 重载所有房间
      */
-    private void reLoadRooms() {
+    public void reLoadRooms() {
         this.unloadRooms();
         this.loadRooms();
     }
@@ -424,7 +254,7 @@ public class MurderMystery extends PluginBase {
         }
     }
 
-    private void roomSetSpawn(Player player, Config config) {
+    public void roomSetSpawn(Player player, Config config) {
         String spawn = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ()+ ":" + player.getLevel().getName();
         String world = player.getLevel().getName();
         config.set("World", world);
@@ -432,7 +262,7 @@ public class MurderMystery extends PluginBase {
         config.save();
     }
 
-    private void roomAddRandomSpawn(Player player, Config config) {
+    public void roomAddRandomSpawn(Player player, Config config) {
         this.roomAddRandomSpawn(player.getFloorX(), player.getFloorY(), player.getFloorZ(), config);
     }
 
@@ -444,7 +274,7 @@ public class MurderMystery extends PluginBase {
         config.save();
     }
 
-    private void roomAddGoldSpawn(Player player, Config config) {
+    public void roomAddGoldSpawn(Player player, Config config) {
         this.roomAddGoldSpawn(player.getFloorX(), player.getFloorY() + 1, player.getFloorZ(), config);
     }
 
@@ -456,17 +286,17 @@ public class MurderMystery extends PluginBase {
         config.save();
     }
 
-    private void roomSetWaitTime(Integer waitTime, Config config) {
+    public void roomSetWaitTime(Integer waitTime, Config config) {
         config.set("等待时间", waitTime);
         config.save();
     }
 
-    private void roomSetGameTime(Integer gameTime, Config config) {
+    public void roomSetGameTime(Integer gameTime, Config config) {
         config.set("游戏时间", gameTime);
         config.save();
     }
 
-    private void roomSetGoldSpawnTime(Integer goldSpawnTime, Config config) {
+    public void roomSetGoldSpawnTime(Integer goldSpawnTime, Config config) {
         config.set("goldSpawnTime", goldSpawnTime);
         config.save();
     }

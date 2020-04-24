@@ -6,24 +6,11 @@ api:
 load: POSTWORLD
 author: lt_name
 loadbefore:
-  - AutoUpData
+  - EconomyAPI
+  - ScoreboardPlugin
 
-commands:
-  killer:
-    usage: /killer help
-    description: "MurderMystery 游戏命令"
-    permission: MurderMystery.a
-    aliases:
-      - 杀手
-      - MurderMystery
-  kadmin:
-    usage: /kadmin help
-    description: "MurderMystery 管理命令"
-    permission: MurderMystery.b
-    aliases:
-      - 杀手管理
 permissions:
-  MurderMystery.a:
+  MurderMystery.all:
     default: true
-  MurderMystery.b:
+  MurderMystery.op:
     default: op
