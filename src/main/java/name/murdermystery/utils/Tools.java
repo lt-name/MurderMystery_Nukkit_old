@@ -2,7 +2,6 @@ package name.murdermystery.utils;
 
 import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.data.Skin;
@@ -18,9 +17,9 @@ import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.network.protocol.PlaySoundPacket;
 import cn.nukkit.network.protocol.PlayerSkinPacket;
-import cn.nukkit.network.protocol.RemoveEntityPacket;
 import cn.nukkit.utils.DyeColor;
 import name.murdermystery.entity.EntityPlayerCorpse;
+import name.murdermystery.entity.EntitySword;
 import name.murdermystery.room.Room;
 
 import java.util.Random;
@@ -186,11 +185,11 @@ public class Tools {
     public static void cleanEntity(Level level, boolean clearAll) {
         for (Entity entity : level.getEntities()) {
             if (!(entity instanceof Player)) {
-                if (entity instanceof EntityPlayerCorpse) {
+                if (entity instanceof EntityPlayerCorpse || entity instanceof EntitySword) {
                     if (clearAll) {
-                        RemoveEntityPacket packet = new RemoveEntityPacket();
+/*                        RemoveEntityPacket packet = new RemoveEntityPacket();
                         packet.eid = entity.getId();
-                        Server.broadcastPacket(Server.getInstance().getOnlinePlayers().values(), packet);
+                        Server.broadcastPacket(Server.getInstance().getOnlinePlayers().values(), packet);*/
                         entity.kill();
                         entity.close();
                     }

@@ -177,7 +177,6 @@ public class MurderListener implements Listener {
             ent.setPosition(new Vector3(player.getFloorX(), Tools.getFloorY(player), player.getFloorZ()));
             ent.setGliding(true);
             ent.setRotation(player.getYaw(), 0);
-            ent.setImmobile(true);
             ent.spawnToAll();
             ent.updateMovement();
         }
