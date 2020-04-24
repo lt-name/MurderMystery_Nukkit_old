@@ -95,6 +95,7 @@ public class MurderMystery extends PluginBase {
         this.rooms.clear();
         this.roomConfigs.clear();
         this.skins.clear();
+        getServer().getScheduler().cancelAllTasks();
         getLogger().info("§c插件卸载完成！");
     }
 
@@ -175,6 +176,7 @@ public class MurderMystery extends PluginBase {
         if (this.roomConfigs.values().size() > 0) {
             this.roomConfigs.clear();
         }
+        getServer().getScheduler().cancelAllTasks();
     }
 
     /**

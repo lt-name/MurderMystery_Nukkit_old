@@ -135,22 +135,24 @@ public class MurderListener implements Listener {
      */
     @EventHandler
     public void onPlayerDeath(MurderPlayerDeathEvent event) {
-        Player player = event.getPlayer();
-        Room room = event.getRoom();
-        if (player == null || room == null) {
-            return;
+        if (!event.isCancelled()) {
+            Player player = event.getPlayer();
+            Room room = event.getRoom();
+            if (player == null || room == null) {
+                return;
+            }
+            player.getInventory().clearAll();
+            player.setAllowModifyWorld(true);
+            player.setAdventureSettings((new AdventureSettings(player)).set(AdventureSettings.Type.ALLOW_FLIGHT, true));
+            player.setGamemode(3);
+            if (room.getPlayerMode(player) == 2) {
+                room.getLevel().dropItem(player, Tools.getMurderItem(1));
+            }
+            room.addPlaying(player, 0);
+            Tools.setPlayerInvisible(player, true);
+            Tools.addSound(room, Sound.GAME_PLAYER_HURT);
+            Server.getInstance().getPluginManager().callEvent(new MurderPlayerCorpseSpawnEvent(room, player));
         }
-        player.getInventory().clearAll();
-        player.setAllowModifyWorld(true);
-        player.setAdventureSettings((new AdventureSettings(player)).set(AdventureSettings.Type.ALLOW_FLIGHT, true));
-        player.setGamemode(3);
-        if (room.getPlayerMode(player) == 2) {
-            room.getLevel().dropItem(player, Tools.getMurderItem(1));
-        }
-        room.addPlaying(player, 0);
-        Tools.setPlayerInvisible(player, true);
-        Tools.addSound(room, Sound.GAME_PLAYER_HURT);
-        Server.getInstance().getPluginManager().callEvent(new MurderPlayerCorpseSpawnEvent(room, player));
     }
 
     /**
@@ -159,23 +161,26 @@ public class MurderListener implements Listener {
      */
     @EventHandler
     public void onCorpseSpawn(MurderPlayerCorpseSpawnEvent event) {
-        Player player = event.getPlayer();
-        Room room = event.getRoom();
-        if (player == null || room == null) {
-            return;
+        if (!event.isCancelled()) {
+            Player player = event.getPlayer();
+            Room room = event.getRoom();
+            if (player == null || room == null) {
+                return;
+            }
+            CompoundTag nbt = EntityPlayerCorpse.getDefaultNBT(player);
+            nbt.putCompound("Skin", new CompoundTag()
+                    .putByteArray("Data", room.getPlayerSkin(player).getSkinData().data)
+                    .putString("ModelId", room.getPlayerSkin(player).getSkinId()));
+            nbt.putFloat("Scale", -1.0F);
+            EntityPlayerCorpse ent = new EntityPlayerCorpse(player.getChunk(), nbt);
+            ent.setSkin(room.getPlayerSkin(player));
+            ent.setPosition(new Vector3(player.getFloorX(), Tools.getFloorY(player), player.getFloorZ()));
+            ent.setGliding(true);
+            ent.setRotation(player.getYaw(), 0);
+            ent.setImmobile(true);
+            ent.spawnToAll();
+            ent.updateMovement();
         }
-        CompoundTag nbt = EntityPlayerCorpse.getDefaultNBT(player);
-        nbt.putCompound("Skin",new CompoundTag()
-                .putByteArray("Data", room.getPlayerSkin(player).getSkinData().data)
-                .putString("ModelId", room.getPlayerSkin(player).getSkinId()));
-        nbt.putFloat("Scale", -1.0F);
-        EntityPlayerCorpse ent = new EntityPlayerCorpse(player.getChunk(), nbt);
-        ent.setSkin(room.getPlayerSkin(player));
-        ent.setPosition(new Vector3(player.getFloorX(), Tools.getFloorY(player), player.getFloorZ()));
-        ent.setGliding(true);
-        ent.setRotation(player.getYaw(), 0);
-        ent.setImmobile(true);
-        ent.spawnToAll();
     }
 
 }

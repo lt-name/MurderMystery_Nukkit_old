@@ -242,7 +242,7 @@ public class PlayerGameListener implements Listener {
                     Effect effect = Effect.getEffect(1);
                     effect.setAmplifier(2);
                     effect.setVisible(false);
-                    effect.setDuration(5);
+                    effect.setDuration(40);
                     player.addEffect(effect);
                     room.effectCD = 10;
                 }
@@ -277,7 +277,12 @@ public class PlayerGameListener implements Listener {
                 if (room.getPlayerMode(player) == 3) {
                     CompoundTag tag = player.getInventory().getItemInHand() == null ? null : player.getInventory().getItemInHand().getNamedTag();
                     if (tag != null && tag.getBoolean("isMurderItem") && tag.getInt("MurderType") == 2) {
-                        Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new SwordMoveTask(room, player));
+                        if (room.swordCD < 1) {
+                            Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new SwordMoveTask(room, player));
+                            room.swordCD = 5;
+                        }else {
+                            player.sendMessage("§a飞剑冷却中");
+                        }
                     }
                 }
                 return;
