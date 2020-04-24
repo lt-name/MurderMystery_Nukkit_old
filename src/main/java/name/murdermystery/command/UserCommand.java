@@ -10,7 +10,7 @@ import name.murdermystery.ui.GuiCreate;
 public class UserCommand extends Command {
 
     MurderMystery murderMystery = MurderMystery.getInstance();
-    private String name;
+    public final String name;
 
     public UserCommand(String name) {
         super(name, "MurderMystery 游戏命令", "/killer help");

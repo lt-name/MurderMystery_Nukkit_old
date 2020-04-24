@@ -9,7 +9,7 @@ import name.murdermystery.ui.GuiCreate;
 public class AdminCommand extends Command {
 
     MurderMystery murderMystery = MurderMystery.getInstance();
-    private String name;
+    private final String name;
 
     public AdminCommand(String name) {
         super(name, "MurderMystery 管理命令", "/kadmin help");
