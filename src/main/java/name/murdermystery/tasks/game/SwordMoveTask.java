@@ -45,7 +45,7 @@ public class SwordMoveTask extends AsyncTask {
         try {
             for (double[] position : this.math) {
                 Position p = new Position(position[0], position[1], position[2], this.sword.level);
-                Thread.sleep(80);
+                Thread.sleep(60);
                 this.sword.setPosition(p);
                 this.sword.updateMovement();
                 for (Entity entity : p.level.getEntities()) {

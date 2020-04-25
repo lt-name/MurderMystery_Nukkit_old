@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class TimeTask extends PluginTask<MurderMystery> {
 
-    private Room room;
+    private final Room room;
 
     public TimeTask(MurderMystery owner, Room room) {
         super(owner);
@@ -29,11 +29,11 @@ public class TimeTask extends PluginTask<MurderMystery> {
             this.cancel();
         }
         //计时与胜利判断
-        if (this.room.gameTime > 0) {
-            this.room.gameTime--;
+        if (room.gameTime > 0) {
+            room.gameTime--;
             int playerNumber = 0;
             boolean killer = false;
-            for (Integer integer : this.room.getPlayers().values()) {
+            for (Integer integer : room.getPlayers().values()) {
                 if (integer != 0) {
                     playerNumber++;
                 }
@@ -52,14 +52,14 @@ public class TimeTask extends PluginTask<MurderMystery> {
             victory(1);
         }
         //开局10秒后给物品
-        if (this.room.gameTime >= this.room.getGameTime()-10) {
-            int time = this.room.gameTime - (this.room.getGameTime() - 10);
+        if (room.gameTime >= room.getGameTime()-10) {
+            int time = room.gameTime - (room.getGameTime() - 10);
             if (time <= 5 && time >= 1) {
                 this.sendMessage("§e杀手将在" + time + "秒后拿到剑！");
-                Tools.addSound(this.room, Sound.RANDOM_CLICK);
+                Tools.addSound(room, Sound.RANDOM_CLICK);
             }else if (time < 1) {
                 this.sendMessage("§e杀手已拿到剑！");
-                for (Map.Entry<Player, Integer> entry : this.room.getPlayers().entrySet()) {
+                for (Map.Entry<Player, Integer> entry : room.getPlayers().entrySet()) {
                     if (entry.getValue() == 2) {
                         Tools.giveItem(entry.getKey(), 1);
                     }else if (entry.getValue() == 3) {
@@ -68,9 +68,12 @@ public class TimeTask extends PluginTask<MurderMystery> {
                 }
             }
         }
-        //杀手加速cd计算
+        //杀手CD计算
         if (room.effectCD > 0) {
             room.effectCD--;
+        }
+        if (room.swordCD > 0) {
+            room.swordCD--;
         }
     }
 

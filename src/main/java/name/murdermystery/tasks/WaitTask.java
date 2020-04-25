@@ -1,7 +1,6 @@
 package name.murdermystery.tasks;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.level.Sound;
 import cn.nukkit.scheduler.PluginTask;
 import name.murdermystery.MurderMystery;
@@ -11,7 +10,7 @@ import name.murdermystery.utils.Tools;
 
 public class WaitTask extends PluginTask<MurderMystery> {
 
-    private Room room;
+    private final Room room;
 
     public WaitTask(MurderMystery owner, Room room) {
         super(owner);
@@ -20,6 +19,9 @@ public class WaitTask extends PluginTask<MurderMystery> {
 
     @Override
     public void onRun(int i) {
+        if (this.room.getMode() != 1) {
+            this.cancel();
+        }
         if (this.room.getPlayers().size() >= 5) {
             if (this.room.getMode() != 1) {
                 this.cancel();
@@ -34,7 +36,7 @@ public class WaitTask extends PluginTask<MurderMystery> {
                     Tools.addSound(this.room, Sound.RANDOM_CLICK);
                 }
             }else {
-                Server.getInstance().getPluginManager().callEvent(new MurderRoomStartEvent(this.room));
+                owner.getServer().getPluginManager().callEvent(new MurderRoomStartEvent(this.room));
                 this.cancel();
             }
         }else if (this.room.getPlayers().size() > 0) {
@@ -42,13 +44,16 @@ public class WaitTask extends PluginTask<MurderMystery> {
                 this.room.waitTime = this.room.getWaitTime();
             }
             if (MurderMystery.getInstance().getConfig().getBoolean("底部显示信息", true)) {
-                this.sendActionBar("§c等待玩家加入中,当前已有: " + this.room.getPlayers().size() + " 位玩家");
+                this.sendActionBar("§c等待玩家加入中,当前已有: " + room.getPlayers().size() + " 位玩家");
             }
+        }else {
+            this.room.setMode(0);
+            this.cancel();
         }
     }
 
     private void sendActionBar(String string) {
-        for (Player player : this.room.getPlayers().keySet()) {
+        for (Player player : room.getPlayers().keySet()) {
             player.sendActionBar(string);
         }
     }

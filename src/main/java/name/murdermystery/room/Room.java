@@ -15,14 +15,14 @@ import name.murdermystery.utils.Tools;
 
 import java.util.*;
 
-
 /**
  * 房间实体类
  */
 public class Room {
 
     private int mode; //0等待重置 1玩家等待中 2玩家游戏中 3胜利结算中
-    public int waitTime, gameTime, victoryTime, goldSpawnTime, effectCD; //秒
+    public int waitTime, gameTime; //秒
+    public int effectCD, swordCD; //杀手技能CD
     private int setWaitTime, setGameTime, setGoldSpawnTime;
     private LinkedHashMap<Player, Integer> players = new LinkedHashMap<>(); //0未分配 1平民 2侦探 3杀手
     private LinkedHashMap<Player, Integer> skinNumber = new LinkedHashMap<>(); //玩家使用皮肤编号，用于防止重复使用
@@ -31,6 +31,7 @@ public class Room {
     private String spawn, world;
     private List<String> randomSpawn;
     public ArrayList<ArrayList<Vector3>> placeBlocks = new ArrayList<>();
+    public ArrayList<String> task = new ArrayList<>();
 
     /**
      * 初始化
@@ -45,8 +46,6 @@ public class Room {
         this.randomSpawn = config.getStringList("randomSpawn");
         this.goldSpawn = config.getStringList("goldSpawn");
         this.setGoldSpawnTime = config.getInt("goldSpawnTime", 15);
-        this.goldSpawnTime = this.setGoldSpawnTime;
-        this.victoryTime = 10;
         this.world = config.getString("World", null);
         this.effectCD = 0;
         this.mode = 0;
@@ -104,8 +103,6 @@ public class Room {
         this.placeBlocks.clear();
         this.waitTime = this.setWaitTime;
         this.gameTime = this.setGameTime;
-        this.victoryTime = 10;
-        this.goldSpawnTime = this.setGoldSpawnTime;
         this.effectCD = 0;
         this.skinNumber.clear();
         this.skinCache.clear();
