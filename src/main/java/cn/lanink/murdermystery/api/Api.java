@@ -1,4 +1,4 @@
-package name.murdermystery.api;
+package cn.lanink.murdermystery.api;
 
 import cn.lanink.murdermystery.MurderMystery;
 import cn.lanink.murdermystery.room.Room;
@@ -10,7 +10,6 @@ import java.util.LinkedHashMap;
 public class Api {
 
     /**
-     * @deprecated
      * @return 房间列表
      */
     public static LinkedHashMap<String, Room> getRooms() {
@@ -18,7 +17,6 @@ public class Api {
     }
 
     /**
-     * @deprecated
      * @param level 世界
      * @return 房间
      */
@@ -27,7 +25,6 @@ public class Api {
     }
 
     /**
-     * @deprecated
      * @param level 世界名称
      * @return 房间
      */
@@ -36,7 +33,6 @@ public class Api {
     }
 
     /**
-     * @deprecated
      * @param level 世界
      * @return 是否为游戏房间
      */
@@ -44,9 +40,6 @@ public class Api {
         return isRoomLevel(level.getName());
     }
 
-    /**
-     * @deprecated
-     */
     public static boolean isRoomLevel(String level) {
         return getRooms().containsKey(level);
     }
@@ -61,7 +54,6 @@ public class Api {
     }
 
     /**
-     * @deprecated
      * @param player 玩家
      * @return 玩家身份
      */
@@ -86,7 +78,6 @@ public class Api {
     }
 
     /**
-     * @deprecated
      * 根据玩家获取倒计时
      * @param player 玩家
      * @return 剩余时间
@@ -105,7 +96,6 @@ public class Api {
     }
 
     /**
-     * @deprecated
      * 获取存活玩家数量
      * @param player 玩家
      * @return 存活玩家数量
@@ -130,7 +120,6 @@ public class Api {
     }
 
     /**
-     * @deprecated
      * 获取房间状态
      * @param player 玩家
      * @return 房间状态
