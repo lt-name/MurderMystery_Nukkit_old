@@ -13,7 +13,7 @@ public class UserCommand extends Command {
     public final String name;
 
     public UserCommand(String name) {
-        super(name, "MurderMystery 游戏命令", "/killer help");
+        super(name, "MurderMystery 游戏命令", "/" + name + " help");
         this.name = name;
         this.setPermission("MurderMystery.all");
     }

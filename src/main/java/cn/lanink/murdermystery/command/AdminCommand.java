@@ -12,7 +12,7 @@ public class AdminCommand extends Command {
     private final String name;
 
     public AdminCommand(String name) {
-        super(name, "MurderMystery 管理命令", "/kadmin help");
+        super(name, "MurderMystery 管理命令", "/" + name + " help");
         this.name = name;
         this.setPermission("MurderMystery.op");
         this.setPermissionMessage("§c你没有权限");
