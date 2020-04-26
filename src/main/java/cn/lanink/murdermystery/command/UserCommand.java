@@ -53,12 +53,13 @@ public class UserCommand extends Command {
                                 } else {
                                     room.joinRoom(player);
                                 }
+                                return true;
                             }else {
                                 commandSender.sendMessage("§a该房间不存在！");
+                                return true;
                             }
-                        }else {
-                            commandSender.sendMessage("§a暂无房间可用！");
                         }
+                        commandSender.sendMessage("§a暂无房间可用！");
                         return true;
                     case "quit": case "退出":
                         for (Room room : murderMystery.getRooms().values()) {
