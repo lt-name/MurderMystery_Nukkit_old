@@ -7,6 +7,7 @@ import cn.lanink.murdermystery.tasks.WaitTask;
 import cn.lanink.murdermystery.utils.Tools;
 import cn.nukkit.Player;
 import cn.nukkit.level.Sound;
+import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.scheduler.PluginTask;
 import me.onebone.economyapi.EconomyAPI;
 
@@ -17,6 +18,7 @@ import java.util.Map;
  */
 public class TimeTask extends PluginTask<MurderMystery> {
 
+    private final String taskName = "TimeTask";
     private final Room room;
 
     public TimeTask(MurderMystery owner, Room room) {
@@ -75,6 +77,9 @@ public class TimeTask extends PluginTask<MurderMystery> {
         if (room.swordCD > 0) {
             room.swordCD--;
         }
+        if (room.scanCD > 0) {
+            room.scanCD--;
+        }
     }
 
     private void sendMessage(String string) {
@@ -84,34 +89,43 @@ public class TimeTask extends PluginTask<MurderMystery> {
     }
 
     private void victory(int victoryMode) {
-        if (this.room.getPlayers().values().size() > 0) {
-            this.room.setMode(3);
-            for (Map.Entry<Player, Integer> entry : this.room.getPlayers().entrySet()) {
-                if (victoryMode == 3) {
-                    entry.getKey().sendTitle("§a杀手获得胜利！", "", 10, 30, 10);
-                    if (entry.getValue() == 3) {
-                        int money = owner.getConfig().getInt("杀手胜利奖励", 0);
-                        if (money > 0) {
-                            EconomyAPI.getInstance().addMoney(entry.getKey(), money);
-                            entry.getKey().sendMessage("§a你获得了胜利奖励: " + money + " 元");
+        if (!this.room.task.contains(this.taskName)) {
+            this.room.task.add(this.taskName);
+            owner.getServer().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
+                @Override
+                public void onRun() {
+                    if (room.getPlayers().values().size() > 0) {
+                        room.setMode(3);
+                        for (Map.Entry<Player, Integer> entry : room.getPlayers().entrySet()) {
+                            if (victoryMode == 3) {
+                                entry.getKey().sendTitle("§a杀手获得胜利！", "", 10, 30, 10);
+                                if (entry.getValue() == 3) {
+                                    int money = owner.getConfig().getInt("杀手胜利奖励", 0);
+                                    if (money > 0) {
+                                        EconomyAPI.getInstance().addMoney(entry.getKey(), money);
+                                        entry.getKey().sendMessage("§a你获得了胜利奖励: " + money + " 元");
+                                    }
+                                }
+                                continue;
+                            }else if (entry.getValue() == 1 || entry.getValue() == 2) {
+                                int money = owner.getConfig().getInt("平民胜利奖励", 0);
+                                if (money > 0) {
+                                    EconomyAPI.getInstance().addMoney(entry.getKey(), money);
+                                    entry.getKey().sendMessage("§a你获得了胜利奖励: " + money + " 元");
+                                }
+                            }
+                            entry.getKey().sendTitle("§a平民和侦探获得胜利！", "", 10, 30, 10);
                         }
+                        owner.getServer().getScheduler().scheduleRepeatingTask(
+                                MurderMystery.getInstance(), new VictoryTask(MurderMystery.getInstance(), room, victoryMode), 20,true);
+                    }else {
+                        room.setMode(1);
+                        owner.getServer().getScheduler().scheduleRepeatingTask(
+                                MurderMystery.getInstance(), new WaitTask(MurderMystery.getInstance(), room), 20,true);
                     }
-                    continue;
-                }else if (entry.getValue() == 1 || entry.getValue() == 2) {
-                    int money = owner.getConfig().getInt("平民胜利奖励", 0);
-                    if (money > 0) {
-                        EconomyAPI.getInstance().addMoney(entry.getKey(), money);
-                        entry.getKey().sendMessage("§a你获得了胜利奖励: " + money + " 元");
-                    }
+                    room.task.remove(taskName);
                 }
-                entry.getKey().sendTitle("§a平民和侦探获得胜利！", "", 10, 30, 10);
-            }
-            owner.getServer().getScheduler().scheduleRepeatingTask(
-                    MurderMystery.getInstance(), new VictoryTask(MurderMystery.getInstance(), this.room, victoryMode), 20,true);
-        }else {
-            this.room.setMode(1);
-            owner.getServer().getScheduler().scheduleRepeatingTask(
-                    MurderMystery.getInstance(), new WaitTask(MurderMystery.getInstance(), this.room), 20,true);
+            });
         }
         this.cancel();
     }

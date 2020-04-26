@@ -40,6 +40,7 @@ public class Tools {
                 break;
             case 2:
                 player.getInventory().setItem(1, getMurderItem(tagNumber));
+                player.getInventory().setItem(2, getMurderItem(3));
                 break;
             case 10:
                 player.getInventory().setItem(8, getMurderItem(tagNumber));
@@ -52,6 +53,11 @@ public class Tools {
         }
     }
 
+    /**
+     * 根据编号获取物品
+     * @param tagNumber 道具编号
+     * @return 物品
+     */
     public static Item getMurderItem(int tagNumber) {
         Item item;
         switch (tagNumber) {
@@ -69,7 +75,15 @@ public class Tools {
                         .putBoolean("isMurderItem", true)
                         .putInt("MurderType", 2));
                 item.setCustomName("§c杀手之剑");
-                item.setLore("杀手之剑", "提示:", "切换到杀手之剑时会获得短暂加速");
+                item.setLore("杀手之剑", "提示:", "切换到杀手之剑时会获得短暂加速", "点击屏幕可使用飞剑");
+                return item;
+            case 3:
+                item = Item.get(395, 0, 1);
+                item.setNamedTag(new CompoundTag()
+                        .putBoolean("isMurderItem", true)
+                        .putInt("MurderType", 3));
+                item.setCustomName("§c定位器");
+                item.setLore("定位器", "提示:", "使用后会显示所有平民/侦探的位置", "这将持续5分钟", "(只有你能看见)");
                 return item;
             case 10:
                 item = Item.get(241, 14, 1);
@@ -78,6 +92,12 @@ public class Tools {
                         .putInt("MurderType", 10));
                 item.setCustomName("§c退出房间");
                 item.setLore("手持点击,即可退出房间");
+                return item;
+            case 20:
+                item = Item.get(262, 0, 1);
+                item.setNamedTag(new CompoundTag()
+                        .putBoolean("isMurderItem", true)
+                        .putInt("MurderType", 20));
                 return item;
             case 21:
                 item = Item.get(373, 0, 1);

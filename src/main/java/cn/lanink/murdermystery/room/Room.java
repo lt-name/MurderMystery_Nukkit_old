@@ -22,14 +22,13 @@ public class Room {
 
     private int mode; //0等待重置 1玩家等待中 2玩家游戏中 3胜利结算中
     public int waitTime, gameTime; //秒
-    public int effectCD, swordCD; //杀手技能CD
+    public int effectCD, swordCD, scanCD; //杀手技能CD
     private int setWaitTime, setGameTime, setGoldSpawnTime;
     private LinkedHashMap<Player, Integer> players = new LinkedHashMap<>(); //0未分配 1平民 2侦探 3杀手
     private LinkedHashMap<Player, Integer> skinNumber = new LinkedHashMap<>(); //玩家使用皮肤编号，用于防止重复使用
     private LinkedHashMap<Player, Skin> skinCache = new LinkedHashMap<>(); //缓存玩家皮肤，用于退出房间时还原
-    private List<String> goldSpawn;
+    private List<String> goldSpawn, randomSpawn;
     private String spawn, world;
-    private List<String> randomSpawn;
     public ArrayList<ArrayList<Vector3>> placeBlocks = new ArrayList<>();
     public ArrayList<String> task = new ArrayList<>();
 
@@ -39,15 +38,13 @@ public class Room {
      */
     public Room(Config config) {
         this.setWaitTime = config.getInt("等待时间", 120);
-        this.waitTime = this.setWaitTime;
         this.setGameTime = config.getInt("游戏时间", 600);
-        this.gameTime = this.setGameTime;
         this.spawn = config.getString("出生点", null);
         this.randomSpawn = config.getStringList("randomSpawn");
         this.goldSpawn = config.getStringList("goldSpawn");
         this.setGoldSpawnTime = config.getInt("goldSpawnTime", 15);
         this.world = config.getString("World", null);
-        this.effectCD = 0;
+        this.initTime();
         this.mode = 0;
     }
 
@@ -58,6 +55,17 @@ public class Room {
         this.setMode(1);
         Server.getInstance().getScheduler().scheduleRepeatingTask(
                 MurderMystery.getInstance(), new WaitTask(MurderMystery.getInstance(), this), 20,true);
+    }
+
+    /**
+     * 初始化时间参数
+     */
+    public void initTime() {
+        this.waitTime = this.setWaitTime;
+        this.gameTime = this.setGameTime;
+        this.effectCD = 0;
+        this.swordCD = 0;
+        this.scanCD = 0;
     }
 
     /**
@@ -101,9 +109,7 @@ public class Room {
         }
         this.placeBlocks.forEach(list -> list.forEach(vector3 -> getLevel().setBlock(vector3, Block.get(0))));
         this.placeBlocks.clear();
-        this.waitTime = this.setWaitTime;
-        this.gameTime = this.setGameTime;
-        this.effectCD = 0;
+        this.initTime();
         this.skinNumber.clear();
         this.skinCache.clear();
         Tools.cleanEntity(this.getLevel(), true);

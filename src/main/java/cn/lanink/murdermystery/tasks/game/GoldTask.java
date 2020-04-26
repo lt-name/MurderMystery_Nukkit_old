@@ -41,8 +41,8 @@ public class GoldTask extends PluginTask<MurderMystery> {
         }else {
             this.goldSpawnTime--;
         }
-        if (!this.room.task.contains(taskName)) {
-            this.room.task.add(taskName);
+        if (!this.room.task.contains(this.taskName)) {
+            this.room.task.add(this.taskName);
             owner.getServer().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
                 @Override
                 public void onRun() {

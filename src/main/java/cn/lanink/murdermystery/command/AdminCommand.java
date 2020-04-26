@@ -86,7 +86,7 @@ public class AdminCommand extends Command {
                             commandSender.sendMessage("§a已卸载所有房间！请在后台查看信息！");
                             return true;
                         default:
-                            commandSender.sendMessage("§e killer管理--命令帮助");
+                            commandSender.sendMessage("§eMurderMystery--命令帮助");
                             commandSender.sendMessage("§a/" + name + " §e打开ui");
                             commandSender.sendMessage("§a/" + name + " 设置出生点 §e设置当前位置为游戏出生点");
                             commandSender.sendMessage("§a/" + name + " 添加金锭生成点 §e将当前位置设置为金锭生成点");
@@ -117,8 +117,8 @@ public class AdminCommand extends Command {
             }else {
                 commandSender.sendMessage("§a请在游戏内输入！");
             }
+            return true;
         }
-        return true;
     }
 
 }

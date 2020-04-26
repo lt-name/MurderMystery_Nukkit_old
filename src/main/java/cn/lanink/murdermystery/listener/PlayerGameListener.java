@@ -3,6 +3,7 @@ package cn.lanink.murdermystery.listener;
 import cn.lanink.murdermystery.MurderMystery;
 import cn.lanink.murdermystery.event.MurderPlayerDamageEvent;
 import cn.lanink.murdermystery.room.Room;
+import cn.lanink.murdermystery.tasks.game.ScanTask;
 import cn.lanink.murdermystery.tasks.game.SwordMoveTask;
 import cn.lanink.murdermystery.utils.Tools;
 import cn.nukkit.Player;
@@ -276,12 +277,21 @@ public class PlayerGameListener implements Listener {
             if (event.getAction() == PlayerInteractEvent.Action.RIGHT_CLICK_AIR) {
                 if (room.getPlayerMode(player) == 3) {
                     CompoundTag tag = player.getInventory().getItemInHand() == null ? null : player.getInventory().getItemInHand().getNamedTag();
-                    if (tag != null && tag.getBoolean("isMurderItem") && tag.getInt("MurderType") == 2) {
-                        if (room.swordCD < 1) {
-                            Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new SwordMoveTask(room, player));
-                            room.swordCD = 5;
-                        }else {
-                            player.sendMessage("§a飞剑冷却中");
+                    if (tag != null && tag.getBoolean("isMurderItem")) {
+                        if (tag.getInt("MurderType") == 2) {
+                            if (room.swordCD < 1) {
+                                Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new SwordMoveTask(room, player));
+                                room.swordCD = 5;
+                            }else {
+                                player.sendMessage("§a飞剑冷却中");
+                            }
+                        }else if (tag.getInt("MurderType") == 3) {
+                            if (room.scanCD < 1) {
+                                Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new ScanTask(room, player));
+                                room.scanCD = 60;
+                            }else {
+                                player.sendMessage("§a定位冷却中");
+                            }
                         }
                     }
                 }

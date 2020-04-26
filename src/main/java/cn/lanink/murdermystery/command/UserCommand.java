@@ -78,7 +78,7 @@ public class UserCommand extends Command {
                         commandSender.sendMessage(String.valueOf(list));
                         return true;
                     default:
-                        commandSender.sendMessage("§e/" + name + "--命令帮助");
+                        commandSender.sendMessage("§eMurderMystery--命令帮助");
                         commandSender.sendMessage("§a/" + name + " §e打开ui");
                         commandSender.sendMessage("§a/" + name + " join 房间名称 §e加入游戏");
                         commandSender.sendMessage("§a/" + name + " quit §e退出游戏");
@@ -87,11 +87,12 @@ public class UserCommand extends Command {
                 }
             }else {
                 GuiCreate.sendUserMenu(player);
+                return true;
             }
         }else {
             commandSender.sendMessage("请在游戏内输入！");
+            return true;
         }
-        return true;
     }
 
 }
