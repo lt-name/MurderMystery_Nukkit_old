@@ -1,6 +1,6 @@
 插件命令: killer
 管理命令: kadmin
-计分板显示信息: true
+计分板显示信息: false
 底部显示信息: true
 #奖励金钱（EconomyAPI）
 杀手胜利奖励: 200

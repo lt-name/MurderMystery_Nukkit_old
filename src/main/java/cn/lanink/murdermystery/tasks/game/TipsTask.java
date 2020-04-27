@@ -6,10 +6,10 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.scheduler.PluginTask;
-import de.theamychan.scoreboard.api.ScoreboardAPI;
-import de.theamychan.scoreboard.network.DisplaySlot;
-import de.theamychan.scoreboard.network.Scoreboard;
-import de.theamychan.scoreboard.network.ScoreboardDisplay;
+import tip.messages.ScoreBoardMessage;
+import tip.utils.Api;
+
+import java.util.LinkedList;
 
 
 /**
@@ -18,10 +18,19 @@ import de.theamychan.scoreboard.network.ScoreboardDisplay;
 public class TipsTask extends PluginTask<MurderMystery> {
 
     private final Room room;
+    private final boolean scoreBoard;
+    private ScoreBoardMessage scoreBoardMessage;
 
     public TipsTask(MurderMystery owner, Room room) {
         super(owner);
         this.room = room;
+        this.scoreBoard = MurderMystery.getInstance().getConfig().getBoolean("计分板显示信息", false);
+        if (this.scoreBoard) {
+            LinkedList<String> ms = new LinkedList<>();
+            this.scoreBoardMessage = new ScoreBoardMessage(
+                    room.getLevel().getName(), true, "§e密室杀人", ms);
+
+        }
     }
 
     @Override
@@ -55,17 +64,14 @@ public class TipsTask extends PluginTask<MurderMystery> {
                                 mode = "死亡";
                                 break;
                         }
-                        if (MurderMystery.getInstance().getConfig().getBoolean("计分板显示信息", true)) {
-                            Scoreboard scoreboard = ScoreboardAPI.createScoreboard();
-                            ScoreboardDisplay scoreboardDisplay = scoreboard.addDisplay(
-                                    DisplaySlot.SIDEBAR, "MurderMystery", "§eMurderMystery");
-                            scoreboardDisplay.addLine("§a当前身份： §l§e" + mode + " ", 0);
-                            scoreboardDisplay.addLine("§a剩余时间： §l§e" + room.gameTime + " ", 1);
-                            scoreboardDisplay.addLine("§a存活人数： §l§e" + playerNumber + " ", 2);
-                            if (room.getPlayerMode(player) == 3) {
-                                scoreboardDisplay.addLine("§a加速冷却： §l§e" + room.effectCD + " ", 3);
-                            }
-                            scoreboard.showFor(player);
+                        if (scoreBoard) {
+                            LinkedList<String> ms = new LinkedList<>();
+                            ms.add("§a当前身份： §l§e" + mode + " ");
+                            ms.add("§a剩余时间： §l§e" + room.gameTime + " ");
+                            ms.add("§a剩余时间： §l§e" + room.gameTime + " ");
+                            ms.add("§a存活人数： §l§e" + playerNumber + " ");
+                            scoreBoardMessage.setMessages(ms);
+                            Api.setPlayerShowMessage(player.getName(), scoreBoardMessage);
                         }
                         if (MurderMystery.getInstance().getConfig().getBoolean("底部显示信息", true)) {
                             if (room.getPlayerMode(player) == 3 && room.effectCD > 0) {

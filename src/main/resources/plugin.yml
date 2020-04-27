@@ -7,7 +7,7 @@ load: POSTWORLD
 author: lt_name
 loadbefore:
   - EconomyAPI
-  - ScoreboardPlugin
+  - Tips
 
 permissions:
   MurderMystery.all:
