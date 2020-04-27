@@ -43,7 +43,8 @@ public class MurderListener implements Listener {
                     player.teleport(new Vector3(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])));
                 }else {
                     x=0;
-                    player.teleport(room.getSpawn());
+                    String[] s = room.getRandomSpawn().get(0).split(":");
+                    player.teleport(new Vector3(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])));
                 }
                 x++;
             }
