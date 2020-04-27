@@ -153,9 +153,9 @@ public class Room {
             this.delPlaying(player);
         }
         if (online) {
+            player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn());
             Tools.rePlayerState(player, false);
             SavePlayerInventory.savePlayerInventory(player, true);
-            player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn());
             this.setRandomSkin(player, true);
         }else {
             this.skinNumber.remove(player);
