@@ -26,9 +26,8 @@ public class TipsTask extends PluginTask<MurderMystery> {
         this.room = room;
         this.scoreBoard = MurderMystery.getInstance().getConfig().getBoolean("计分板显示信息", false);
         if (this.scoreBoard) {
-            LinkedList<String> ms = new LinkedList<>();
             this.scoreBoardMessage = new ScoreBoardMessage(
-                    room.getLevel().getName(), true, "§e密室杀人", ms);
+                    room.getLevel().getName(), true, "§e密室杀人", new LinkedList<>());
 
         }
     }
@@ -36,6 +35,10 @@ public class TipsTask extends PluginTask<MurderMystery> {
     @Override
     public void onRun(int i) {
         if (this.room.getMode() != 2) {
+            if (room.getPlayers().values().size() > 0) {
+                room.getPlayers().keySet().forEach(
+                        player -> Api.removePlayerShowMessage(player.getName(), this.scoreBoardMessage));
+            }
             this.cancel();
         }
         Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
