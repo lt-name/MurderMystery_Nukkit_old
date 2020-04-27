@@ -23,23 +23,25 @@ public class ScanTask extends AsyncTask {
 
     @Override
     public void onRun() {
-        ArrayList<Player> players = new ArrayList<>();
+        ArrayList<EntityText> texts = new ArrayList<>();
         for (Map.Entry<Player, Integer> entry : this.room.getPlayers().entrySet()) {
             if (entry.getValue() == 1 || entry.getValue() == 2) {
-                players.add(entry.getKey());
+                EntityText text = new EntityText(entry.getKey().getChunk(), EntityText.getDefaultNBT(entry.getKey()), entry.getKey());
+                text.spawnTo(player);
+                texts.add(text);
             }
         }
-        for (Player p : players) {
-            EntityText text = new EntityText(p.getChunk(), EntityText.getDefaultNBT(p), p);
-            text.spawnTo(player);
-            Server.getInstance().getScheduler().scheduleDelayedTask(MurderMystery.getInstance(), new Task() {
-                @Override
-                public void onRun(int i) {
-                    text.close();
-                }
-            }, 100);
-        }
         this.player.sendMessage("§a已显示所有玩家位置！");
+        Server.getInstance().getScheduler().scheduleDelayedTask(MurderMystery.getInstance(), new Task() {
+            @Override
+            public void onRun(int i) {
+                if (texts.size() > 0) {
+                    for (EntityText text : texts) {
+                        text.close();
+                    }
+                }
+            }
+        }, 100);
     }
 
 }

@@ -2,6 +2,7 @@ package cn.lanink.murdermystery.utils;
 
 import cn.lanink.murdermystery.entity.EntityPlayerCorpse;
 import cn.lanink.murdermystery.entity.EntitySword;
+import cn.lanink.murdermystery.entity.EntityText;
 import cn.lanink.murdermystery.room.Room;
 import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
@@ -198,19 +199,20 @@ public class Tools {
         player.dataPacket(packet);
     }
 
+    public static void cleanEntity(Level level) {
+        cleanEntity(level, false);
+    }
+
     /**
-     * 清理所有实体
+     * 清理实体
      * @param level 世界
+     * @param cleanAll 是否清理全部
      */
-    public static void cleanEntity(Level level, boolean clearAll) {
+    public static void cleanEntity(Level level, boolean cleanAll) {
         for (Entity entity : level.getEntities()) {
             if (!(entity instanceof Player)) {
-                if (entity instanceof EntityPlayerCorpse || entity instanceof EntitySword) {
-                    if (clearAll) {
-/*                        RemoveEntityPacket packet = new RemoveEntityPacket();
-                        packet.eid = entity.getId();
-                        Server.broadcastPacket(Server.getInstance().getOnlinePlayers().values(), packet);*/
-                        entity.kill();
+                if (entity instanceof EntityPlayerCorpse || entity instanceof EntitySword || entity instanceof EntityText) {
+                    if (cleanAll) {
                         entity.close();
                     }
                 } else {
@@ -218,21 +220,6 @@ public class Tools {
                 }
             }
         }
-    }
-
-    /**
-     * 清理非玩家实体
-     * @param level 世界
-     */
-    public static void cleanEntity(Level level) {
-        cleanEntity(level, false);
-/*        for (Entity entity : level.getEntities()) {
-            if (!(entity instanceof EntityHuman)) {
-                if (!entity.getNameTag().equals("§e侦探之弓")) {
-                    entity.close();
-                }
-            }
-        }*/
     }
 
     /**
