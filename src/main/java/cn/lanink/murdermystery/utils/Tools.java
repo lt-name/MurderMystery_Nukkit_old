@@ -83,8 +83,8 @@ public class Tools {
                 item.setNamedTag(new CompoundTag()
                         .putBoolean("isMurderItem", true)
                         .putInt("MurderType", 3));
-                item.setCustomName("§c定位器");
-                item.setLore("定位器", "提示:", "使用后会显示所有平民/侦探的位置", "这将持续5分钟", "(只有你能看见)");
+                item.setCustomName("§c扫描器");
+                item.setLore("扫描出所有存活的人的位置", "提示:", "使用后会显示所有平民/侦探的位置", "这将持续5秒", "(只有你能看见)");
                 return item;
             case 10:
                 item = Item.get(241, 14, 1);
