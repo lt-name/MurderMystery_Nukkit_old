@@ -17,13 +17,14 @@ import java.util.LinkedList;
 public class TipsTask extends PluginTask<MurderMystery> {
 
     private final Room room;
-    private final boolean scoreBoard;
+    private final boolean bottom, scoreBoard;
     private ScoreBoardMessage scoreBoardMessage;
 
     public TipsTask(MurderMystery owner, Room room) {
         super(owner);
         this.room = room;
-        this.scoreBoard = MurderMystery.getInstance().getConfig().getBoolean("计分板显示信息", false);
+        this.bottom = owner.getConfig().getBoolean("底部显示信息", true);
+        this.scoreBoard = owner.getConfig().getBoolean("计分板显示信息", false);
         if (this.scoreBoard) {
             this.scoreBoardMessage = new ScoreBoardMessage(
                     room.getLevel().getName(), true, "§e密室杀人", new LinkedList<>());
@@ -66,6 +67,12 @@ public class TipsTask extends PluginTask<MurderMystery> {
                                 mode = "死亡";
                                 break;
                         }
+                        if (bottom) {
+                            if (room.getPlayerMode(player) == 3 && room.effectCD > 0) {
+                                mode += " 加速冷却剩余：" + room.effectCD + "秒";
+                            }
+                            player.sendActionBar("§a身份：" + mode + "\n§a距游戏结束还有 "+ room.gameTime + " 秒\n当前还有： §e" + playerNumber + " §a人存活");
+                        }
                         if (scoreBoard) {
                             LinkedList<String> ms = new LinkedList<>();
                             ms.add("§a当前身份： §l§e" + mode + " ");
@@ -74,12 +81,6 @@ public class TipsTask extends PluginTask<MurderMystery> {
                             ms.add("§a存活人数： §l§e" + playerNumber + " ");
                             scoreBoardMessage.setMessages(ms);
                             Api.setPlayerShowMessage(player.getName(), scoreBoardMessage);
-                        }
-                        if (MurderMystery.getInstance().getConfig().getBoolean("底部显示信息", true)) {
-                            if (room.getPlayerMode(player) == 3 && room.effectCD > 0) {
-                                mode += " 加速冷却剩余：" + room.effectCD + "秒";
-                            }
-                            player.sendActionBar("§a身份：" + mode + "\n§a距游戏结束还有 "+ room.gameTime + " 秒\n当前还有： §e" + playerNumber + " §a人存活");
                         }
                     }
                 }

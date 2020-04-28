@@ -265,7 +265,7 @@ public class PlayerGameListener implements Listener {
             return;
         }
         Room room = MurderMystery.getInstance().getRooms().getOrDefault(player.getLevel().getName(), null);
-        if (room == null) {
+        if (room == null || !room.isPlaying(player)) {
             return;
         }
         if (event.getAction() == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK ||

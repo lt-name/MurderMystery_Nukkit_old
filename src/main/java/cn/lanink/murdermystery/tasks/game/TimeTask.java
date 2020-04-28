@@ -3,7 +3,6 @@ package cn.lanink.murdermystery.tasks.game;
 import cn.lanink.murdermystery.MurderMystery;
 import cn.lanink.murdermystery.room.Room;
 import cn.lanink.murdermystery.tasks.VictoryTask;
-import cn.lanink.murdermystery.tasks.WaitTask;
 import cn.lanink.murdermystery.utils.Tools;
 import cn.nukkit.Player;
 import cn.nukkit.level.Sound;
@@ -119,9 +118,7 @@ public class TimeTask extends PluginTask<MurderMystery> {
                         owner.getServer().getScheduler().scheduleRepeatingTask(
                                 MurderMystery.getInstance(), new VictoryTask(MurderMystery.getInstance(), room, victoryMode), 20,true);
                     }else {
-                        room.setMode(1);
-                        owner.getServer().getScheduler().scheduleRepeatingTask(
-                                MurderMystery.getInstance(), new WaitTask(MurderMystery.getInstance(), room), 20,true);
+                       room.endGame();
                     }
                     room.task.remove(taskName);
                 }
