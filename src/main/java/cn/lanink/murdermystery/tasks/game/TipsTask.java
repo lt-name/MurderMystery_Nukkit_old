@@ -3,7 +3,6 @@ package cn.lanink.murdermystery.tasks.game;
 import cn.lanink.murdermystery.MurderMystery;
 import cn.lanink.murdermystery.room.Room;
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.scheduler.PluginTask;
 import tip.messages.ScoreBoardMessage;
@@ -41,7 +40,7 @@ public class TipsTask extends PluginTask<MurderMystery> {
             }
             this.cancel();
         }
-        Server.getInstance().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
+        owner.getServer().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
             @Override
             public void onRun() {
                 if (room.getPlayers().values().size() > 0) {

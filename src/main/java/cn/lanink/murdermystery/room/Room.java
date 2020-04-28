@@ -112,6 +112,7 @@ public class Room {
         this.initTime();
         this.skinNumber.clear();
         this.skinCache.clear();
+        this.task.clear();
         Tools.cleanEntity(this.getLevel(), true);
         this.mode = 0;
     }

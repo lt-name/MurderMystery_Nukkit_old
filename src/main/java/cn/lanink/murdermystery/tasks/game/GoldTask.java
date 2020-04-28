@@ -31,13 +31,18 @@ public class GoldTask extends PluginTask<MurderMystery> {
             this.cancel();
         }
         if (this.goldSpawnTime < 1) {
-            Tools.cleanEntity(this.room.getLevel());
-            for (String spawn : this.room.getGoldSpawn()) {
-                String[] s = spawn.split(":");
-                this.room.getLevel().dropItem(new Vector3(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])),
-                        Item.get(266, 0));
-            }
             this.goldSpawnTime = this.room.getGoldSpawnTime();
+            owner.getServer().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
+                @Override
+                public void onRun() {
+                    Tools.cleanEntity(room.getLevel());
+                    for (String spawn : room.getGoldSpawn()) {
+                        String[] s = spawn.split(":");
+                        room.getLevel().dropItem(new Vector3(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])),
+                                Item.get(266, 0));
+                    }
+                }
+            });
         }else {
             this.goldSpawnTime--;
         }
