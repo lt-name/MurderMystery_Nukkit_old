@@ -165,12 +165,10 @@ public class Tools {
         if (joinRoom) {
             player.setNameTagVisible(false);
             player.setNameTagAlwaysVisible(false);
-            player.setNameTag(" ");
             player.setAllowModifyWorld(false);
         }else {
             player.setNameTagVisible(true);
             player.setNameTagAlwaysVisible(true);
-            player.setNameTag(player.getName());
             setPlayerInvisible(player, false);
             player.setAllowModifyWorld(true);
         }

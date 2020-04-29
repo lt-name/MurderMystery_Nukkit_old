@@ -1,6 +1,7 @@
 package cn.lanink.murdermystery.room;
 
 import cn.lanink.murdermystery.MurderMystery;
+import cn.lanink.murdermystery.tasks.TipsTask;
 import cn.lanink.murdermystery.tasks.WaitTask;
 import cn.lanink.murdermystery.utils.SavePlayerInventory;
 import cn.lanink.murdermystery.utils.Tools;
@@ -12,6 +13,8 @@ import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.Config;
+import tip.messages.NameTagMessage;
+import tip.utils.Api;
 
 import java.util.*;
 
@@ -23,6 +26,7 @@ public class Room {
     private int mode; //0等待重置 1玩家等待中 2玩家游戏中 3胜利结算中
     public int waitTime, gameTime; //秒
     public int effectCD, swordCD, scanCD; //杀手技能CD
+    public int victory; //胜利者
     private int setWaitTime, setGameTime, setGoldSpawnTime;
     private LinkedHashMap<Player, Integer> players = new LinkedHashMap<>(); //0未分配 1平民 2侦探 3杀手
     private LinkedHashMap<Player, Integer> skinNumber = new LinkedHashMap<>(); //玩家使用皮肤编号，用于防止重复使用
@@ -54,7 +58,9 @@ public class Room {
     public void initTask() {
         this.setMode(1);
         Server.getInstance().getScheduler().scheduleRepeatingTask(
-                MurderMystery.getInstance(), new WaitTask(MurderMystery.getInstance(), this), 20,true);
+                MurderMystery.getInstance(), new WaitTask(MurderMystery.getInstance(), this), 20, true);
+        Server.getInstance().getScheduler().scheduleRepeatingTask(
+                MurderMystery.getInstance(), new TipsTask(MurderMystery.getInstance(), this), 20);
     }
 
     /**
@@ -132,6 +138,8 @@ public class Room {
             player.teleport(this.getSpawn());
             this.setRandomSkin(player, false);
             Tools.giveItem(player, 10);
+            NameTagMessage nameTagMessage = new NameTagMessage(this.world, true, "");
+            Api.setPlayerShowMessage(player.getName(), nameTagMessage);
             player.sendMessage("§a你已加入房间: " + this.world);
         }
     }
@@ -154,6 +162,8 @@ public class Room {
             this.delPlaying(player);
         }
         if (online) {
+            NameTagMessage nameTagMessage = new NameTagMessage(this.world, true, "");
+            Api.removePlayerShowMessage(player.getName(), nameTagMessage);
             player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn());
             Tools.rePlayerState(player, false);
             SavePlayerInventory.savePlayerInventory(player, true);

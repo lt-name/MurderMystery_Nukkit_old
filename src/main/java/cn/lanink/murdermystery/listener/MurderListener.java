@@ -6,7 +6,6 @@ import cn.lanink.murdermystery.event.*;
 import cn.lanink.murdermystery.room.Room;
 import cn.lanink.murdermystery.tasks.game.GoldTask;
 import cn.lanink.murdermystery.tasks.game.TimeTask;
-import cn.lanink.murdermystery.tasks.game.TipsTask;
 import cn.lanink.murdermystery.utils.Tools;
 import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
@@ -54,8 +53,6 @@ public class MurderListener implements Listener {
                 MurderMystery.getInstance(), new TimeTask(MurderMystery.getInstance(), room), 20,true);
         Server.getInstance().getScheduler().scheduleRepeatingTask(
                 MurderMystery.getInstance(), new GoldTask(MurderMystery.getInstance(), room), 20, true);
-        Server.getInstance().getScheduler().scheduleRepeatingTask(
-                MurderMystery.getInstance(), new TipsTask(MurderMystery.getInstance(), room), 20);
     }
 
     /**
