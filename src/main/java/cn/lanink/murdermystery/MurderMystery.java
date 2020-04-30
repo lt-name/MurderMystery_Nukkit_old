@@ -43,7 +43,6 @@ public class MurderMystery extends PluginBase {
     @Override
     public void onEnable() {
         getLogger().info("§e插件开始加载！本插件是免费哒~如果你花钱了，那一定是被骗了~");
-
         if (murderMystery == null) {
             murderMystery = this;
         }
