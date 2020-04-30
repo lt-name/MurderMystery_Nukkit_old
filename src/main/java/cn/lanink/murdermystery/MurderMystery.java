@@ -43,6 +43,7 @@ public class MurderMystery extends PluginBase {
     @Override
     public void onEnable() {
         getLogger().info("§e插件开始加载！本插件是免费哒~如果你花钱了，那一定是被骗了~");
+
         if (murderMystery == null) {
             murderMystery = this;
         }
@@ -227,6 +228,11 @@ public class MurderMystery extends PluginBase {
     }
 
     private void loadResources() {
+        saveResource( "git.json", "/Resources/git.json", true);
+        Config git = new Config(new File(getDataFolder() + "/Resources/git.json"), 1);
+        getLogger().info("§l§e版本: " + git.getString("git.branch", "读取失败") +
+                " - " + git.getString("git.build.version", "读取失败") + " - git-" +
+                git.getString("git.commit.id.abbrev", "读取失败"));
         saveResource( "Resources/Sword/skin.png", "/Resources/Sword/skin.png", false);
         saveResource("Resources/Sword/skin.json", "/Resources/Sword/skin.json", false);
         File fileImg = new File(getDataFolder() + "/Resources/Sword/skin.png");
@@ -247,17 +253,17 @@ public class MurderMystery extends PluginBase {
                 skin.setGeometryName(name);
                 skin.setGeometryData(Utils.readFile(fileJson));
                 this.sword = skin;
-                getLogger().info("§a资源加载完成");
+                getLogger().info("§a资源文件加载完成");
             }else {
-                getLogger().warning("§c资源加载失败");
+                getLogger().warning("§c资源文件加载失败");
             }
         } catch (IOException ignored) {
-            getLogger().warning("§c资源加载失败");
+            getLogger().warning("§c资源文件加载失败");
         }
     }
 
     public void roomSetSpawn(Player player, Config config) {
-        String spawn = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ()+ ":" + player.getLevel().getName();
+        String spawn = player.getFloorX() + ":" + player.getFloorY() + ":" + player.getFloorZ();
         String world = player.getLevel().getName();
         config.set("World", world);
         config.set("出生点", spawn);

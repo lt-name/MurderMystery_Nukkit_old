@@ -13,6 +13,7 @@ import cn.nukkit.entity.item.EntityFirework;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemFirework;
 import cn.nukkit.level.Level;
+import cn.nukkit.level.Position;
 import cn.nukkit.level.Sound;
 import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -245,7 +246,7 @@ public class Tools {
      * GitHub：https://github.com/SmallasWater/LuckDraw/blob/master/src/main/java/smallaswater/luckdraw/utils/Tools.java
      * @param player 玩家
      */
-    public static void spawnFirework(Player player) {
+    public static void spawnFirework(Position player) {
         Level level = player.getLevel();
         ItemFirework item = new ItemFirework();
         CompoundTag tag = new CompoundTag();

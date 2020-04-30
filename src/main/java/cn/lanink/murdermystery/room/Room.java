@@ -19,7 +19,7 @@ import tip.utils.Api;
 import java.util.*;
 
 /**
- * 房间实体类
+ * 房间类
  */
 public class Room {
 
@@ -106,14 +106,14 @@ public class Room {
                 while(it.hasNext()) {
                     Map.Entry<Player, Integer> entry = it.next();
                     it.remove();
-                    quitRoom(entry.getKey());
+                    this.quitRoom(entry.getKey());
                 }
             }
         }else {
             this.getLevel().getPlayers().values().forEach(
                     player -> player.kick("\n§c房间非正常关闭!\n为了您的背包安全，请稍后重进服务器！"));
         }
-        this.placeBlocks.forEach(list -> list.forEach(vector3 -> getLevel().setBlock(vector3, Block.get(0))));
+        this.placeBlocks.forEach(list -> list.forEach(vector3 -> this.getLevel().setBlock(vector3, Block.get(0))));
         this.placeBlocks.clear();
         this.initTime();
         this.skinNumber.clear();
@@ -259,7 +259,7 @@ public class Room {
         return new Position(Integer.parseInt(s[0]),
                 Integer.parseInt(s[1]),
                 Integer.parseInt(s[2]),
-                MurderMystery.getInstance().getServer().getLevelByName(s[3]));
+                this.getLevel());
     }
 
     /**
