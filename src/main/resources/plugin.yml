@@ -1,10 +1,10 @@
 name: MurderMystery
 main: cn.lanink.murdermystery.MurderMystery
-version: "1.0.0"
+version: "${pom.version}"
 api:
   - 1.0.0
 load: POSTWORLD
-author: lt_name
+author: "lt_name"
 loadbefore:
   - EconomyAPI
   - Tips

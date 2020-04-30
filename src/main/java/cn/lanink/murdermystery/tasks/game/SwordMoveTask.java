@@ -57,6 +57,8 @@ public class SwordMoveTask extends AsyncTask {
                             if (player2 != this.player) {
                                 Server.getInstance().getPluginManager().callEvent(
                                         new MurderPlayerDamageEvent(this.room, this.player, player2));
+                                this.sword.close();
+                                return;
                             }
                         }
                     }
