@@ -229,8 +229,7 @@ public class MurderMystery extends PluginBase {
     private void loadResources() {
         saveResource( "git.json", "/Resources/git.json", true);
         Config git = new Config(new File(getDataFolder() + "/Resources/git.json"), 1);
-        getLogger().info("§l§e版本: " + git.getString("git.branch", "读取失败") +
-                " - " + git.getString("git.build.version", "读取失败") + " - git-" +
+        getLogger().info("§l§e版本: " + git.getString("git.build.version", "读取失败") + " - git-" +
                 git.getString("git.commit.id.abbrev", "读取失败"));
         saveResource( "Resources/Sword/skin.png", "/Resources/Sword/skin.png", false);
         saveResource("Resources/Sword/skin.json", "/Resources/Sword/skin.json", false);
