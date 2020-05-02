@@ -257,8 +257,9 @@ public class PlayerGameListener implements Listener {
      * 玩家点击事件
      * @param event 事件
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.isCancelled()) return;
         Player player = event.getPlayer();
         Block block = event.getBlock();
         if (player == null || block == null) {
