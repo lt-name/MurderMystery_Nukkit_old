@@ -8,6 +8,7 @@ import cn.lanink.murdermystery.listener.PlayerJoinAndQuit;
 import cn.lanink.murdermystery.listener.RoomLevelProtection;
 import cn.lanink.murdermystery.room.Room;
 import cn.lanink.murdermystery.ui.GuiListener;
+import cn.lanink.murdermystery.utils.Language;
 import cn.lanink.murdermystery.utils.MetricsLite;
 import cn.nukkit.Player;
 import cn.nukkit.entity.data.Skin;
@@ -32,6 +33,7 @@ import java.util.Map;
 public class MurderMystery extends PluginBase {
 
     private static MurderMystery murderMystery;
+    private Language language;
     private Config config;
     private LinkedHashMap<String, Config> roomConfigs = new LinkedHashMap<>();
     private LinkedHashMap<String, Room> rooms = new LinkedHashMap<>();
@@ -69,8 +71,8 @@ public class MurderMystery extends PluginBase {
         getServer().getCommandMap().register("", new AdminCommand(this.config.getString("管理命令", "kadmin")));
         getServer().getPluginManager().registerEvents(new PlayerJoinAndQuit(), this);
         getServer().getPluginManager().registerEvents(new RoomLevelProtection(), this);
-        getServer().getPluginManager().registerEvents(new PlayerGameListener(), this);
-        getServer().getPluginManager().registerEvents(new MurderListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerGameListener(this), this);
+        getServer().getPluginManager().registerEvents(new MurderListener(this), this);
         getServer().getPluginManager().registerEvents(new GuiListener(), this);
         new MetricsLite(this, 7290);
         getLogger().info("§e插件加载完成！欢迎使用！");
@@ -97,6 +99,10 @@ public class MurderMystery extends PluginBase {
         this.skins.clear();
         getServer().getScheduler().cancelTask(this);
         getLogger().info("§c插件卸载完成！");
+    }
+
+    public Language getLanguage() {
+        return this.language;
     }
 
     public Config getConfig() {
@@ -231,6 +237,9 @@ public class MurderMystery extends PluginBase {
         Config git = new Config(new File(getDataFolder() + "/Resources/git.json"), 1);
         getLogger().info("§l§e版本: " + git.getString("git.build.version", "读取失败") + " - git-" +
                 git.getString("git.commit.id.abbrev", "读取失败"));
+
+        this.language = new Language();
+
         saveResource( "Resources/Sword/skin.png", "/Resources/Sword/skin.png", false);
         saveResource("Resources/Sword/skin.json", "/Resources/Sword/skin.json", false);
         File fileImg = new File(getDataFolder() + "/Resources/Sword/skin.png");

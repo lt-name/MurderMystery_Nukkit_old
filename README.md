@@ -12,7 +12,7 @@
   - [X] 侦探死后掉弓  
   - [X] 被杀生成尸体  
   - [X] 给玩家设置随机皮肤  
-  - [X] 杀手丢飞剑
+  - [X] 杀手丢飞剑  
 - [X] 进退游戏保存背包  
 - [X] 聊天限制  
 - [X] GUI操作  
@@ -30,11 +30,8 @@ cn/lanink/murdermystery/api/Api.java
  - MurderRoomStartEvent 房间开始事件
  - MurderRoomChooseIdentityEvent 分配玩家身份事件
  - MurderPlayerDamageEvent 玩家被攻击事件  
-   杀手用剑打人，平民或侦探用弓打人时调用
  - MurderPlayerDeathEvent 玩家死亡事件   
-   杀手被平民或侦探击杀，平民或侦探被杀手击杀时调用   
  - MurderPlayerCorpseSpawnEvent 尸体生成事件  
-   玩家死亡时调用
    
 物品CompoundTag：  
 isMurderItem - boolean类型 是否为插件物品  

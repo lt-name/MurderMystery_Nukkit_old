@@ -2,6 +2,7 @@ package cn.lanink.murdermystery.tasks;
 
 import cn.lanink.murdermystery.MurderMystery;
 import cn.lanink.murdermystery.room.Room;
+import cn.lanink.murdermystery.utils.Language;
 import cn.nukkit.Player;
 import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.scheduler.PluginTask;
@@ -20,15 +21,17 @@ public class TipsTask extends PluginTask<MurderMystery> {
     private final String taskName = "TipsTask";
     private final Room room;
     private final boolean bottom, scoreBoard;
-    private TipMessage tipMessage;
+    private TipMessage bottomMessage;
     private ScoreBoardMessage scoreBoardMessage;
+    private final Language language;
 
     public TipsTask(MurderMystery owner, Room room) {
         super(owner);
+        this.language = owner.getLanguage();
         this.room = room;
         this.bottom = owner.getConfig().getBoolean("底部显示信息", true);
         this.scoreBoard = owner.getConfig().getBoolean("计分板显示信息", false);
-        this.tipMessage = new TipMessage(room.getLevel().getName(), true, 0, null);
+        this.bottomMessage = new TipMessage(room.getLevel().getName(), true, 0, null);
         this.scoreBoardMessage = new ScoreBoardMessage(
                 room.getLevel().getName(), true, "§e密室杀人", new LinkedList<>());
     }
@@ -39,7 +42,7 @@ public class TipsTask extends PluginTask<MurderMystery> {
             if (this.room.getPlayers().values().size() > 0) {
                 this.room.getPlayers().keySet().forEach(player -> {
                             Api.removePlayerShowMessage(player.getName(), this.scoreBoardMessage);
-                            Api.removePlayerShowMessage(player.getName(), this.tipMessage);
+                            Api.removePlayerShowMessage(player.getName(), this.bottomMessage);
                         });
             }
             this.cancel();
@@ -52,18 +55,22 @@ public class TipsTask extends PluginTask<MurderMystery> {
                     if (room.getPlayers().values().size() > 0) {
                         if (room.getMode() == 1) {
                             if (room.getPlayers().values().size() > 5) {
-                                tipMessage.setMessage("§a当前已有: " + room.getPlayers().size() + " 位玩家" +
-                                        "\n§a游戏还有: " + room.waitTime + " 秒开始！");
+                                bottomMessage.setMessage(language.waitTimeBottom
+                                        .replace("%playerNumber%", room.getPlayers().size() + "")
+                                        .replace("%time%", room.waitTime + ""));
                                 LinkedList<String> ms = new LinkedList<>();
-                                ms.add("玩家: §a" + room.getPlayers().size() + "/16 ");
-                                ms.add("§a开始倒计时： §l§e" + room.waitTime + " ");
+                                for (String string : language.waitTimeScoreBoard.split("\n")) {
+                                    ms.add(string.replace("%playerNumber%", room.getPlayers().size() + "")
+                                            .replace("%time%", room.waitTime + ""));
+                                }
                                 scoreBoardMessage.setMessages(ms);
                             }else {
-                                tipMessage.setMessage("§c等待玩家加入中,当前已有: " + room.getPlayers().size() + " 位玩家");
+                                bottomMessage.setMessage(language.waitBottom
+                                        .replace("%playerNumber%", room.getPlayers().size() + ""));
                                 LinkedList<String> ms = new LinkedList<>();
-                                ms.add("玩家: §a" + room.getPlayers().size() + "/16 ");
-                                ms.add("最低游戏人数为 5 人 ");
-                                ms.add("等待玩家加入中 ");
+                                for (String string : language.waitScoreBoard.split("\n")) {
+                                    ms.add(string.replace("%playerNumber%", room.getPlayers().size() + ""));
+                                }
                                 scoreBoardMessage.setMessages(ms);
                             }
                             this.sendMessage();
@@ -78,26 +85,23 @@ public class TipsTask extends PluginTask<MurderMystery> {
                             for (Player player : room.getPlayers().keySet()) {
                                 switch (room.getPlayerMode(player)) {
                                     case 1:
-                                        mode = "平民";
+                                        mode = owner.getLanguage().commonPeople;
                                         break;
                                     case 2:
-                                        mode = "侦探";
+                                        mode = owner.getLanguage().detective;
                                         break;
                                     case 3:
-                                        mode = "杀手";
+                                        mode = owner.getLanguage().killer;
                                         break;
                                     default:
-                                        mode = "死亡";
+                                        mode = owner.getLanguage().death;
                                         break;
                                 }
                                 if (bottom) {
-                                    if (room.getPlayerMode(player) == 3 && room.effectCD > 0) {
-                                        mode += " 加速冷却剩余：" + room.effectCD + "秒";
-                                    }
-                                    tipMessage.setMessage("§a身份：" + mode +
+                                    bottomMessage.setMessage("§a身份：" + mode +
                                             "\n§a距游戏结束还有 "+ room.gameTime +
                                             " 秒\n当前还有： §e" + playerNumber + " §a人存活");
-                                    Api.setPlayerShowMessage(player.getName(), tipMessage);
+                                    Api.setPlayerShowMessage(player.getName(), bottomMessage);
                                 }
                                 if (scoreBoard) {
                                     LinkedList<String> ms = new LinkedList<>();
@@ -121,12 +125,12 @@ public class TipsTask extends PluginTask<MurderMystery> {
                             }
                         }else if (room.getMode() == 3) {
                             if (room.victory == 3) {
-                                tipMessage.setMessage("§e恭喜杀手获得胜利");
+                                bottomMessage.setMessage("§e恭喜杀手获得胜利");
                                 LinkedList<String> ms = new LinkedList<>();
                                 ms.add("§e恭喜杀手获得胜利! ");
                                 scoreBoardMessage.setMessages(ms);
                             } else {
-                                tipMessage.setMessage("§e恭喜平民和侦探获得胜利！");
+                                bottomMessage.setMessage("§e恭喜平民和侦探获得胜利！");
                                 LinkedList<String> ms = new LinkedList<>();
                                 ms.add("§e恭喜平民和侦探获得胜利! ");
                                 scoreBoardMessage.setMessages(ms);
@@ -140,7 +144,7 @@ public class TipsTask extends PluginTask<MurderMystery> {
                 private void sendMessage() {
                     for (Player player : room.getPlayers().keySet()) {
                         if (bottom) {
-                            Api.setPlayerShowMessage(player.getName(), tipMessage);
+                            Api.setPlayerShowMessage(player.getName(), bottomMessage);
                         }
                         if (scoreBoard) {
                             Api.setPlayerShowMessage(player.getName(), scoreBoardMessage);
