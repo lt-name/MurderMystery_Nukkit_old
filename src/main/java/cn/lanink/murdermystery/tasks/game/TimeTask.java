@@ -56,10 +56,10 @@ public class TimeTask extends PluginTask<MurderMystery> {
         if (room.gameTime >= room.getGameTime()-10) {
             int time = room.gameTime - (room.getGameTime() - 10);
             if (time <= 5 && time >= 1) {
-                this.sendMessage("§e杀手将在" + time + "秒后拿到剑！");
+                this.sendMessage(owner.getLanguage().killerGetSwordTime.replace("%time%", time + ""));
                 Tools.addSound(room, Sound.RANDOM_CLICK);
             }else if (time < 1) {
-                this.sendMessage("§e杀手已拿到剑！");
+                this.sendMessage(owner.getLanguage().killerGetSword);
                 for (Map.Entry<Player, Integer> entry : room.getPlayers().entrySet()) {
                     if (entry.getValue() == 2) {
                         Tools.giveItem(entry.getKey(), 1);
@@ -97,12 +97,15 @@ public class TimeTask extends PluginTask<MurderMystery> {
                         room.setMode(3);
                         for (Map.Entry<Player, Integer> entry : room.getPlayers().entrySet()) {
                             if (victoryMode == 3) {
-                                entry.getKey().sendTitle("§a杀手获得胜利！", "", 10, 30, 10);
+                                entry.getKey().sendTitle(
+                                        owner.getLanguage().titleVictoryKillerTitle,
+                                        "", 10, 30, 10);
                                 if (entry.getValue() == 3) {
                                     int money = owner.getConfig().getInt("杀手胜利奖励", 0);
                                     if (money > 0) {
                                         EconomyAPI.getInstance().addMoney(entry.getKey(), money);
-                                        entry.getKey().sendMessage("§a你获得了胜利奖励: " + money + " 元");
+                                        entry.getKey().sendMessage(
+                                                owner.getLanguage().victoryMoney.replace("%money%", money + ""));
                                     }
                                 }
                                 continue;
@@ -110,10 +113,12 @@ public class TimeTask extends PluginTask<MurderMystery> {
                                 int money = owner.getConfig().getInt("平民胜利奖励", 0);
                                 if (money > 0) {
                                     EconomyAPI.getInstance().addMoney(entry.getKey(), money);
-                                    entry.getKey().sendMessage("§a你获得了胜利奖励: " + money + " 元");
+                                    entry.getKey().sendMessage(
+                                            owner.getLanguage().victoryMoney.replace("%money%", money + ""));
                                 }
                             }
-                            entry.getKey().sendTitle("§a平民和侦探获得胜利！", "", 10, 30, 10);
+                            entry.getKey().sendTitle(owner.getLanguage().titleVictoryCommonPeopleSubtitle,
+                                    "", 10, 30, 10);
                         }
                         owner.getServer().getScheduler().scheduleRepeatingTask(
                                 MurderMystery.getInstance(), new VictoryTask(MurderMystery.getInstance(), room, victoryMode), 20,true);

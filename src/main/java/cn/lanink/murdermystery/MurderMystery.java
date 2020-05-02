@@ -8,6 +8,7 @@ import cn.lanink.murdermystery.listener.PlayerJoinAndQuit;
 import cn.lanink.murdermystery.listener.RoomLevelProtection;
 import cn.lanink.murdermystery.room.Room;
 import cn.lanink.murdermystery.ui.GuiListener;
+import cn.lanink.murdermystery.utils.Language;
 import cn.lanink.murdermystery.utils.MetricsLite;
 import cn.nukkit.Player;
 import cn.nukkit.entity.data.Skin;
@@ -32,6 +33,7 @@ import java.util.Map;
 public class MurderMystery extends PluginBase {
 
     private static MurderMystery murderMystery;
+    private Language language;
     private Config config;
     private LinkedHashMap<String, Config> roomConfigs = new LinkedHashMap<>();
     private LinkedHashMap<String, Room> rooms = new LinkedHashMap<>();
@@ -69,8 +71,8 @@ public class MurderMystery extends PluginBase {
         getServer().getCommandMap().register("", new AdminCommand(this.config.getString("管理命令", "kadmin")));
         getServer().getPluginManager().registerEvents(new PlayerJoinAndQuit(), this);
         getServer().getPluginManager().registerEvents(new RoomLevelProtection(), this);
-        getServer().getPluginManager().registerEvents(new PlayerGameListener(), this);
-        getServer().getPluginManager().registerEvents(new MurderListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerGameListener(this), this);
+        getServer().getPluginManager().registerEvents(new MurderListener(this), this);
         getServer().getPluginManager().registerEvents(new GuiListener(), this);
         new MetricsLite(this, 7290);
         getLogger().info("§e插件加载完成！欢迎使用！");
@@ -97,6 +99,10 @@ public class MurderMystery extends PluginBase {
         this.skins.clear();
         getServer().getScheduler().cancelTask(this);
         getLogger().info("§c插件卸载完成！");
+    }
+
+    public Language getLanguage() {
+        return this.language;
     }
 
     public Config getConfig() {
@@ -227,11 +233,25 @@ public class MurderMystery extends PluginBase {
     }
 
     private void loadResources() {
-        saveResource( "git.json", "/Resources/git.json", true);
+        //版本信息
+        saveResource("git.json", "/Resources/git.json", true);
         Config git = new Config(new File(getDataFolder() + "/Resources/git.json"), 1);
-        getLogger().info("§l§e版本: " + git.getString("git.build.version", "读取失败") + " - git-" +
+        getLogger().info("§l§e版本: " + git.getString("git.build.version", "读取失败") + "   git-" +
                 git.getString("git.commit.id.abbrev", "读取失败"));
-        saveResource( "Resources/Sword/skin.png", "/Resources/Sword/skin.png", false);
+        getLogger().info("§e开始加载资源文件");
+        //语言文件
+        saveResource("Resources/Language/zh_CN.yml", "/Resources/Language/zh_CN.yml", false);
+        String s = this.config.getString("language", "zh_CN");
+        File languageFile = new File(getDataFolder() + "/Resources/Language/" + s + ".yml");
+        if (languageFile.exists()) {
+            getLogger().info("§aLanguage: " + s + " loaded !");
+            this.language = new Language(new Config(languageFile, 2));
+        }else {
+            getLogger().warning("§cLanguage: " + s + " Not found, Load the default language !");
+            this.language = new Language(new Config());
+        }
+        //剑
+        saveResource("Resources/Sword/skin.png", "/Resources/Sword/skin.png", false);
         saveResource("Resources/Sword/skin.json", "/Resources/Sword/skin.json", false);
         File fileImg = new File(getDataFolder() + "/Resources/Sword/skin.png");
         File fileJson = new File(getDataFolder() + "/Resources/Sword/skin.json");
@@ -251,13 +271,14 @@ public class MurderMystery extends PluginBase {
                 skin.setGeometryName(name);
                 skin.setGeometryData(Utils.readFile(fileJson));
                 this.sword = skin;
-                getLogger().info("§a资源文件加载完成");
+                getLogger().info("§aSword文件加载完成");
             }else {
-                getLogger().warning("§c资源文件加载失败");
+                getLogger().warning("§cSword文件加载失败");
             }
         } catch (IOException ignored) {
-            getLogger().warning("§c资源文件加载失败");
+            getLogger().warning("§cSword文件加载失败");
         }
+        getLogger().info("§e资源文件加载完成");
     }
 
     public void roomSetSpawn(Player player, Config config) {

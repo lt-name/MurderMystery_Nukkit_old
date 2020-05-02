@@ -1,5 +1,6 @@
 package cn.lanink.murdermystery.utils;
 
+import cn.lanink.murdermystery.MurderMystery;
 import cn.lanink.murdermystery.entity.EntityPlayerCorpse;
 import cn.lanink.murdermystery.entity.EntitySword;
 import cn.lanink.murdermystery.entity.EntityText;
@@ -62,38 +63,39 @@ public class Tools {
      */
     public static Item getMurderItem(int tagNumber) {
         Item item;
+        Language language = MurderMystery.getInstance().getLanguage();
         switch (tagNumber) {
             case 1:
                 item = Item.get(261, 0, 1);
                 item.setNamedTag(new CompoundTag()
                         .putBoolean("isMurderItem", true)
                         .putInt("MurderType", 1));
-                item.setCustomName("§e侦探之弓");
-                item.setLore("会自动补充消耗的箭", "提示:", "攻击队友,您也会死");
+                item.setCustomName(language.itemDetectiveBow);
+                item.setLore(language.itemDetectiveBowLore.split("\n"));
                 return item;
             case 2:
                 item = Item.get(267, 0, 1);
                 item.setNamedTag(new CompoundTag()
                         .putBoolean("isMurderItem", true)
                         .putInt("MurderType", 2));
-                item.setCustomName("§c杀手之剑");
-                item.setLore("杀手之剑", "提示:", "切换到杀手之剑时会获得短暂加速", "点击屏幕可使用飞剑");
+                item.setCustomName(language.itemKillerSword);
+                item.setLore(language.itemKillerSwordLore.split("\n"));
                 return item;
             case 3:
                 item = Item.get(395, 0, 1);
                 item.setNamedTag(new CompoundTag()
                         .putBoolean("isMurderItem", true)
                         .putInt("MurderType", 3));
-                item.setCustomName("§c扫描器");
-                item.setLore("扫描出所有存活的人的位置", "提示:", "使用后会显示所有平民/侦探的位置", "这将持续5秒", "(只有你能看见)");
+                item.setCustomName(language.itemScan);
+                item.setLore(language.itemScanLore.split("\n"));
                 return item;
             case 10:
                 item = Item.get(241, 14, 1);
                 item.setNamedTag(new CompoundTag()
                         .putBoolean("isMurderItem", true)
                         .putInt("MurderType", 10));
-                item.setCustomName("§c退出房间");
-                item.setLore("手持点击,即可退出房间");
+                item.setCustomName(language.itemQuitRoom);
+                item.setLore(language.itemQuitRoomLore.split("\n"));
                 return item;
             case 20:
                 item = Item.get(262, 0, 1);
@@ -106,24 +108,24 @@ public class Tools {
                 item.setNamedTag(new CompoundTag()
                         .putBoolean("isMurderItem", true)
                         .putInt("MurderType", 21));
-                item.setCustomName("§a神秘药水");
-                item.setLore("未知效果的药水", "究竟是会带来好运，还是厄运？", "使用方法：直接饮用即可");
+                item.setCustomName(language.itemPotion);
+                item.setLore(language.itemPotionLore.split("\n"));
                 return item;
             case 22:
                 item = Item.get(241, 3, 1);
                 item.setNamedTag(new CompoundTag()
                         .putBoolean("isMurderItem", true)
                         .putInt("MurderType", 22));
-                item.setCustomName("§a护盾生成器");
-                item.setLore("可以生成一面短时间存在的墙", "它的功能很差，但却能在关键时间救你一命", "使用方法：放在地面即可");
+                item.setCustomName(language.itemShieldWall);
+                item.setLore(language.itemShieldWallLore.split("\n"));
                 return item;
             case 23:
                 item = Item.get(332, 0, 1);
                 item.setNamedTag(new CompoundTag()
                         .putBoolean("isMurderItem", true)
                         .putInt("MurderType", 23));
-                item.setCustomName("§a减速雪球");
-                item.setLore("命中后使目标减速2秒");
+                item.setCustomName(language.itemSnowball);
+                item.setLore(language.itemSnowballLore.split("\n"));
                 return item;
         }
         return null;

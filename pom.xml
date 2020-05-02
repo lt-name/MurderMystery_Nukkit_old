@@ -31,8 +31,12 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
-                    <include>*.yml</include>
+                    <include>plugin.yml</include>
                 </includes>
+            </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>${basedir}/src/main/resources</directory>
             </resource>
         </resources>
         <plugins>

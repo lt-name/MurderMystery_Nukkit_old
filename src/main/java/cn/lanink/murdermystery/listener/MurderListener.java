@@ -6,6 +6,7 @@ import cn.lanink.murdermystery.event.*;
 import cn.lanink.murdermystery.room.Room;
 import cn.lanink.murdermystery.tasks.game.GoldTask;
 import cn.lanink.murdermystery.tasks.game.TimeTask;
+import cn.lanink.murdermystery.utils.Language;
 import cn.lanink.murdermystery.utils.Tools;
 import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
@@ -25,6 +26,14 @@ import java.util.Random;
  * @author lt_name
  */
 public class MurderListener implements Listener {
+
+    private final MurderMystery murderMystery;
+    private final Language language;
+
+    public MurderListener(MurderMystery murderMystery) {
+        this.murderMystery = murderMystery;
+        this.language = murderMystery.getLanguage();
+    }
 
     /**
      * 房间开始事件
@@ -76,17 +85,20 @@ public class MurderListener implements Listener {
                 //侦探
                 if (j == random1) {
                     room.addPlaying(player, 2);
-                    player.sendTitle("§e侦探", "找出杀手，并用弓箭击杀他", 10, 40, 10);
+                    player.sendTitle(this.language.titleDetectiveTitle,
+                            this.language.titleDetectiveSubtitle, 10, 40, 10);
                     continue;
                 }
                 //杀手
                 if (j == random2) {
                     room.addPlaying(player, 3);
-                    player.sendTitle("§c杀手", "杀掉所有人", 10, 40, 10);
+                    player.sendTitle(this.language.titleKillerTitle,
+                            this.language.titleKillerSubtitle, 10, 40, 10);
                     continue;
                 }
                 room.addPlaying(player, 1);
-                player.sendTitle("§a平民", "活下去，就是胜利", 10, 40, 10);
+                player.sendTitle(this.language.titleCommonPeopleTitle,
+                        this.language.titleCommonPeopleSubtitle, 10, 40, 10);
             }
         }
     }
@@ -106,20 +118,24 @@ public class MurderListener implements Listener {
             }
             //攻击者是杀手
             if (room.getPlayerMode(player1) == 3) {
-                player1.sendMessage("§a你成功击杀了一位玩家！");
-                player2.sendTitle("§c死亡", "§c你被杀手杀死了", 20, 60, 20);
+                player1.sendMessage(this.language.killPlayer);
+                player2.sendTitle(this.language.deathTitle,
+                        this.language.deathByKillerSubtitle, 20, 60, 20);
             }else { //攻击者是平民或侦探
                 if (room.getPlayerMode(player2) == 3) {
-                    player1.sendMessage("§a你成功击杀了杀手！");
+                    player1.sendMessage(this.language.killKiller);
                     int money = MurderMystery.getInstance().getConfig().getInt("击杀杀手额外奖励", 0);
                     if (money > 0) {
                         EconomyAPI.getInstance().addMoney(player1, money);
-                        player1.sendMessage("§a你获得了额外奖励: " + money + " 元！");
+                        player1.sendMessage(this.language.victoryKillKillerMoney.replace("%money%", money + ""));
                     }
-                    player2.sendTitle("§c死亡", "§c你被击杀了", 10, 20, 20);
+                    player2.sendTitle(this.language.deathTitle,
+                            this.language.killerDeathSubtitle, 10, 20, 20);
                 } else {
-                    player1.sendTitle("§c死亡", "§c你击中了队友", 20, 60, 20);
-                    player2.sendTitle("§c死亡", "§c你被队友打死了", 20, 60, 20);
+                    player1.sendTitle(this.language.deathTitle,
+                            this.language.deathByDamageTeammateSubtitle, 20, 60, 20);
+                    player2.sendTitle(this.language.deathTitle,
+                            this.language.deathByTeammateSubtitle, 20, 60, 20);
                     Server.getInstance().getPluginManager().callEvent(new MurderPlayerDeathEvent(room, player1));
                 }
             }

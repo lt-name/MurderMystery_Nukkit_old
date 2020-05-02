@@ -111,7 +111,7 @@ public class Room {
             }
         }else {
             this.getLevel().getPlayers().values().forEach(
-                    player -> player.kick("\n§c房间非正常关闭!\n为了您的背包安全，请稍后重进服务器！"));
+                    player -> player.kick(MurderMystery.getInstance().getLanguage().roomSafeKick));
         }
         this.placeBlocks.forEach(list -> list.forEach(vector3 -> this.getLevel().setBlock(vector3, Block.get(0))));
         this.placeBlocks.clear();
@@ -140,7 +140,7 @@ public class Room {
             Tools.giveItem(player, 10);
             NameTagMessage nameTagMessage = new NameTagMessage(this.world, true, "");
             Api.setPlayerShowMessage(player.getName(), nameTagMessage);
-            player.sendMessage("§a你已加入房间: " + this.world);
+            player.sendMessage(MurderMystery.getInstance().getLanguage().joinRoom.replace("%name%", this.world));
         }
     }
 

@@ -31,7 +31,7 @@ public class ScanTask extends AsyncTask {
                 texts.add(text);
             }
         }
-        this.player.sendMessage("§a已显示所有玩家位置！");
+        this.player.sendMessage(MurderMystery.getInstance().getLanguage().useItemScan);
         Server.getInstance().getScheduler().scheduleDelayedTask(MurderMystery.getInstance(), new Task() {
             @Override
             public void onRun(int i) {

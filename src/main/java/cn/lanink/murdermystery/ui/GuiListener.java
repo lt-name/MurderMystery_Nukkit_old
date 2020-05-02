@@ -39,7 +39,7 @@ public class GuiListener implements Listener {
                         break;
                 }
             }else if (event.getFormID() == GuiCreate.ROOM_LIST_MENU) {
-                if (simple.getResponse().getClickedButton().getText().equals("§c返回")) {
+                if (simple.getResponse().getClickedButton().getText().equals(MurderMystery.getInstance().getLanguage().buttonReturn)) {
                     GuiCreate.sendUserMenu(player);
                 }else {
                     GuiCreate.sendRoomJoinOkMenu(player, simple.getResponse().getClickedButton().getText());
@@ -47,13 +47,13 @@ public class GuiListener implements Listener {
             }else if (event.getFormID() == GuiCreate.ADMIN_MENU) {
                 switch (simple.getResponse().getClickedButtonId()) {
                     case 0:
-                        MurderMystery.getInstance().getServer().dispatchCommand(player, aName + " 设置出生点");
+                        MurderMystery.getInstance().getServer().dispatchCommand(player, aName + " setspawn");
                         break;
                     case 1:
-                        MurderMystery.getInstance().getServer().dispatchCommand(player, aName + " 添加随机出生点");
+                        MurderMystery.getInstance().getServer().dispatchCommand(player, aName + " addrandomspawn");
                         break;
                     case 2:
-                        MurderMystery.getInstance().getServer().dispatchCommand(player, aName + " 添加金锭生成点");
+                        MurderMystery.getInstance().getServer().dispatchCommand(player, aName + " addgoldspawn");
                         break;
                     case 3:
                         GuiCreate.sendAdminTimeMenu(player);
@@ -69,26 +69,14 @@ public class GuiListener implements Listener {
         }else if (event.getWindow() instanceof FormWindowCustom) {
             FormWindowCustom custom = (FormWindowCustom) event.getWindow();
             if (event.getFormID() == GuiCreate.ADMIN_TIME_MENU) {
-                if (custom.getResponse().getInputResponse(0).matches("[0-9]*")) {
-                    MurderMystery.getInstance().getServer().dispatchCommand(player, aName + " 设置金锭产出间隔 " + custom.getResponse().getInputResponse(0));
-                }else {
-                    player.sendMessage("§a金锭产出间隔只能设置为正整数！");
-                }
-                if (custom.getResponse().getInputResponse(1).matches("[0-9]*")) {
-                    MurderMystery.getInstance().getServer().dispatchCommand(player, aName + " 设置等待时间 " + custom.getResponse().getInputResponse(1));
-                }else {
-                    player.sendMessage("§a等待时间只能设置为正整数！");
-                }
-                if (custom.getResponse().getInputResponse(2).matches("[0-9]*")) {
-                    MurderMystery.getInstance().getServer().dispatchCommand(player, aName + " 设置游戏时间 " + custom.getResponse().getInputResponse(2));
-                }else {
-                    player.sendMessage("§a游戏时间只能设置为正整数！");
-                }
+                MurderMystery.getInstance().getServer().dispatchCommand(player, aName + " setgoldspawntime " + custom.getResponse().getInputResponse(0));
+                MurderMystery.getInstance().getServer().dispatchCommand(player, aName + " setwaittime " + custom.getResponse().getInputResponse(1));
+                MurderMystery.getInstance().getServer().dispatchCommand(player, aName + " setgametime " + custom.getResponse().getInputResponse(2));
             }
         }else if (event.getWindow() instanceof FormWindowModal) {
             FormWindowModal modal = (FormWindowModal) event.getWindow();
             if (event.getFormID() == GuiCreate.ROOM_JOIN_OK) {
-                if (modal.getResponse().getClickedButtonId() == 0 && !modal.getButton1().equals("§c返回")) {
+                if (modal.getResponse().getClickedButtonId() == 0 && !modal.getButton1().equals(MurderMystery.getInstance().getLanguage().buttonReturn)) {
                     String[] s = modal.getContent().split("\"");
                     MurderMystery.getInstance().getServer().dispatchCommand(
                             player, uName + " join " + s[1].replace("§e", "").trim());
