@@ -10,6 +10,7 @@ import tip.messages.ScoreBoardMessage;
 import tip.messages.TipMessage;
 import tip.utils.Api;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 
@@ -33,7 +34,7 @@ public class TipsTask extends PluginTask<MurderMystery> {
         this.scoreBoard = owner.getConfig().getBoolean("计分板显示信息", false);
         this.bottomMessage = new TipMessage(room.getLevel().getName(), true, 0, null);
         this.scoreBoardMessage = new ScoreBoardMessage(
-                room.getLevel().getName(), true, "§e密室杀人", new LinkedList<>());
+                room.getLevel().getName(), true, this.language.scoreBoardTitle, new LinkedList<>());
     }
 
     @Override
@@ -98,25 +99,30 @@ public class TipsTask extends PluginTask<MurderMystery> {
                                         break;
                                 }
                                 if (bottom) {
-                                    bottomMessage.setMessage("§a身份：" + mode +
-                                            "\n§a距游戏结束还有 "+ room.gameTime +
-                                            " 秒\n当前还有： §e" + playerNumber + " §a人存活");
+                                    bottomMessage.setMessage(language.gameTimeBottom.replace("%mode%", mode)
+                                            .replace("%playerNumber%", playerNumber + "")
+                                            .replace("%time%", room.gameTime + ""));
                                     Api.setPlayerShowMessage(player.getName(), bottomMessage);
                                 }
                                 if (scoreBoard) {
                                     LinkedList<String> ms = new LinkedList<>();
-                                    ms.add("§l§a当前身份： §e" + mode + " ");
-                                    ms.add("§l§a存活人数： §e" + playerNumber + " ");
-                                    ms.add("§l§a剩余时间： §e" + room.gameTime + " §a秒 ");
+                                    for (String string : language.gameTimeScoreBoard.split("\n")) {
+                                        ms.add(string.replace("%mode%", mode)
+                                                .replace("%playerNumber%", playerNumber + "")
+                                                .replace("%time%", room.gameTime + ""));
+                                    }
                                     if (room.getPlayerMode(player) == 3) {
                                         if (room.effectCD > 0) {
-                                            ms.add("§l§a加速冷却: §e" + room.effectCD + " §a秒 ");
+                                            ms.add(language.gameEffectCDScoreBoard
+                                                    .replace("%time%", room.effectCD + ""));
                                         }
                                         if (room.swordCD > 0) {
-                                            ms.add("§l§a飞剑冷却: §e" + room.effectCD + " §a秒 ");
+                                            ms.add(language.gameSwordCDScoreBoard
+                                                    .replace("%time%", room.swordCD + ""));
                                         }
                                         if (room.scanCD > 0) {
-                                            ms.add("§l§a扫描冷却: §e" + room.effectCD + " §a秒 ");
+                                            ms.add(language.gameScanCDScoreBoard
+                                                    .replace("%time%", room.scanCD + ""));
                                         }
                                     }
                                     scoreBoardMessage.setMessages(ms);
@@ -125,14 +131,12 @@ public class TipsTask extends PluginTask<MurderMystery> {
                             }
                         }else if (room.getMode() == 3) {
                             if (room.victory == 3) {
-                                bottomMessage.setMessage("§e恭喜杀手获得胜利");
-                                LinkedList<String> ms = new LinkedList<>();
-                                ms.add("§e恭喜杀手获得胜利! ");
+                                bottomMessage.setMessage(language.victoryKillerBottom);
+                                LinkedList<String> ms = new LinkedList<>(Arrays.asList(language.victoryKillerScoreBoard.split("\n")));
                                 scoreBoardMessage.setMessages(ms);
                             } else {
-                                bottomMessage.setMessage("§e恭喜平民和侦探获得胜利！");
-                                LinkedList<String> ms = new LinkedList<>();
-                                ms.add("§e恭喜平民和侦探获得胜利! ");
+                                bottomMessage.setMessage(language.victoryCommonPeopleBottom);
+                                LinkedList<String> ms = new LinkedList<>(Arrays.asList(language.victoryCommonPeopleScoreBoard.split("\n")));
                                 scoreBoardMessage.setMessages(ms);
                             }
                             this.sendMessage();
