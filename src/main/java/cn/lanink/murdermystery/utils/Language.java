@@ -45,6 +45,8 @@ public class Language {
     public String adminUnload = "§a已卸载所有房间！请在后台查看信息！";
     public String roomSafeKick = "\n§c房间非正常关闭!\n为了您的背包安全，请稍后重进服务器！";
     public String playerDeathChat = "§c[死亡] %player% + §b >>> %message%";
+    public String tpJoinRoomLevel = "§e >> §c要进入游戏地图，请先加入游戏！";
+    public String tpQuitRoomLevel = "§e >> §c退出房间请使用：/killer quit";
     //道具
     public String itemDetectiveBow = "§e侦探之弓";
     public String itemDetectiveBowLore = "会自动补充消耗的箭\n提示:\n攻击队友,您也会死";
@@ -154,6 +156,8 @@ public class Language {
         this.adminUnload = config.getString("adminUnload", this.adminUnload);
         this.roomSafeKick = config.getString("roomSafeKick", this.roomSafeKick);
         this.playerDeathChat = config.getString("playerDeathChat", this.playerDeathChat);
+        this.tpJoinRoomLevel = config.getString("tpJoinRoomLevel", this.tpJoinRoomLevel);
+        this.tpQuitRoomLevel = config.getString("tpQuitRoomLevel", this.tpQuitRoomLevel);
         this.itemDetectiveBow = config.getString("itemDetectiveBow", this.itemDetectiveBow);
         this.itemDetectiveBowLore = config.getString("itemDetectiveBowLore", this.itemDetectiveBowLore);
         this.itemKillerSword = config.getString("itemKillerSword", this.itemKillerSword);

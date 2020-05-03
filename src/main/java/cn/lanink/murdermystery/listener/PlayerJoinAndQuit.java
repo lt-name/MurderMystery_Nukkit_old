@@ -59,11 +59,11 @@ public class PlayerJoinAndQuit implements Listener {
             LinkedHashMap<String, Room> room =  MurderMystery.getInstance().getRooms();
             if (room.containsKey(fromLevel) && room.get(fromLevel).isPlaying(player)) {
                 event.setCancelled(true);
-                player.sendMessage("§e >> §c退出房间请使用：/killer quit");
+                player.sendMessage(MurderMystery.getInstance().getLanguage().tpQuitRoomLevel);
             }else if (!player.isOp() && room.containsKey(toLevel) &&
                     !room.get(toLevel).isPlaying(player)) {
                 event.setCancelled(true);
-                player.sendMessage("§e >> §c要进入游戏地图，请先加入游戏！");
+                player.sendMessage(MurderMystery.getInstance().getLanguage().tpJoinRoomLevel);
             }
         }
     }
