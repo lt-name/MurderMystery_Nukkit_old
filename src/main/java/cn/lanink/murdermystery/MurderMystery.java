@@ -1,5 +1,6 @@
 package cn.lanink.murdermystery;
 
+import cn.lanink.murdermystery.addons.Addons;
 import cn.lanink.murdermystery.command.AdminCommand;
 import cn.lanink.murdermystery.command.UserCommand;
 import cn.lanink.murdermystery.listener.MurderListener;
@@ -33,6 +34,7 @@ import java.util.Map;
 public class MurderMystery extends PluginBase {
 
     private static MurderMystery murderMystery;
+    private Addons addons;
     private Language language;
     private Config config;
     private LinkedHashMap<String, Config> roomConfigs = new LinkedHashMap<>();
@@ -75,6 +77,11 @@ public class MurderMystery extends PluginBase {
         getServer().getPluginManager().registerEvents(new MurderListener(this), this);
         getServer().getPluginManager().registerEvents(new GuiListener(), this);
         new MetricsLite(this, 7290);
+        getLogger().info("§e开始加载扩展");
+        if (addons == null) {
+            this.addons = new Addons(this);
+        }
+        getLogger().info("§e扩展加载完成！");
         getLogger().info("§e插件加载完成！欢迎使用！");
     }
 
