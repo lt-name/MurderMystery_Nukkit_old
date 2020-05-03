@@ -40,12 +40,6 @@ public class TipsTask extends PluginTask<MurderMystery> {
     @Override
     public void onRun(int i) {
         if (this.room.getMode() == 0) {
-            if (this.room.getPlayers().values().size() > 0) {
-                this.room.getPlayers().keySet().forEach(player -> {
-                            Api.removePlayerShowMessage(player.getName(), this.scoreBoardMessage);
-                            Api.removePlayerShowMessage(player.getName(), this.bottomMessage);
-                        });
-            }
             this.cancel();
         }
         if (!this.room.task.contains(this.taskName)) {

@@ -24,11 +24,29 @@ import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.network.protocol.PlaySoundPacket;
 import cn.nukkit.network.protocol.PlayerSkinPacket;
 import cn.nukkit.utils.DyeColor;
+import tip.messages.NameTagMessage;
+import tip.messages.ScoreBoardMessage;
+import tip.messages.TipMessage;
+import tip.utils.Api;
 
+import java.util.LinkedList;
 import java.util.Random;
 
 
 public class Tools {
+
+    /**
+     * 移除显示信息(底部与计分板)
+     * @param level 地图
+     */
+    public static void removePlayerShowMessage(String level, Player player) {
+        Api.removePlayerShowMessage(player.getName(),
+                new NameTagMessage(level, true, ""));
+        Api.removePlayerShowMessage(player.getName(),
+                new TipMessage(level, true, 0, ""));
+        Api.removePlayerShowMessage(player.getName(),
+                new ScoreBoardMessage(level, true, "", new LinkedList<>()));
+    }
 
     /**
      * 给玩家道具

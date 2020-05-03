@@ -162,9 +162,8 @@ public class Room {
             this.delPlaying(player);
         }
         if (online) {
-            NameTagMessage nameTagMessage = new NameTagMessage(this.world, true, "");
-            Api.removePlayerShowMessage(player.getName(), nameTagMessage);
-            player.teleport(MurderMystery.getInstance().getServer().getDefaultLevel().getSafeSpawn());
+            Tools.removePlayerShowMessage(this.world, player);
+            player.teleport(Server.getInstance().getDefaultLevel().getSafeSpawn());
             Tools.rePlayerState(player, false);
             SavePlayerInventory.savePlayerInventory(player, true);
             this.setRandomSkin(player, true);
@@ -301,7 +300,7 @@ public class Room {
      * @return 游戏世界
      */
     public Level getLevel() {
-        return MurderMystery.getInstance().getServer().getLevelByName(this.world);
+        return Server.getInstance().getLevelByName(this.world);
     }
 
     /**
