@@ -1,4 +1,4 @@
-package cn.lanink.murdermystery.addons.UiShop;
+package cn.lanink.murdermystery.addons.uishop;
 
 import cn.lanink.murdermystery.MurderMystery;
 import cn.nukkit.Server;

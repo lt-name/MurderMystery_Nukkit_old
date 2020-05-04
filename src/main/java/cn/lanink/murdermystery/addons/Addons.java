@@ -1,7 +1,7 @@
 package cn.lanink.murdermystery.addons;
 
 import cn.lanink.murdermystery.MurderMystery;
-import cn.lanink.murdermystery.addons.UiShop.UiShop;
+import cn.lanink.murdermystery.addons.uishop.UiShop;
 import cn.nukkit.utils.Config;
 
 public class Addons {

@@ -59,9 +59,9 @@ public class MurderListener implements Listener {
         }
         room.setMode(2);
         Server.getInstance().getScheduler().scheduleRepeatingTask(
-                MurderMystery.getInstance(), new TimeTask(MurderMystery.getInstance(), room), 20,true);
+                MurderMystery.getInstance(), new TimeTask(this.murderMystery, room), 20,true);
         Server.getInstance().getScheduler().scheduleRepeatingTask(
-                MurderMystery.getInstance(), new GoldTask(MurderMystery.getInstance(), room), 20, true);
+                MurderMystery.getInstance(), new GoldTask(this.murderMystery, room), 20, true);
     }
 
     /**
@@ -124,7 +124,7 @@ public class MurderListener implements Listener {
             }else { //攻击者是平民或侦探
                 if (room.getPlayerMode(player2) == 3) {
                     player1.sendMessage(this.language.killKiller);
-                    int money = MurderMystery.getInstance().getConfig().getInt("击杀杀手额外奖励", 0);
+                    int money = this.murderMystery.getConfig().getInt("击杀杀手额外奖励", 0);
                     if (money > 0) {
                         EconomyAPI.getInstance().addMoney(player1, money);
                         player1.sendMessage(this.language.victoryKillKillerMoney.replace("%money%", money + ""));
