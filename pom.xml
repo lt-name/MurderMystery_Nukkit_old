@@ -23,22 +23,6 @@
     </properties>
 
     <build>
-        <defaultGoal>clean package</defaultGoal>
-        <finalName>MurderMystery-${project.version}</finalName>
-        <resources>
-            <resource>
-                <targetPath>.</targetPath>
-                <filtering>true</filtering>
-                <directory>${basedir}/src/main/resources</directory>
-                <includes>
-                    <include>plugin.yml</include>
-                </includes>
-            </resource>
-            <resource>
-                <targetPath>.</targetPath>
-                <directory>${basedir}/src/main/resources</directory>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -69,39 +53,55 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
-                    <prefix>git</prefix>
-                    <dateFormat>yyyy.MM.dd '@' HH:mm:ss z</dateFormat>
-                    <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
-                    <verbose>true</verbose>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.json</generateGitPropertiesFilename>
-                    <format>json</format>
-                    <skipPoms>true</skipPoms>
-                    <injectAllReactorProjects>false</injectAllReactorProjects>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    <format>properties</format>
                     <failOnNoGitDirectory>false</failOnNoGitDirectory>
                     <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
-                    <skip>false</skip>
-                    <runOnlyOnce>true</runOnlyOnce>
+                    <runOnlyOnce>false</runOnlyOnce>
+                    <verbose>true</verbose>
+                    <skipPoms>false</skipPoms>
                     <excludeProperties>
                         <excludeProperty>git.user.*</excludeProperty>
                         <excludeProperty>git.build.user.email</excludeProperty>
                         <excludeProperty>git.commit.user.email</excludeProperty>
                     </excludeProperties>
-                    <includeOnlyProperties />
-                    <useNativeGit>false</useNativeGit>
-                    <abbrevLength>7</abbrevLength>
                     <commitIdGenerationMode>flat</commitIdGenerationMode>
                     <gitDescribe>
-                        <skip>false</skip>
-                        <always>false</always>
-                        <abbrev>7</abbrev>
-                        <dirty>-dirty</dirty>
-                        <match>*</match>
-                        <tags>false</tags>
-                        <forceLongFormat>false</forceLongFormat>
+                        <always>true</always>
                     </gitDescribe>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.3</version>
+                <executions>
+                    <execution>
+                        <id>add-version</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>${project.basedir}/src/main/java/cn/lanink/murdermystery/MurderMystery.java</include>
+                                <include>${project.basedir}/src/main/resources/plugin.yml</include>
+                            </includes>
+                            <replacements>
+                                <replacement>
+                                    <token>VERSION = ".*"</token>
+                                    <!--suppress UnresolvedMavenProperty -->
+                                    <value>VERSION = "${project.version} git-${git.branch}-${git.commit.id.abbrev}"</value>
+                                </replacement>
+                                <replacement>
+                                    <token>version: ".*"</token>
+                                    <value>version: "${project.version}"</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

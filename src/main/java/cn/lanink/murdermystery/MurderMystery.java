@@ -33,6 +33,7 @@ import java.util.Map;
  */
 public class MurderMystery extends PluginBase {
 
+    public static String VERSION = "1.0.0-SNAPSHOT git-master-fdf4ab8";
     private static MurderMystery murderMystery;
     private Addons addons;
     private Language language;
@@ -241,10 +242,7 @@ public class MurderMystery extends PluginBase {
 
     private void loadResources() {
         //版本信息
-        saveResource("git.json", "/Resources/git.json", true);
-        Config git = new Config(new File(getDataFolder() + "/Resources/git.json"), 1);
-        getLogger().info("§l§e版本: " + git.getString("git.build.version", "读取失败") + "   git-" +
-                git.getString("git.commit.id.abbrev", "读取失败"));
+        getLogger().info("§l§e版本: " + VERSION);
         getLogger().info("§e开始加载资源文件");
         //语言文件
         saveResource("Resources/Language/zh_CN.yml", "/Resources/Language/zh_CN.yml", false);
