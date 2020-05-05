@@ -92,7 +92,7 @@
                                 <replacement>
                                     <token>VERSION = ".*"</token>
                                     <!--suppress UnresolvedMavenProperty -->
-                                    <value>VERSION = "${project.version} git-${git.branch}-${git.commit.id.abbrev}"</value>
+                                    <value>VERSION = "${project.version} git-${git.commit.id.abbrev}"</value>
                                 </replacement>
                                 <replacement>
                                     <token>version: ".*"</token>
