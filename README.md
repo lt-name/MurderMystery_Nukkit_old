@@ -1,7 +1,7 @@
 # MurderMystery  
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
-![Java CI](https://github.com/lt-name/MurderMystery_Nukkit/workflows/Java%20CI/badge.svg)
-####密室杀手小游戏
+![Java CI](https://github.com/lt-name/MurderMystery_Nukkit/workflows/Java%20CI/badge.svg)  
+#### 密室杀手小游戏
 在论坛的介绍：  
 [McBBS](https://www.mcbbs.net/thread-1014768-1-1.html)  
 [MineBBS](https://www.minebbs.com/resources/murdermystery.1012/)  

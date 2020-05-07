@@ -10,13 +10,13 @@ import cn.lanink.murdermystery.listener.RoomLevelProtection;
 import cn.lanink.murdermystery.room.Room;
 import cn.lanink.murdermystery.ui.GuiListener;
 import cn.lanink.murdermystery.utils.Language;
-import cn.lanink.murdermystery.utils.MetricsLite;
 import cn.nukkit.Player;
 import cn.nukkit.entity.data.Skin;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.Utils;
+import org.bstats.nukkit.MetricsLite;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class MurderMystery extends PluginBase {
 
-    public static String VERSION = "1.0.1-SNAPSHOT git-00af808";
+    public static String VERSION = "1.0.1-SNAPSHOT git-b3bbf68";
     private static MurderMystery murderMystery;
     private Addons addons;
     private Language language;

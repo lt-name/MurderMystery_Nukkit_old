@@ -1,4 +1,4 @@
-package cn.lanink.murdermystery.utils;
+package org.bstats.nukkit;
 
 import cn.nukkit.Server;
 import cn.nukkit.plugin.Plugin;
@@ -254,7 +254,7 @@ public class MetricsLite {
                     Field handle = NKServiceManager.class.getDeclaredField("handle");
                     field.setInt(handle, handle.getModifiers() & ~Modifier.FINAL);
                     handle.setAccessible(true);
-                    providers = ((Map<Class<?>, List<RegisteredServiceProvider<?>>>) handle.get(Server.getInstance().getServiceManager())).get(service);
+                    providers = ((Map<Class<?>, List<RegisteredServiceProvider<?>>>) handle.get((NKServiceManager) (Server.getInstance().getServiceManager()))).get(service);
                 } catch(IllegalAccessException | IllegalArgumentException | SecurityException e) {
                     // Something went wrong! :(
                     if (logFailedRequests) {
