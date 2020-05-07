@@ -135,8 +135,8 @@ public class TipsTask extends PluginTask<MurderMystery> {
                             }
                             this.sendMessage();
                         }
-                        room.task.remove(taskName);
                     }
+                    room.task.remove(taskName);
                 }
 
                 private void sendMessage() {

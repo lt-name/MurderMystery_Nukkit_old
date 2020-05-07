@@ -100,6 +100,7 @@ public class Room {
      * @param normal 正常关闭
      */
     public void endGame(boolean normal) {
+        this.mode = 0;
         if (normal) {
             if (this.players.values().size() > 0 ) {
                 Iterator<Map.Entry<Player, Integer>> it = this.players.entrySet().iterator();
@@ -120,7 +121,6 @@ public class Room {
         this.skinCache.clear();
         this.task.clear();
         Tools.cleanEntity(this.getLevel(), true);
-        this.mode = 0;
     }
 
     /**
