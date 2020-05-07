@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class MurderMystery extends PluginBase {
 
-    public static String VERSION = "1.0.0-SNAPSHOT git-master-fdf4ab8";
+    public static String VERSION = "1.0.1-SNAPSHOT git-00af808";
     private static MurderMystery murderMystery;
     private Addons addons;
     private Language language;
