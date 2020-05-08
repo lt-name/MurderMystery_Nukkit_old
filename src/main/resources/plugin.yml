@@ -4,7 +4,7 @@ version: "1.0.1-SNAPSHOT"
 api:
   - 1.0.0
 load: POSTWORLD
-author: "lt_name"
+author: "LT_Name"
 loadbefore:
   - EconomyAPI
   - Tips

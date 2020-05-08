@@ -1,4 +1,4 @@
-package org.bstats.nukkit;
+package cn.lanink.murdermystery.utils;
 
 import cn.nukkit.Server;
 import cn.nukkit.plugin.Plugin;
