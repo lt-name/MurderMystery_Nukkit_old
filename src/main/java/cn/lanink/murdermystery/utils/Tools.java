@@ -24,6 +24,7 @@ import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.network.protocol.PlaySoundPacket;
 import cn.nukkit.network.protocol.PlayerSkinPacket;
 import cn.nukkit.utils.DyeColor;
+import tip.messages.BossBarMessage;
 import tip.messages.NameTagMessage;
 import tip.messages.ScoreBoardMessage;
 import tip.messages.TipMessage;
@@ -36,7 +37,7 @@ import java.util.Random;
 public class Tools {
 
     /**
-     * 移除显示信息(底部与计分板)
+     * 移除显示信息
      * @param level 地图
      */
     public static void removePlayerShowMessage(String level, Player player) {
@@ -46,6 +47,8 @@ public class Tools {
                 new TipMessage(level, true, 0, ""));
         Api.removePlayerShowMessage(player.getName(),
                 new ScoreBoardMessage(level, true, "", new LinkedList<>()));
+        Api.removePlayerShowMessage(player.getName(),
+                new BossBarMessage(level, false, 5, false, new LinkedList<>()));
     }
 
     /**
