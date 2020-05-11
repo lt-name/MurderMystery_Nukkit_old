@@ -46,14 +46,10 @@ public class MurderListener implements Listener {
         if (room.getRandomSpawn().size() > 0) {
             int x=0;
             for (Player player : room.getPlayers().keySet()) {
-                if (room.getRandomSpawn().get(x) != null) {
-                    String[] s = room.getRandomSpawn().get(x).split(":");
-                    player.teleport(new Vector3(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])));
-                }else {
-                    x=0;
-                    String[] s = room.getRandomSpawn().get(0).split(":");
-                    player.teleport(new Vector3(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])));
+                if (room.getRandomSpawn().get(x) == null) {
+                    x = 0;
                 }
+                player.teleport(room.getRandomSpawn().get(x));
                 x++;
             }
         }
