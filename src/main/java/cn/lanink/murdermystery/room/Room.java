@@ -31,7 +31,7 @@ public class Room {
     private LinkedHashMap<Player, Integer> players = new LinkedHashMap<>(); //0未分配 1平民 2侦探 3杀手
     private LinkedHashMap<Player, Integer> skinNumber = new LinkedHashMap<>(); //玩家使用皮肤编号，用于防止重复使用
     private LinkedHashMap<Player, Skin> skinCache = new LinkedHashMap<>(); //缓存玩家皮肤，用于退出房间时还原
-    private List<Position> randomSpawn;
+    private ArrayList<Position> randomSpawn = new ArrayList<>();
     private List<String> goldSpawn;
     private String spawn, world;
     public ArrayList<ArrayList<Vector3>> placeBlocks = new ArrayList<>();
@@ -45,15 +45,21 @@ public class Room {
         this.setWaitTime = config.getInt("等待时间", 120);
         this.setGameTime = config.getInt("游戏时间", 600);
         this.spawn = config.getString("出生点", null);
-        for (String string : config.getStringList("randomSpawn")) {
-            String[] s = string.split(":");
-            this.randomSpawn.add(
-                    new Position(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2]), this.getLevel()));
-        }
         this.goldSpawn = config.getStringList("goldSpawn");
         this.setGoldSpawnTime = config.getInt("goldSpawnTime", 15);
         this.world = config.getString("World", null);
         this.initTime();
+        if (this.getLevel() == null) {
+            Server.getInstance().loadLevel(this.world);
+        }
+        List<String> rSpawn = config.getStringList("randomSpawn");
+        if (rSpawn.size() > 0) {
+            for (String string : rSpawn) {
+                String[] s = string.split(":");
+                this.randomSpawn.add(new Position(
+                        Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2]), this.getLevel()));
+            }
+        }
         this.loadChuck();
         this.mode = 0;
     }
@@ -74,8 +80,10 @@ public class Room {
      */
     private void loadChuck() {
         this.getLevel().loadChunk(this.getSpawn().getChunkX(), this.getSpawn().getChunkZ());
-        for (Position position : this.randomSpawn) {
-            this.getLevel().loadChunk(position.getChunkX(), position.getChunkZ());
+        if (this.randomSpawn.size() > 0) {
+            for (Position position : this.randomSpawn) {
+                this.getLevel().loadChunk(position.getChunkX(), position.getChunkZ());
+            }
         }
     }
 

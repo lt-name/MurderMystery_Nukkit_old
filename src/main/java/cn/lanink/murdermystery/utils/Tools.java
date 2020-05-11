@@ -111,7 +111,7 @@ public class Tools {
                 item.setLore(language.itemScanLore.split("\n"));
                 return item;
             case 10:
-                item = Item.get(241, 14, 1);
+                item = Item.get(324, 0, 1);
                 item.setNamedTag(new CompoundTag()
                         .putBoolean("isMurderItem", true)
                         .putInt("MurderType", 10));
