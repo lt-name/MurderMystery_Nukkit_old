@@ -134,7 +134,7 @@ public class Room {
             }
             this.addPlaying(player);
             Tools.rePlayerState(player, true);
-            SavePlayerInventory.savePlayerInventory(player, false);
+            SavePlayerInventory.save(player);
             player.teleport(this.getSpawn());
             this.setRandomSkin(player, false);
             Tools.giveItem(player, 10);
@@ -165,7 +165,7 @@ public class Room {
             Tools.removePlayerShowMessage(this.world, player);
             player.teleport(Server.getInstance().getDefaultLevel().getSafeSpawn());
             Tools.rePlayerState(player, false);
-            SavePlayerInventory.savePlayerInventory(player, true);
+            SavePlayerInventory.restore(player);
             this.setRandomSkin(player, true);
         }else {
             this.skinNumber.remove(player);
