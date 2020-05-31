@@ -60,7 +60,6 @@ public class Room {
                         Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2]), this.getLevel()));
             }
         }
-        this.loadChuck();
         this.mode = 0;
     }
 
@@ -73,18 +72,6 @@ public class Room {
                 MurderMystery.getInstance(), new WaitTask(MurderMystery.getInstance(), this), 20, true);
         Server.getInstance().getScheduler().scheduleRepeatingTask(
                 MurderMystery.getInstance(), new TipsTask(MurderMystery.getInstance(), this), 20);
-    }
-
-    /**
-     * 加载区块
-     */
-    private void loadChuck() {
-        this.getLevel().loadChunk(this.getSpawn().getChunkX(), this.getSpawn().getChunkZ());
-        if (this.randomSpawn.size() > 0) {
-            for (Position position : this.randomSpawn) {
-                this.getLevel().loadChunk(position.getChunkX(), position.getChunkZ());
-            }
-        }
     }
 
     /**
@@ -153,7 +140,6 @@ public class Room {
      */
     public void joinRoom(Player player) {
         if (this.players.values().size() < 16) {
-            this.loadChuck();
             if (this.mode == 0) {
                 this.initTask();
             }

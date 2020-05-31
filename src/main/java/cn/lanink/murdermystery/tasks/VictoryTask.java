@@ -4,7 +4,6 @@ import cn.lanink.murdermystery.MurderMystery;
 import cn.lanink.murdermystery.room.Room;
 import cn.lanink.murdermystery.utils.Tools;
 import cn.nukkit.Player;
-import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.scheduler.PluginTask;
 
 import java.util.Map;
@@ -32,19 +31,14 @@ public class VictoryTask extends PluginTask<MurderMystery> {
             this.cancel();
         }else {
             this.victoryTime--;
-            owner.getServer().getScheduler().scheduleAsyncTask(MurderMystery.getInstance(), new AsyncTask() {
-                @Override
-                public void onRun() {
-                    for (Map.Entry<Player, Integer> entry : room.getPlayers().entrySet()) {
-                        if (entry.getValue() != 0) {
-                            if (room.victory == 1 && entry.getValue() == 3) {
-                                continue;
-                            }
-                            Tools.spawnFirework(entry.getKey());
-                        }
+            for (Map.Entry<Player, Integer> entry : room.getPlayers().entrySet()) {
+                if (entry.getValue() != 0) {
+                    if (room.victory == 1 && entry.getValue() == 3) {
+                        continue;
                     }
+                    Tools.spawnFirework(entry.getKey());
                 }
-            });
+            }
         }
     }
 
