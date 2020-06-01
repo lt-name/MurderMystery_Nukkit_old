@@ -42,6 +42,7 @@ public class MurderListener implements Listener {
     @EventHandler
     public void onRoomStart(MurderRoomStartEvent event) {
         Room room = event.getRoom();
+        room.setMode(2);
         Server.getInstance().getPluginManager().callEvent(new MurderRoomChooseIdentityEvent(room));
         if (room.getRandomSpawn().size() > 0) {
             int x=0;
@@ -53,7 +54,6 @@ public class MurderListener implements Listener {
                 x++;
             }
         }
-        room.setMode(2);
         Server.getInstance().getScheduler().scheduleRepeatingTask(
                 MurderMystery.getInstance(), new TimeTask(this.murderMystery, room), 20,true);
         Server.getInstance().getScheduler().scheduleRepeatingTask(

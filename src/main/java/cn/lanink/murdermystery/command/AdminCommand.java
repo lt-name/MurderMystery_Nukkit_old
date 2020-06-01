@@ -1,6 +1,8 @@
 package cn.lanink.murdermystery.command;
 
 import cn.lanink.murdermystery.MurderMystery;
+import cn.lanink.murdermystery.event.MurderRoomStartEvent;
+import cn.lanink.murdermystery.room.Room;
 import cn.lanink.murdermystery.ui.GuiCreate;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
@@ -76,6 +78,18 @@ public class AdminCommand extends Command {
                                 }
                             }else {
                                 commandSender.sendMessage(murderMystery.getLanguage().cmdHelp.replace("%cmdName%", this.name));
+                            }
+                            return true;
+                        case "start":
+                            Room room = murderMystery.getRooms().get(player.getLevel().getName());
+                            if (room != null) {
+                                if (room.getPlayers().size() > 2) {
+                                    murderMystery.getServer().getPluginManager().callEvent(new MurderRoomStartEvent(room));
+                                }else {
+                                    commandSender.sendMessage(murderMystery.getLanguage().adminStartNoPlayer);
+                                }
+                            }else {
+                                commandSender.sendMessage(murderMystery.getLanguage().adminStartNoRoom);
                             }
                             return true;
                         case "reload": case "重载":

@@ -41,6 +41,8 @@ public class Language {
     public String adminSetWaitTime = "§a等待时间已设置为：%time%";
     public String adminSetGameTime = "§a游戏时间已设置为：%time%";
     public String adminSetGameTimeShort = "§a游戏时间最小不能低于1分钟！";
+    public String adminStartNoPlayer = "§a房间人数不足三人,无法开始游戏！";
+    public String adminStartNoRoom = "§a当前地图不是房间！";
     public String adminReload = "§a配置重载完成！请在后台查看信息！";
     public String adminUnload = "§a已卸载所有房间！请在后台查看信息！";
     public String roomSafeKick = "\n§c房间非正常关闭!\n为了您的背包安全，请稍后重进服务器！";
@@ -152,6 +154,8 @@ public class Language {
         this.adminSetWaitTime = config.getString("adminSetWaitTime", this.adminSetWaitTime);
         this.adminSetGameTime = config.getString("adminSetGameTime", this.adminSetGameTime);
         this.adminSetGameTimeShort = config.getString("adminSetGameTimeShort", this.adminSetGameTimeShort);
+        this.adminStartNoPlayer = config.getString("adminStartNoPlayer", this.adminStartNoPlayer);
+        this.adminStartNoRoom = config.getString("adminStartNoRoom", this.adminStartNoRoom);
         this.adminReload = config.getString("adminReload", this.adminReload);
         this.adminUnload = config.getString("adminUnload", this.adminUnload);
         this.roomSafeKick = config.getString("roomSafeKick", this.roomSafeKick);
