@@ -5,9 +5,9 @@ api:
   - 1.0.0
 load: POSTWORLD
 author: "LT_Name"
-loadbefore:
-  - EconomyAPI
-  - Tips
+depend:
+  - "Tips"
+  - "EconomyAPI"
 
 permissions:
   MurderMystery.all:

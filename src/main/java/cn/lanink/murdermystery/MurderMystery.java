@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class MurderMystery extends PluginBase {
 
-    public static String VERSION = "1.0.1-SNAPSHOT git-24ac654";
+    public static String VERSION = "?";
     private static MurderMystery murderMystery;
     private Addons addons;
     private Language language;
@@ -53,7 +53,6 @@ public class MurderMystery extends PluginBase {
         }
         saveDefaultConfig();
         this.config = new Config(getDataFolder() + "/config.yml", 2);
-        this.loadResources();
         File file1 = new File(this.getDataFolder() + "/Rooms");
         File file2 = new File(this.getDataFolder() + "/PlayerInventory");
         File file3 = new File(this.getDataFolder() + "/Skins");
@@ -66,6 +65,7 @@ public class MurderMystery extends PluginBase {
         if (!file3.exists() && !file3.mkdirs()) {
             getLogger().warning("Skins 文件夹初始化失败");
         }
+        this.loadResources();
         getLogger().info("§e开始加载房间");
         this.loadRooms();
         getLogger().info("§e开始加载皮肤");
@@ -88,7 +88,6 @@ public class MurderMystery extends PluginBase {
 
     @Override
     public void onDisable() {
-        this.config.save();
         if (this.rooms.values().size() > 0) {
             Iterator<Map.Entry<String, Room>> it = this.rooms.entrySet().iterator();
             while(it.hasNext()){

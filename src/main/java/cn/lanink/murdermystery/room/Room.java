@@ -1,7 +1,6 @@
 package cn.lanink.murdermystery.room;
 
 import cn.lanink.murdermystery.MurderMystery;
-import cn.lanink.murdermystery.tasks.TipsTask;
 import cn.lanink.murdermystery.tasks.WaitTask;
 import cn.lanink.murdermystery.utils.SavePlayerInventory;
 import cn.lanink.murdermystery.utils.Tools;
@@ -14,6 +13,7 @@ import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.Config;
 import tip.messages.NameTagMessage;
+import tip.messages.TipMessage;
 import tip.utils.Api;
 
 import java.util.*;
@@ -26,14 +26,13 @@ public class Room {
     private int mode; //0等待重置 1玩家等待中 2玩家游戏中 3胜利结算中
     public int waitTime, gameTime; //秒
     public int effectCD, swordCD, scanCD; //杀手技能CD
-    public int victory; //胜利者
     private int setWaitTime, setGameTime, setGoldSpawnTime;
     private LinkedHashMap<Player, Integer> players = new LinkedHashMap<>(); //0未分配 1平民 2侦探 3杀手
     private LinkedHashMap<Player, Integer> skinNumber = new LinkedHashMap<>(); //玩家使用皮肤编号，用于防止重复使用
     private LinkedHashMap<Player, Skin> skinCache = new LinkedHashMap<>(); //缓存玩家皮肤，用于退出房间时还原
     private ArrayList<Position> randomSpawn = new ArrayList<>();
     private List<String> goldSpawn;
-    private String spawn, world;
+    private String spawn, level;
     public ArrayList<ArrayList<Vector3>> placeBlocks = new ArrayList<>();
     public ArrayList<String> task = new ArrayList<>();
 
@@ -47,10 +46,10 @@ public class Room {
         this.spawn = config.getString("出生点", null);
         this.goldSpawn = config.getStringList("goldSpawn");
         this.setGoldSpawnTime = config.getInt("goldSpawnTime", 15);
-        this.world = config.getString("World", null);
+        this.level = config.getString("World", null);
         this.initTime();
         if (this.getLevel() == null) {
-            Server.getInstance().loadLevel(this.world);
+            Server.getInstance().loadLevel(this.level);
         }
         List<String> rSpawn = config.getStringList("randomSpawn");
         if (rSpawn.size() > 0) {
@@ -69,9 +68,7 @@ public class Room {
     private void initTask() {
         this.setMode(1);
         Server.getInstance().getScheduler().scheduleRepeatingTask(
-                MurderMystery.getInstance(), new WaitTask(MurderMystery.getInstance(), this), 20, true);
-        Server.getInstance().getScheduler().scheduleRepeatingTask(
-                MurderMystery.getInstance(), new TipsTask(MurderMystery.getInstance(), this), 20);
+                MurderMystery.getInstance(), new WaitTask(MurderMystery.getInstance(), this), 20);
     }
 
     /**
@@ -149,9 +146,11 @@ public class Room {
             player.teleport(this.getSpawn());
             this.setRandomSkin(player, false);
             Tools.giveItem(player, 10);
-            NameTagMessage nameTagMessage = new NameTagMessage(this.world, true, "");
+            NameTagMessage nameTagMessage = new NameTagMessage(this.level, true, "");
             Api.setPlayerShowMessage(player.getName(), nameTagMessage);
-            player.sendMessage(MurderMystery.getInstance().getLanguage().joinRoom.replace("%name%", this.world));
+            TipMessage tipMessage = new TipMessage(this.level, false, 0, "");
+            Api.setPlayerShowMessage(player.getName(), tipMessage);
+            player.sendMessage(MurderMystery.getInstance().getLanguage().joinRoom.replace("%name%", this.level));
         }
     }
 
@@ -173,7 +172,7 @@ public class Room {
             this.delPlaying(player);
         }
         if (online) {
-            Tools.removePlayerShowMessage(this.world, player);
+            Tools.removePlayerShowMessage(this.level, player);
             player.teleport(Server.getInstance().getDefaultLevel().getSafeSpawn());
             Tools.rePlayerState(player, false);
             SavePlayerInventory.restore(player);
@@ -311,7 +310,7 @@ public class Room {
      * @return 游戏世界
      */
     public Level getLevel() {
-        return Server.getInstance().getLevelByName(this.world);
+        return Server.getInstance().getLevelByName(this.level);
     }
 
     /**
