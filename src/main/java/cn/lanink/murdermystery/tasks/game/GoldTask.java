@@ -20,6 +20,7 @@ public class GoldTask extends PluginTask<MurderMystery> {
 
     public GoldTask(MurderMystery owner, Room room) {
         super(owner);
+        owner.taskList.add(this.getTaskId());
         this.room = room;
         this.goldSpawnTime = room.getGoldSpawnTime();
     }
@@ -77,6 +78,14 @@ public class GoldTask extends PluginTask<MurderMystery> {
                 }
             });
         }
+    }
+
+    @Override
+    public void cancel() {
+        while (owner.taskList.contains(this.getTaskId())) {
+            owner.taskList.remove(this.getTaskId());
+        }
+        super.cancel();
     }
 
 }

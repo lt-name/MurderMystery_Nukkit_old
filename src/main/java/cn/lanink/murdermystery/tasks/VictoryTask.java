@@ -23,6 +23,7 @@ public class VictoryTask extends PluginTask<MurderMystery> {
 
     public VictoryTask(MurderMystery owner, Room room, int victory) {
         super(owner);
+        owner.taskList.add(this.getTaskId());
         this.room = room;
         this.language = owner.getLanguage();
         this.victoryTime = 10;
@@ -63,6 +64,12 @@ public class VictoryTask extends PluginTask<MurderMystery> {
         }
     }
 
-
+    @Override
+    public void cancel() {
+        while (owner.taskList.contains(this.getTaskId())) {
+            owner.taskList.remove(this.getTaskId());
+        }
+        super.cancel();
+    }
 
 }

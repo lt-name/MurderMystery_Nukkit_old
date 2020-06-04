@@ -21,6 +21,7 @@ public class TimeTask extends PluginTask<MurderMystery> {
 
     public TimeTask(MurderMystery owner, Room room) {
         super(owner);
+        owner.taskList.add(this.getTaskId());
         this.room = room;
     }
 
@@ -93,8 +94,7 @@ public class TimeTask extends PluginTask<MurderMystery> {
             room.setMode(3);
             for (Map.Entry<Player, Integer> entry : room.getPlayers().entrySet()) {
                 if (victoryMode == 3) {
-                    entry.getKey().sendTitle(
-                            owner.getLanguage().titleVictoryKillerTitle,
+                    entry.getKey().sendTitle(owner.getLanguage().titleVictoryKillerTitle,
                             "", 10, 30, 10);
                     if (entry.getValue() == 3) {
                         int money = owner.getConfig().getInt("杀手胜利奖励", 0);
@@ -116,12 +116,19 @@ public class TimeTask extends PluginTask<MurderMystery> {
                 entry.getKey().sendTitle(owner.getLanguage().titleVictoryCommonPeopleSubtitle,
                         "", 10, 30, 10);
             }
-            owner.getServer().getScheduler().scheduleRepeatingTask(
-                    MurderMystery.getInstance(), new VictoryTask(MurderMystery.getInstance(), room, victoryMode), 20);
+            owner.getServer().getScheduler().scheduleRepeatingTask(owner, new VictoryTask(owner, room, victoryMode), 20);
         }else {
            room.endGame();
         }
         this.cancel();
+    }
+
+    @Override
+    public void cancel() {
+        while (owner.taskList.contains(this.getTaskId())) {
+            owner.taskList.remove(this.getTaskId());
+        }
+        super.cancel();
     }
 
 }

@@ -20,6 +20,7 @@ public class WaitTask extends PluginTask<MurderMystery> {
 
     public WaitTask(MurderMystery owner, Room room) {
         super(owner);
+        owner.taskList.add(this.getTaskId());
         this.room = room;
         this.language = owner.getLanguage();
     }
@@ -68,6 +69,14 @@ public class WaitTask extends PluginTask<MurderMystery> {
             this.room.endGame();
             this.cancel();
         }
+    }
+
+    @Override
+    public void cancel() {
+        while (owner.taskList.contains(this.getTaskId())) {
+            owner.taskList.remove(this.getTaskId());
+        }
+        super.cancel();
     }
 
 }

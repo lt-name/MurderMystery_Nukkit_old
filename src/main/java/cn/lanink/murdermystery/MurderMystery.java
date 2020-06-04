@@ -22,10 +22,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * MurderMystery
@@ -38,10 +35,11 @@ public class MurderMystery extends PluginBase {
     private Addons addons;
     private Language language;
     private Config config;
-    private LinkedHashMap<String, Config> roomConfigs = new LinkedHashMap<>();
+    private HashMap<String, Config> roomConfigs = new HashMap<>();
     private LinkedHashMap<String, Room> rooms = new LinkedHashMap<>();
     private LinkedHashMap<Integer, Skin> skins = new LinkedHashMap<>();
     private Skin sword;
+    public final LinkedList<Integer> taskList = new LinkedList<>();
 
     public static MurderMystery getInstance() { return murderMystery; }
 
@@ -104,7 +102,9 @@ public class MurderMystery extends PluginBase {
         this.rooms.clear();
         this.roomConfigs.clear();
         this.skins.clear();
-        getServer().getScheduler().cancelTask(this);
+        for (int id : this.taskList) {
+            getServer().getScheduler().cancelTask(id);
+        }
         getLogger().info("§c插件卸载完成！");
     }
 
@@ -189,7 +189,9 @@ public class MurderMystery extends PluginBase {
         if (this.roomConfigs.values().size() > 0) {
             this.roomConfigs.clear();
         }
-        getServer().getScheduler().cancelTask(this);
+        for (int id : this.taskList) {
+            getServer().getScheduler().cancelTask(id);
+        }
     }
 
     /**
