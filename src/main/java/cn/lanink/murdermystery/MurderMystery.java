@@ -105,6 +105,7 @@ public class MurderMystery extends PluginBase {
         for (int id : this.taskList) {
             getServer().getScheduler().cancelTask(id);
         }
+        this.taskList.clear();
         getLogger().info("§c插件卸载完成！");
     }
 
@@ -132,9 +133,6 @@ public class MurderMystery extends PluginBase {
         if (this.roomConfigs.containsKey(level)) {
             return this.roomConfigs.get(level);
         }
-        if (!new File(getDataFolder() + "/Rooms/" + level + ".yml").exists()) {
-            saveResource("room.yml", "/Rooms/" + level + ".yml", false);
-        }
         Config config = new Config(getDataFolder() + "/Rooms/" + level + ".yml", 2);
         this.roomConfigs.put(level, config);
         return config;
@@ -156,10 +154,10 @@ public class MurderMystery extends PluginBase {
                     Config config = getRoomConfig(fileName[0]);
                     if (config.getInt("等待时间", 0) == 0 ||
                             config.getInt("游戏时间", 0) == 0 ||
-                            config.getString("出生点", null) == null ||
+                            config.getString("出生点", "").trim().equals("") ||
                             config.getStringList("goldSpawn").size() < 1 ||
                             config.getInt("goldSpawnTime", 0) == 0 ||
-                            config.getString("World", null) == null) {
+                            config.getString("World", "").trim().equals("")) {
                         getLogger().warning("§c房间：" + fileName[0] + " 配置不完整，加载失败！");
                         continue;
                     }
@@ -192,6 +190,7 @@ public class MurderMystery extends PluginBase {
         for (int id : this.taskList) {
             getServer().getScheduler().cancelTask(id);
         }
+        this.taskList.clear();
     }
 
     /**
