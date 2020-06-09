@@ -48,7 +48,7 @@ public class MurderListener implements Listener {
         if (room.getRandomSpawn().size() > 0) {
             int x=0;
             for (Player player : room.getPlayers().keySet()) {
-                if (room.getRandomSpawn().size() <= x) {
+                if (x >= room.getRandomSpawn().size()) {
                     x = 0;
                 }
                 player.teleport(room.getRandomSpawn().get(x));

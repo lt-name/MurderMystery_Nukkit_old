@@ -245,7 +245,8 @@ public class MurderMystery extends PluginBase {
         getLogger().info("§l§e版本: " + VERSION);
         getLogger().info("§e开始加载资源文件");
         //语言文件
-        saveResource("Resources/Language/zh_CN.yml", "/Resources/Language/zh_CN.yml", false);
+        saveResource("Resources/Language/zh_CN.yml", false);
+        saveResource("Resources/Language/en.yml", false);
         String s = this.config.getString("language", "zh_CN");
         File languageFile = new File(getDataFolder() + "/Resources/Language/" + s + ".yml");
         if (languageFile.exists()) {
