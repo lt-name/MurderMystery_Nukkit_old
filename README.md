@@ -1,3 +1,8 @@
+# Please go to the new link: https://github.com/lt-name/MurderMystery_Nukkit  
+      
+      
+      
+
 # MurderMystery  
 [![License](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
 ![Java CI](https://github.com/lt-name/MurderMystery_Nukkit/workflows/Java%20CI/badge.svg)
